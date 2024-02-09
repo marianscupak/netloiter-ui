@@ -1,0 +1,21 @@
+{
+  "name": "netloiter-ui",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx watch index.ts",
+    "start": "bun dist/index.js"
+  },
+  "dependencies": {
+    "@trpc/server": "^10.45.1",
+    "cors": "^2.8.5",
+    "zod": "^3.0.0"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.13",
+    "bun-types": "1.0.26",
+    "tsx": "^4.0.0",
+    "typescript": "^5.3.3"
+  }
+}

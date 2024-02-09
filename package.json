@@ -1,0 +1,31 @@
+{
+  "name": "netloier-ui",
+  "private": true,
+  "version": "1.0.0",
+  "workspaces": [
+    "client",
+    "server"
+  ],
+  "scripts": {
+    "build:client": "cd client && bun run build",
+    "build:server": "cd server && bun run build",
+    "build": "concurrently \"bun build:server\" \"bun build:client\"",
+    "dev": "concurrently \"bun dev:client\" \"bun dev:server\"",
+    "dev:client": "cd client && bun run dev",
+    "dev:server": "cd server && bun run dev",
+    "start:client": "cd client && bun run start",
+    "start:server": "cd server && bun run start",
+    "lint": "eslint --cache --ext \".js,.ts,.tsx\" --report-unused-disable-directives client server",
+    "type-check": "concurrently \"bun type-check:client\" \"bun type-check:server\"",
+    "type-check:client": "cd client && tsc --noEmit",
+    "type-check:server": "cd server && tsc --noEmit"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "6.21.0",
+    "@typescript-eslint/parser": "6.21.0",
+    "concurrently": "8.2.2",
+    "eslint": "8.56.0",
+    "eslint-plugin-react": "7.33.2",
+    "wait-port": "^1.0.1"
+  }
+}
