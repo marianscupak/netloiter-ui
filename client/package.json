@@ -4,22 +4,30 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "bunx --bun vite",
+    "dev": "concurrently \"bunx --bun vite\" \"bun run watch-tailwind\"",
     "build": "tsc && vite build",
-    "start": "vite preview"
+    "start": "vite preview",
+    "watch-tailwind": "bun run tailwindcss build -i ./src/main.css -o ./dist/output.css --watch"
   },
   "dependencies": {
+    "@emotion/react": "^11.11.3",
+    "@emotion/styled": "^11.11.0",
+    "@mui/material": "^5.15.10",
+    "@mui/styles": "^5.15.10",
     "@tanstack/react-query": "^4.18.0",
     "@trpc/client": "^10.45.1",
     "@trpc/react-query": "^10.45.1",
     "@trpc/server": "^10.45.1",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.22.1"
   },
   "devDependencies": {
     "@types/react": "^18.2.33",
     "@types/react-dom": "^18.2.14",
     "@vitejs/plugin-react": "^3.1.0",
+    "concurrently": "8.2.2",
+    "tailwindcss": "^3.4.1",
     "typescript": "^5.3.3",
     "vite": "^4.1.2"
   },
