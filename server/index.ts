@@ -1,32 +1,38 @@
-import { initTRPC } from "@trpc/server";
-import { createHTTPServer } from "@trpc/server/adapters/standalone";
+import express from "express";
+import { wsWrapper } from "./websocket";
+import { createHTTPHandler } from "@trpc/server/adapters/standalone";
 import cors from "cors";
-import { z } from "zod";
+import { appRouter } from "./trpc-routers";
+import { createContext } from "./context";
+import { getRunningFrom, startNetLoiter, stopNetLoiter } from "./nl-status";
 
-const t = initTRPC.create();
-
-const publicProcedure = t.procedure;
-const router = t.router;
-
-const appRouter = router({
-  greeting: publicProcedure
-    .input(
-      z
-        .object({
-          name: z.string().nullish(),
-        })
-        .nullish(),
-    )
-    .query(({ input }) => {
-      return {
-        text: `Hello ${input?.name ?? "world"}`,
-      };
-    }),
-});
-
-export type AppRouter = typeof appRouter;
-
-createHTTPServer({
+const trpcHandler = createHTTPHandler({
   middleware: cors(),
   router: appRouter,
-}).listen(2022);
+  createContext,
+});
+
+const app = express().use(cors());
+
+app.get("/start", (req, res) => {
+  startNetLoiter();
+  res.send();
+});
+
+app.get("/status", (req, res) => {
+  res.send({ runningFrom: getRunningFrom() });
+});
+
+app.get("/stop", (req, res) => {
+  stopNetLoiter();
+  res.send();
+});
+
+app.route("*").get(async (req, res) => {
+  await trpcHandler(req, res);
+});
+
+export const httpServer = app.listen(2022);
+wsWrapper(httpServer);
+
+console.log("✅  Server listening at http://localhost:2022");

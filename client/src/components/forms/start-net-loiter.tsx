@@ -1,4 +1,4 @@
-import { Box, Button, Modal } from "@mui/material";
+import { Box, Button, CircularProgress, Modal } from "@mui/material";
 import { Select } from "./select";
 
 const style = {
@@ -14,10 +14,17 @@ const style = {
 
 interface Props {
   open: boolean;
+  loading: boolean;
   onClose(): void;
+  onStartNetLoiter(): void;
 }
 
-export const StartNetLoiterModal = ({ open, onClose }: Props) => (
+export const StartNetLoiterModal = ({
+  open,
+  loading,
+  onClose,
+  onStartNetLoiter,
+}: Props) => (
   <Modal open={open} disableEnforceFocus onClose={onClose}>
     <Box style={style}>
       <div className="text-header">Start NetLoiter</div>
@@ -35,6 +42,15 @@ export const StartNetLoiterModal = ({ open, onClose }: Props) => (
         </div>
         <Button variant="outlined" className="w-[30%]">
           NEW CONFIG
+        </Button>
+      </div>
+      <div className="mt-4">
+        <Button
+          variant="contained"
+          onClick={onStartNetLoiter}
+          disabled={loading}
+        >
+          {loading ? <CircularProgress color="info" size="24px" /> : "START"}
         </Button>
       </div>
     </Box>
