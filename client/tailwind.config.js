@@ -5,6 +5,8 @@ export default {
     fontSize: {
       base: "18px",
       header: "40px",
+      subheader: "35px",
+      subsubheader: "30px",
     },
     colors: {
       gray: "#404040",

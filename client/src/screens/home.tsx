@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import dayjs from "dayjs";
 import { axios } from "../utils/axios";
 import useWebSocket from "react-use-websocket";
+import { useNlStatusEndpoints } from "../utils/use-nl-status-endpoints";
 
 const NL_START_DURATION = 1000;
 
@@ -15,8 +16,8 @@ export const Home = () => {
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [runningFrom, setRunningFrom] = useState<Date | false>(false);
   const [statusLoading, setStatusLoading] = useState(false);
-
-  const {} = useWebSocket("ws://localhost:2022");
+  const { startNetLoiter, stopNetLoiter, getIsNetLoiterRunning } =
+    useNlStatusEndpoints();
 
   const onOpen = useCallback(() => {
     setStartOpen(true);
@@ -26,16 +27,8 @@ export const Home = () => {
     setStartOpen(false);
   }, []);
 
-  const startNetLoiter = useCallback(async () => {
-    await axios.get("/start");
-  }, []);
-
-  const stopNetLoiter = useCallback(async () => {
-    await axios.get("/stop");
-  }, []);
-
   const getIsNlRunning = useCallback(async (showSnackbar?: boolean) => {
-    const response = await axios.get<{ runningFrom: Date | false }>("/status");
+    const response = await getIsNetLoiterRunning();
     if (response.status === 200) {
       const { runningFrom: newRunningFrom } = response.data;
       setRunningFrom(newRunningFrom);

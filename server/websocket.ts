@@ -1,6 +1,7 @@
 import { WebSocket } from "ws";
 import { Server } from "http";
 import { eventEmitter } from "./event-emitter";
+import { parseMessage } from "./nl-status/parse-message";
 
 const broadcast = (clients: Set<WebSocket>, message: string) => {
   clients.forEach((client) => {
@@ -20,9 +21,11 @@ export const wsWrapper = (expressServer: Server) => {
   });
 
   eventEmitter.on("add", (data) => {
+    const message = String.fromCharCode(...data);
+
     broadcast(
       websocketServer.clients,
-      JSON.stringify({ message: String.fromCharCode(...data) }),
+      JSON.stringify({ messages: parseMessage(message) }),
     );
   });
 
