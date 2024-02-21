@@ -7,6 +7,7 @@ export default {
       header: "40px",
       subheader: "35px",
       subsubheader: "30px",
+      small: "14px",
     },
     colors: {
       gray: "#404040",

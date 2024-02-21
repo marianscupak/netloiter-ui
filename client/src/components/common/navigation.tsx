@@ -1,20 +1,25 @@
 import { NavLink } from "react-router-dom";
+import { useAtom } from "jotai";
+import { statusAtom } from "../../state/status";
 
 interface NavigationItem {
   path: string;
   label: string;
 }
 
-const navigationItems: NavigationItem[] = [
+const getNavigationItems = (running: boolean): NavigationItem[] => [
   { path: "/", label: "Home" },
-  { path: "/current-run", label: "Current run" },
+  ...(running ? [{ path: "/current-run", label: "Current run" }] : []),
+  { path: "/actions", label: "Actions" },
 ];
 
 export const Navigation = () => {
+  const [status] = useAtom(statusAtom);
+
   return (
     <div className="bg-dark-gray p-4">
       <div className="text-[24px] mb-2">NetLoiter</div>
-      {navigationItems.map((item) => (
+      {getNavigationItems(Boolean(status.runningFrom)).map((item) => (
         <NavLink
           key={item.path}
           to={item.path}

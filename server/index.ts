@@ -28,7 +28,7 @@ app.get("/stop", (req, res) => {
   res.send();
 });
 
-app.route("*").get(async (req, res) => {
+app.route("*").all(async (req, res) => {
   await trpcHandler(req, res);
 });
 

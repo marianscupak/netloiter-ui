@@ -33,6 +33,7 @@ export const CurrentRun = () => {
 
   useEffect(() => {
     if (lastJsonMessage) {
+      console.log(lastJsonMessage);
       setMessages((oldMessages) => [
         ...oldMessages,
         ...lastJsonMessage.messages,

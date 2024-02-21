@@ -1,20 +1,18 @@
-import { Alert, Button, Snackbar } from "@mui/material";
+import { Button } from "@mui/material";
 import { StartNetLoiterModal } from "../components/forms/start-net-loiter";
 import { useCallback, useEffect, useState } from "react";
 import dayjs from "dayjs";
-import { axios } from "../utils/axios";
-import useWebSocket from "react-use-websocket";
 import { useNlStatusEndpoints } from "../utils/use-nl-status-endpoints";
+import { useAtom } from "jotai";
+import { statusAtom } from "../state/status";
+import { NavLink } from "react-router-dom";
+import { useSnackbar } from "../utils/snackbar";
 
 const NL_START_DURATION = 1000;
 
 export const Home = () => {
   const [startOpen, setStartOpen] = useState(false);
-  const [snackbarOpen, setSnackbarOpen] = useState<
-    "success" | "error" | undefined
-  >(undefined);
-  const [snackbarMessage, setSnackbarMessage] = useState("");
-  const [runningFrom, setRunningFrom] = useState<Date | false>(false);
+  const [status, setStatus] = useAtom(statusAtom);
   const [statusLoading, setStatusLoading] = useState(false);
   const { startNetLoiter, stopNetLoiter, getIsNetLoiterRunning } =
     useNlStatusEndpoints();
@@ -27,20 +25,20 @@ export const Home = () => {
     setStartOpen(false);
   }, []);
 
-  const getIsNlRunning = useCallback(async (showSnackbar?: boolean) => {
+  const { showSnackbar } = useSnackbar();
+
+  const getIsNlRunning = useCallback(async (shouldShowSnackbar?: boolean) => {
     const response = await getIsNetLoiterRunning();
     if (response.status === 200) {
       const { runningFrom: newRunningFrom } = response.data;
-      setRunningFrom(newRunningFrom);
+      setStatus((oldStatus) => ({ ...oldStatus, runningFrom: newRunningFrom }));
 
-      if (showSnackbar) {
+      if (shouldShowSnackbar) {
         if (newRunningFrom) {
-          setSnackbarMessage("NetLoiter started successfully");
-          setSnackbarOpen("success");
+          showSnackbar("NetLoiter started successfully");
           setStartOpen(false);
         } else {
-          setSnackbarMessage("Failed to start NetLoiter");
-          setSnackbarOpen("error");
+          showSnackbar("Failed to start NetLoiter", "error");
         }
       }
       setStatusLoading(false);
@@ -64,14 +62,16 @@ export const Home = () => {
 
   return (
     <div className="flex justify-center items-center h-full">
-      {runningFrom ? (
+      {status.runningFrom ? (
         <div>
           <div className="text-header">NetLoiter is up and running</div>
           <div className="mb-2 text-center">
-            Running from: {dayjs(runningFrom).format("DD. MM. HH:mm:ss")}
+            Running from: {dayjs(status.runningFrom).format("DD. MM. HH:mm:ss")}
           </div>
           <div className="flex justify-center gap-2">
-            <Button variant="contained">OVERVIEW</Button>
+            <NavLink to="/current-run">
+              <Button variant="contained">OVERVIEW</Button>
+            </NavLink>
             <Button variant="contained" color="error" onClick={onStopNetLoiter}>
               STOP
             </Button>
@@ -96,21 +96,6 @@ export const Home = () => {
         onClose={onClose}
         onStartNetLoiter={onStartNetLoiter}
       />
-      <Snackbar
-        open={Boolean(snackbarOpen)}
-        message={snackbarMessage}
-        onClose={() => setSnackbarOpen(undefined)}
-        autoHideDuration={5000}
-      >
-        <Alert
-          onClose={() => setSnackbarOpen(undefined)}
-          severity={snackbarOpen}
-          variant="filled"
-          sx={{ width: "100%" }}
-        >
-          {snackbarMessage}
-        </Alert>
-      </Snackbar>
     </div>
   );
 };

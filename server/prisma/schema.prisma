@@ -1,0 +1,32 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ActionType {
+  BitNoise
+  Drop
+  Pause
+  Reorder
+  SocketTcp
+  Skip
+  Delay
+  Finish
+  Restart
+  Replicate
+  Throttle
+}
+
+model Action {
+  id Int @id @default(autoincrement())
+  type ActionType
+  name String
+  data Json?
+}

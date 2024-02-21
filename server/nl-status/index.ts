@@ -30,6 +30,7 @@ const sshClient = new Client().on("ready", () => {
         console.log("Closed with code: " + code, signal);
         sshClient.end();
         runningFrom = false;
+        eventEmitter.emit("close");
       });
   });
 });
