@@ -1,7 +1,7 @@
-import { FormTextField } from "../../wrapped-inputs/form-text-field";
+import { FormNumberWithGenerator } from "../../wrapped-inputs/form-number-with-generator";
 
 export const ThrottleFields = () => (
   <div className="mt-4">
-    <FormTextField type="number" name="limit" label="Limit" />
+    <FormNumberWithGenerator name="limit" label="Limit" />
   </div>
 );

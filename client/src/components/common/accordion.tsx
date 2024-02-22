@@ -1,4 +1,3 @@
-import React from "react";
 import { Accordion as MuiAccordion, styled } from "@mui/material";
 
 export const Accordion = styled(MuiAccordion)({

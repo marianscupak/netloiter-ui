@@ -11,7 +11,7 @@ import {
 } from "../../utils/snackbar";
 
 export const Layout = () => {
-  const [_, setStatus] = useAtom(statusAtom);
+  const [, setStatus] = useAtom(statusAtom);
 
   const { getIsNetLoiterRunning } = useNlStatusEndpoints();
 

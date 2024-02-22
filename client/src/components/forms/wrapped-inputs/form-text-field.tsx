@@ -16,7 +16,7 @@ export const FormTextField = ({
           ? Number.parseFloat(e.target.value)
           : e.target.value;
 
-      if (value !== Number.NaN) {
+      if (typeof value === "string" || !isNaN(value)) {
         setValue(name, value);
       }
     },

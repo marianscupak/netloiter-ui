@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { ActionType } from "../../../../../server/prisma/public";
+import { numberWithValueGeneratorSchema } from "../value-generators/types";
 
 const createActionBaseFormValuesSchema = z.object({
   name: z.string().refine((name) => name.length > 0, { message: "Required" }),
@@ -14,9 +15,12 @@ export enum BitNoiseStrategy {
 
 const bitNoiseActionValuesSchema = createActionBaseFormValuesSchema.extend({
   type: z.literal(ActionType.BitNoise),
-  percentageOfBitsToSwap: z.number().refine((n) => n > 0 && n < 1, {
-    message: "Enter a value between 0 and 1",
-  }),
+  percentageOfBitsToSwap: numberWithValueGeneratorSchema.refine(
+    (n) => (typeof n === "number" ? n > 0 && n < 1 : true),
+    {
+      message: "Enter a value between 0 and 1",
+    },
+  ),
   layer: z.number().refine((l) => l > 0 && l < 5, {
     message: "Enter a value between 1 and 4",
   }),
@@ -25,7 +29,7 @@ const bitNoiseActionValuesSchema = createActionBaseFormValuesSchema.extend({
 
 const delayActionValuesSchema = createActionBaseFormValuesSchema.extend({
   type: z.literal(ActionType.Delay),
-  n: z.number(),
+  n: numberWithValueGeneratorSchema,
 });
 
 const dropActionValuesSchema = createActionBaseFormValuesSchema.extend({
@@ -55,13 +59,13 @@ export enum ReorderStrategy {
 
 const reorderActionValuesSchema = createActionBaseFormValuesSchema.extend({
   type: z.literal(ActionType.Reorder),
-  count: z.number(),
+  count: numberWithValueGeneratorSchema,
   reorderStrategy: z.nativeEnum(ReorderStrategy),
 });
 
 const replicateActionValuesSchema = createActionBaseFormValuesSchema.extend({
   type: z.literal(ActionType.Reorder),
-  count: z.number(),
+  count: numberWithValueGeneratorSchema,
   // TODO: Action
 });
 
@@ -83,7 +87,7 @@ const socketTcpActionValuesSchema = createActionBaseFormValuesSchema.extend({
 
 const throttleActionValuesSchema = createActionBaseFormValuesSchema.extend({
   type: z.literal(ActionType.Throttle),
-  limit: z.number(),
+  limit: numberWithValueGeneratorSchema,
 });
 
 export const createActionFormValuesSchema = z.union([

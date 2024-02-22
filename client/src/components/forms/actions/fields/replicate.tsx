@@ -1,9 +1,9 @@
-import { FormTextField } from "../../wrapped-inputs/form-text-field";
+import { FormNumberWithGenerator } from "../../wrapped-inputs/form-number-with-generator";
 
 export const ReplicateFields = () => (
   <div>
     <div className="mt-4">
-      <FormTextField name="count" label="Count" type="number" />
+      <FormNumberWithGenerator name="count" label="Count" />
     </div>
   </div>
 );

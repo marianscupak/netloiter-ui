@@ -2,6 +2,7 @@ import { FormTextField } from "../../wrapped-inputs/form-text-field";
 import { FormSelect } from "../../wrapped-inputs/form-select";
 import { SelectOption } from "../../select";
 import { BitNoiseStrategy } from "../create-action-form-types";
+import { FormNumberWithGenerator } from "../../wrapped-inputs/form-number-with-generator";
 
 const bitNoiseStrategyOptions: SelectOption[] = [
   { label: "Left", value: BitNoiseStrategy.Left },
@@ -12,11 +13,9 @@ const bitNoiseStrategyOptions: SelectOption[] = [
 export const BitNoiseActionFields = () => (
   <div>
     <div className="mt-4">
-      <FormTextField
-        type="number"
+      <FormNumberWithGenerator
         name="percentageOfBitsToSwap"
         label="Percentage of bits to swap"
-        error
       />
     </div>
     <div className="mt-4">

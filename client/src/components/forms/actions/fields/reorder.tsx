@@ -1,7 +1,7 @@
-import { FormTextField } from "../../wrapped-inputs/form-text-field";
 import { FormSelect } from "../../wrapped-inputs/form-select";
 import { SelectOption } from "../../select";
 import { ReorderStrategy } from "../create-action-form-types";
+import { FormNumberWithGenerator } from "../../wrapped-inputs/form-number-with-generator";
 
 const reorderStrategyOptions: SelectOption[] = [
   { value: ReorderStrategy.Random, label: "Random" },
@@ -11,7 +11,7 @@ const reorderStrategyOptions: SelectOption[] = [
 export const ReorderFields = () => (
   <div>
     <div className="mt-4">
-      <FormTextField type="number" name="count" label="Count" />
+      <FormNumberWithGenerator name="count" label="Count" />
     </div>
     <div className="mt-4">
       <FormSelect

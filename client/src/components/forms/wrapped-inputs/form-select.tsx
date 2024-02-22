@@ -5,12 +5,7 @@ interface Props extends SelectProps {
   name: string;
 }
 
-export const FormSelect = ({
-  defaultValue,
-  name,
-  onChange,
-  ...rest
-}: Props) => {
+export const FormSelect = ({ defaultValue, name, ...rest }: Props) => {
   const { control } = useFormContext();
 
   return (

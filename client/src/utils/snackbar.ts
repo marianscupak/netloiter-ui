@@ -17,7 +17,7 @@ export const snackbarAtom = atom<SnackbarAtom>({
 });
 
 export const useSnackbar = () => {
-  const [_, setSnackbar] = useAtom(snackbarAtom);
+  const [, setSnackbar] = useAtom(snackbarAtom);
 
   const showSnackbar = useCallback(
     (message: string, snackbarType: AlertColor = "success") => {

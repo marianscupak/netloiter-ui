@@ -1,8 +1,4 @@
-import {
-  Message,
-  MessageType,
-  MessageWithPacketId,
-} from "../../../../server/nl-status/message-types";
+import { MessageWithPacketId } from "../../../../server/nl-status/message-types";
 import { Event } from "./event";
 import { useMemo } from "react";
 import { groupMessagesByPacketId } from "../../utils/common";
@@ -25,8 +21,8 @@ export const PacketEventList = ({ messages }: Props) => {
         <AccordionSummary>Packet ID: {key}</AccordionSummary>
         <AccordionDetails>
           {groupedEvents[key].map((message, index) => (
-            <div className="my-2">
-              <Event message={message} key={index} />
+            <div className="my-2" key={index}>
+              <Event message={message} />
             </div>
           ))}
         </AccordionDetails>
