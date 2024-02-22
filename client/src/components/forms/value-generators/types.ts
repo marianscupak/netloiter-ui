@@ -21,7 +21,7 @@ const valueGeneratorBaseSchema = z.object({
 const normalDistributionGeneratorFormSchema = valueGeneratorBaseSchema.extend({
   min: z.number(),
   max: z.number(),
-  once: z.boolean(),
+  once: z.boolean().optional(),
   average: z.number(),
   deviation: z.number(),
 });
@@ -34,7 +34,7 @@ const normalDistributionGeneratorSchema =
 const uniformDistributionGeneratorFormSchema = valueGeneratorBaseSchema.extend({
   min: z.number(),
   max: z.number(),
-  once: z.boolean(),
+  once: z.boolean().optional(),
 });
 
 const uniformDistributionGeneratorSchema =
@@ -45,7 +45,7 @@ const uniformDistributionGeneratorSchema =
 const sequenceGeneratorFormSchema = valueGeneratorBaseSchema.extend({
   min: z.number(),
   max: z.number(),
-  once: z.boolean(),
+  once: z.boolean().optional(),
   step: z.number(),
   mode: z.nativeEnum(SequenceMode),
 });
