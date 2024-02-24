@@ -65,16 +65,16 @@ export const CreateActionForm = () => {
       form.clearErrors("type");
       await createAction(formValues);
     },
-    [],
+    [form],
   );
 
   const onSubmitError = useCallback(() => {
     form.clearErrors("type");
-  }, []);
+  }, [form]);
 
   const onSubmit = useMemo(
     () => form.handleSubmit(handleSubmit, onSubmitError),
-    [handleSubmit],
+    [handleSubmit, onSubmitError],
   );
 
   return (

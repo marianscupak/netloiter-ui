@@ -8,15 +8,12 @@ export const actionRouter = createTRPCRouter({
       select: { name: true, id: true },
     });
   }),
-  createAction: publicProcedure
-    .input(createActionFormValuesSchema)
-    .mutation(async ({ ctx, input }) => {
-      const { type, name, ...rest } = input;
-
-      return await ctx.prisma.action.create({
+  createAction: publicProcedure.input(createActionFormValuesSchema).mutation(
+    async ({ ctx, input: { type, name, ...rest } }) =>
+      await ctx.prisma.action.create({
         data: { type, name, data: rest },
-      });
-    }),
+      }),
+  ),
   deleteAction: publicProcedure
     .input(z.object({ id: z.number() }))
     .mutation(

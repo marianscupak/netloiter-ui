@@ -11,6 +11,7 @@ const getNavigationItems = (running: boolean): NavigationItem[] => [
   { path: "/", label: "Home" },
   ...(running ? [{ path: "/current-run", label: "Current run" }] : []),
   { path: "/actions", label: "Actions" },
+  { path: "/guards", label: "Guards" },
 ];
 
 export const Navigation = () => {

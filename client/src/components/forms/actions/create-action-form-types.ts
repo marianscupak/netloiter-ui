@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { ActionType } from "../../../../../server/prisma/public";
 import { numberWithValueGeneratorSchema } from "../value-generators/types";
+import { ipSchema } from "../../../utils/schemas";
 
 const createActionBaseFormValuesSchema = z.object({
   name: z.string().refine((name) => name.length > 0, { message: "Required" }),
@@ -69,12 +70,9 @@ const replicateActionValuesSchema = createActionBaseFormValuesSchema.extend({
   // TODO: Action
 });
 
-const ipv4regex =
-  /\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b/;
-
 const socketTcpActionValuesSchema = createActionBaseFormValuesSchema.extend({
   type: z.literal(ActionType.SocketTcp),
-  ip: z.string().regex(ipv4regex, { message: "Invalid IP" }),
+  ip: ipSchema,
   port: z.number(),
   packFormat: z.string(),
   mark: z.string(),

@@ -30,3 +30,25 @@ model Action {
   name String
   data Json?
 }
+
+enum GuardType {
+  Count
+  CountPeriod
+  EveryN
+  ICMP
+  IP
+  Port
+  Prob
+  Protocol
+  Size
+  Time
+  TimePeriod
+}
+
+model Guard {
+  id Int @id @default(autoincrement())
+  type GuardType
+  name String
+  invert Boolean
+  data Json?
+}
