@@ -4,7 +4,7 @@ import {
   TextFieldProps,
 } from "@mui/material";
 
-const CustomTextField = styled(MuiTextField)(({ error }) => ({
+const CustomTextField = styled(MuiTextField)(({ error, disabled }) => ({
   "& .MuiInputBase-root": {
     color: "#F2F2F3",
   },
@@ -16,7 +16,7 @@ const CustomTextField = styled(MuiTextField)(({ error }) => ({
       borderColor: error ? "#D41121" : "#F2F2F3",
     },
     "&:hover fieldset": {
-      borderColor: error ? "#D41121" : "#64D22D",
+      borderColor: disabled ? undefined : error ? "#D41121" : "#64D22D",
     },
     "&.Mui-focused fieldset": {
       borderColor: error ? "#D41121" : "#64D22D",
@@ -25,11 +25,5 @@ const CustomTextField = styled(MuiTextField)(({ error }) => ({
 }));
 
 export const TextField = ({ label, ...props }: TextFieldProps) => (
-  <CustomTextField
-    id={`${label}`}
-    label={label}
-    fullWidth
-    variant="outlined"
-    {...props}
-  />
+  <CustomTextField label={label} fullWidth variant="outlined" {...props} />
 );

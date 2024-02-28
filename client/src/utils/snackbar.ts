@@ -23,7 +23,7 @@ export const useSnackbar = () => {
     (message: string, snackbarType: AlertColor = "success") => {
       setSnackbar({ message, snackbarType, open: true });
     },
-    [],
+    [setSnackbar],
   );
 
   return { showSnackbar };

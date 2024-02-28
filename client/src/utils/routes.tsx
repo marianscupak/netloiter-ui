@@ -6,6 +6,8 @@ import { Actions } from "../screens/actions";
 import { CreateAction } from "../screens/actions/create";
 import { Guards } from "../screens/guards";
 import { CreateGuard } from "../screens/guards/create";
+import { Rules } from "../screens/rules";
+import { CreateRule } from "../screens/rules/create";
 
 export const router = createBrowserRouter([
   {
@@ -18,6 +20,8 @@ export const router = createBrowserRouter([
       { path: "/actions/create", element: <CreateAction /> },
       { path: "/guards", element: <Guards /> },
       { path: "/guards/create", element: <CreateGuard /> },
+      { path: "/rules", element: <Rules /> },
+      { path: "/rules/create", element: <CreateRule /> },
     ],
   },
 ]);

@@ -12,11 +12,11 @@ import { useCallback } from "react";
 import { useSnackbar } from "../../utils/snackbar";
 
 interface Props {
-  guards: RouterOutputs["guard"]["getAll"] | undefined;
+  rules: RouterOutputs["rule"]["getAll"] | undefined;
 }
 
-export const GuardsTable = ({ guards }: Props) => {
-  const { mutateAsync: deleteGuard } = trpc.guard.deleteGuard.useMutation();
+export const RulesTable = ({ rules }: Props) => {
+  const { mutateAsync: deleteRule } = trpc.rule.deleteRule.useMutation();
 
   const trpcContext = trpc.useContext();
 
@@ -24,11 +24,11 @@ export const GuardsTable = ({ guards }: Props) => {
 
   const onDelete = useCallback(
     async (id: number) => {
-      await deleteGuard({ id });
-      await trpcContext.guard.getAll.invalidate();
-      showSnackbar("Guard successfully deleted");
+      await deleteRule({ id });
+      await trpcContext.rule.getAll.invalidate();
+      showSnackbar("Rule successfully deleted");
     },
-    [deleteGuard, showSnackbar, trpcContext.guard.getAll],
+    [deleteRule, showSnackbar, trpcContext.rule.getAll],
   );
 
   return (
@@ -41,15 +41,15 @@ export const GuardsTable = ({ guards }: Props) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {guards?.map((guard) => (
-            <TableRow key={guard.id}>
-              <TableCell>{guard.name}</TableCell>
+          {rules?.map((rule) => (
+            <TableRow key={rule.id}>
+              <TableCell>{rule.name}</TableCell>
               <TableCell>
                 <div className="flex justify-end">
                   <Button
                     variant="contained"
                     color="error"
-                    onClick={() => onDelete(guard.id)}
+                    onClick={() => onDelete(rule.id)}
                   >
                     DELETE
                   </Button>

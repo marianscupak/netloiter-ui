@@ -2,22 +2,36 @@ import { FormSelect } from "../../wrapped-inputs/form-select";
 import { SelectOption } from "../../select";
 import { ReorderStrategy } from "../create-action-form-types";
 import { FormNumberWithGenerator } from "../../wrapped-inputs/form-number-with-generator";
+import { FieldNamePrefix } from "../../field-name-prefix";
 
 const reorderStrategyOptions: SelectOption[] = [
   { value: ReorderStrategy.Random, label: "Random" },
   { value: ReorderStrategy.Reverse, label: "Reverse" },
 ];
 
-export const ReorderFields = () => (
+interface Props extends FieldNamePrefix {
+  disabled?: boolean;
+}
+
+export const ReorderFields = ({ fieldNamePrefix, disabled }: Props) => (
   <div>
     <div className="mt-4">
-      <FormNumberWithGenerator name="count" label="Count" />
+      <FormNumberWithGenerator
+        name={fieldNamePrefix ? `${fieldNamePrefix}.count` : "count"}
+        label="Count"
+        disabled={disabled}
+      />
     </div>
     <div className="mt-4">
       <FormSelect
-        name="reorderStrategy"
+        name={
+          fieldNamePrefix
+            ? `${fieldNamePrefix}.reorderStrategy`
+            : "reorderStrategy"
+        }
         label="Reorder strategy"
         options={reorderStrategyOptions}
+        disabled={disabled}
       />
     </div>
   </div>

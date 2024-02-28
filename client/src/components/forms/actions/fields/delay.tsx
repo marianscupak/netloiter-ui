@@ -1,7 +1,16 @@
 import { FormNumberWithGenerator } from "../../wrapped-inputs/form-number-with-generator";
+import { FieldNamePrefix } from "../../field-name-prefix";
 
-export const DelayFields = () => (
+interface Props extends FieldNamePrefix {
+  disabled?: boolean;
+}
+
+export const DelayFields = ({ fieldNamePrefix, disabled }: Props) => (
   <div className="mt-4">
-    <FormNumberWithGenerator name="n" label="Duration" />
+    <FormNumberWithGenerator
+      name={fieldNamePrefix ? `${fieldNamePrefix}.n` : "n"}
+      label="Duration"
+      disabled={disabled}
+    />
   </div>
 );

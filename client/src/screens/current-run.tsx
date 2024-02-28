@@ -29,7 +29,7 @@ export const CurrentRun = () => {
     };
 
     call();
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (lastJsonMessage) {

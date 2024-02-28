@@ -1,16 +1,33 @@
 import { FormNumberWithGenerator } from "../../wrapped-inputs/form-number-with-generator";
 import { FormCheckbox } from "../../wrapped-inputs/form-checkbox";
+import { FieldNamePrefix } from "../../field-name-prefix";
 
-export const TimeGuardFields = () => (
+interface Props extends FieldNamePrefix {
+  disabled?: boolean;
+}
+
+export const TimeGuardFields = ({ fieldNamePrefix, disabled }: Props) => (
   <div>
     <div className="mt-4">
-      <FormNumberWithGenerator name="after" label="After" />
+      <FormNumberWithGenerator
+        name={fieldNamePrefix ? `${fieldNamePrefix}.after` : "after"}
+        label="After"
+        disabled={disabled}
+      />
     </div>
     <div className="mt-4">
-      <FormNumberWithGenerator name="duration" label="Duration" />
+      <FormNumberWithGenerator
+        name={fieldNamePrefix ? `${fieldNamePrefix}.duration` : "duration"}
+        label="Duration"
+        disabled={disabled}
+      />
     </div>
     <div className="mt-4">
-      <FormCheckbox name="instant" label="Instant" />
+      <FormCheckbox
+        name={fieldNamePrefix ? `${fieldNamePrefix}.instant` : "instant"}
+        label="Instant"
+        disabled={disabled}
+      />
     </div>
   </div>
 );

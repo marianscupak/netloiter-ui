@@ -1,12 +1,30 @@
 import { FormNumberWithGenerator } from "../../wrapped-inputs/form-number-with-generator";
+import { FieldNamePrefix } from "../../field-name-prefix";
 
-export const CountPeriodGuardFields = () => (
+interface Props extends FieldNamePrefix {
+  disabled?: boolean;
+}
+
+export const CountPeriodGuardFields = ({
+  fieldNamePrefix,
+  disabled,
+}: Props) => (
   <div>
     <div className="mt-4">
-      <FormNumberWithGenerator name="truePeriod" label="True period" />
+      <FormNumberWithGenerator
+        name={fieldNamePrefix ? `${fieldNamePrefix}.truePeriod` : "truePeriod"}
+        label="True period"
+        disabled={disabled}
+      />
     </div>
     <div className="mt-4">
-      <FormNumberWithGenerator name="falsePeriod" label="False period" />
+      <FormNumberWithGenerator
+        name={
+          fieldNamePrefix ? `${fieldNamePrefix}.falsePeriod` : "falsePeriod"
+        }
+        label="False period"
+        disabled={disabled}
+      />
     </div>
   </div>
 );

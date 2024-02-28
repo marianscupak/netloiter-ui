@@ -1,15 +1,35 @@
 import { FormTextField } from "../../wrapped-inputs/form-text-field";
+import { FieldNamePrefix } from "../../field-name-prefix";
 
-export const PortGuardFields = () => (
+interface Props extends FieldNamePrefix {
+  disabled?: boolean;
+}
+
+export const PortGuardFields = ({ fieldNamePrefix, disabled }: Props) => (
   <div>
     <div className="mt-4">
-      <FormTextField type="number" name="src" label="Source" />
+      <FormTextField
+        type="number"
+        name={fieldNamePrefix ? `${fieldNamePrefix}.src` : "src"}
+        label="Source"
+        disabled={disabled}
+      />
     </div>
     <div className="mt-4">
-      <FormTextField type="number" name="dest" label="Destination" />
+      <FormTextField
+        type="number"
+        name={fieldNamePrefix ? `${fieldNamePrefix}.dest` : "dest"}
+        label="Destination"
+        disabled={disabled}
+      />
     </div>
     <div className="mt-4">
-      <FormTextField type="number" name="any" label="Any" />
+      <FormTextField
+        type="number"
+        name={fieldNamePrefix ? `${fieldNamePrefix}.any` : "any"}
+        label="Any"
+        disabled={disabled}
+      />
     </div>
   </div>
 );

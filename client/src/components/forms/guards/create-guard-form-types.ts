@@ -4,7 +4,6 @@ import { numberWithValueGeneratorSchema } from "../value-generators/types";
 import { ipSchema } from "../../../utils/schemas";
 
 const createGuardBaseFormValuesSchema = z.object({
-  name: z.string().refine((name) => name.length > 0, { message: "Required" }),
   type: z.nativeEnum(GuardType),
   invert: z.boolean(),
 });
@@ -32,29 +31,19 @@ const icmpGuardValuesSchema = createGuardBaseFormValuesSchema.extend({
   icmpCode: z.number(),
 });
 
-const ipGuardValuesSchema = createGuardBaseFormValuesSchema
-  .extend({
-    type: z.literal(GuardType.IP),
-    src: ipSchema.optional(),
-    dst: ipSchema.optional(),
-    any: ipSchema.optional(),
-  })
-  .refine(
-    (x) => x.src !== undefined || x.dst !== undefined || x.any !== undefined,
-    { message: "Fill out at least one parameter", path: ["any"] },
-  );
+const ipGuardValuesSchema = createGuardBaseFormValuesSchema.extend({
+  type: z.literal(GuardType.IP),
+  src: ipSchema.optional(),
+  dst: ipSchema.optional(),
+  any: ipSchema.optional(),
+});
 
-const portGuardValuesSchema = createGuardBaseFormValuesSchema
-  .extend({
-    type: z.literal(GuardType.Port),
-    src: z.number().optional(),
-    dst: z.number().optional(),
-    any: z.number().optional(),
-  })
-  .refine(
-    (x) => x.src !== undefined || x.dst !== undefined || x.any !== undefined,
-    { message: "Fill out at least one parameter", path: ["any"] },
-  );
+const portGuardValuesSchema = createGuardBaseFormValuesSchema.extend({
+  type: z.literal(GuardType.Port),
+  src: z.number().optional(),
+  dst: z.number().optional(),
+  any: z.number().optional(),
+});
 
 const probGuardValuesSchema = createGuardBaseFormValuesSchema.extend({
   type: z.literal(GuardType.Prob),
@@ -94,18 +83,36 @@ const timePeriodGuardValuesSchema = createGuardBaseFormValuesSchema.extend({
   instant: z.boolean(),
 });
 
-export const createGuardFormValuesSchema = z.union([
-  countGuardValuesSchema,
-  countPeriodGuardValuesSchema,
-  everyNGuardValuesSchema,
-  icmpGuardValuesSchema,
-  ipGuardValuesSchema,
-  portGuardValuesSchema,
-  probGuardValuesSchema,
-  protocolGuardValuesSchema,
-  sizeGuardValuesSchema,
-  timeGuardValuesSchema,
-  timePeriodGuardValuesSchema,
-]);
+export const guardFormValuesSchema = z
+  .discriminatedUnion("type", [
+    countGuardValuesSchema,
+    countPeriodGuardValuesSchema,
+    everyNGuardValuesSchema,
+    icmpGuardValuesSchema,
+    ipGuardValuesSchema,
+    portGuardValuesSchema,
+    probGuardValuesSchema,
+    protocolGuardValuesSchema,
+    sizeGuardValuesSchema,
+    timeGuardValuesSchema,
+    timePeriodGuardValuesSchema,
+  ])
+  .refine(
+    (x) =>
+      !(
+        (x.type === GuardType.IP || x.type === GuardType.Port) &&
+        (x.src !== undefined || x.dst !== undefined || x.any !== undefined)
+      ),
+    { message: "Fill out at least one parameter", path: ["any"] },
+  );
+
+export type GuardFormValues = z.infer<typeof guardFormValuesSchema>;
+
+export const createGuardFormValuesSchema = z.intersection(
+  guardFormValuesSchema,
+  z.object({
+    name: z.string().refine((name) => name.length > 0, { message: "Required" }),
+  }),
+);
 
 export type CreateGuardFormValues = z.infer<typeof createGuardFormValuesSchema>;

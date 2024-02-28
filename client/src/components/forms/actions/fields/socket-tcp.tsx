@@ -1,32 +1,72 @@
 import { FormTextField } from "../../wrapped-inputs/form-text-field";
+import { FieldNamePrefix } from "../../field-name-prefix";
 
-export const SocketTcpFields = () => (
+interface Props extends FieldNamePrefix {
+  disabled?: boolean;
+}
+
+export const SocketTcpFields = ({ fieldNamePrefix, disabled }: Props) => (
   <div>
     <div className="flex mt-4 gap-2">
       <div className="w-[75%]">
-        <FormTextField name="ip" label="IP" />
+        <FormTextField
+          name={fieldNamePrefix ? `${fieldNamePrefix}.ip` : "ip"}
+          label="IP"
+          disabled={disabled}
+        />
       </div>
       <div className="w-[25%]">
-        <FormTextField name="port" label="Port" type="number" />
+        <FormTextField
+          name={fieldNamePrefix ? `${fieldNamePrefix}.port` : "port"}
+          label="Port"
+          type="number"
+          disabled={disabled}
+        />
       </div>
     </div>
     <div className="mt-4">
-      <FormTextField name="packFormat" label="Pack format" />
+      <FormTextField
+        name={fieldNamePrefix ? `${fieldNamePrefix}.packFormat` : "packFormat"}
+        label="Pack format"
+        disabled={disabled}
+      />
     </div>
     <div className="mt-4">
-      <FormTextField name="mark" label="Mark" />
+      <FormTextField
+        name={fieldNamePrefix ? `${fieldNamePrefix}.mark` : "mark"}
+        label="Mark"
+        disabled={disabled}
+      />
     </div>
     <div className="mt-4">
       <div>Format</div>
       <div className="border px-4 pb-4">
         <div className="mt-4">
-          <FormTextField name="format.meta" label="Meta" />
+          <FormTextField
+            name={
+              fieldNamePrefix ? `${fieldNamePrefix}.format.meta` : "format.meta"
+            }
+            label="Meta"
+            disabled={disabled}
+          />
         </div>
         <div className="mt-4">
-          <FormTextField name="format.data" label="Data" />
+          <FormTextField
+            name={
+              fieldNamePrefix ? `${fieldNamePrefix}.format.data` : "format.data"
+            }
+            label="Data"
+            disabled={disabled}
+          />
         </div>
         <div className="mt-4">
-          <FormTextField name="format.type" label="Type" />
+          <FormTextField
+            name={
+              fieldNamePrefix ? `${fieldNamePrefix}.format.type` : "format.type"
+            }
+            label="Type"
+            disabled={disabled}
+          />
         </div>
       </div>
     </div>

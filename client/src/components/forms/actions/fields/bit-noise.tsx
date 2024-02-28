@@ -3,6 +3,7 @@ import { FormSelect } from "../../wrapped-inputs/form-select";
 import { SelectOption } from "../../select";
 import { BitNoiseStrategy } from "../create-action-form-types";
 import { FormNumberWithGenerator } from "../../wrapped-inputs/form-number-with-generator";
+import { FieldNamePrefix } from "../../field-name-prefix";
 
 const bitNoiseStrategyOptions: SelectOption[] = [
   { label: "Left", value: BitNoiseStrategy.Left },
@@ -10,22 +11,39 @@ const bitNoiseStrategyOptions: SelectOption[] = [
   { label: "Random", value: BitNoiseStrategy.Random },
 ];
 
-export const BitNoiseActionFields = () => (
+interface Props extends FieldNamePrefix {
+  disabled?: boolean;
+}
+
+export const BitNoiseActionFields = ({ fieldNamePrefix, disabled }: Props) => (
   <div>
     <div className="mt-4">
       <FormNumberWithGenerator
-        name="percentageOfBitsToSwap"
+        name={
+          fieldNamePrefix
+            ? `${fieldNamePrefix}.percentageOfBitsToSwap`
+            : "percentageOfBitsToSwap"
+        }
         label="Percentage of bits to swap"
+        disabled={disabled}
       />
     </div>
     <div className="mt-4">
-      <FormTextField type="number" name="layer" label="Layer" />
+      <FormTextField
+        type="number"
+        name={fieldNamePrefix ? `${fieldNamePrefix}.layer` : "layer"}
+        label="Layer"
+        disabled={disabled}
+      />
     </div>
     <div className="mt-4">
       <FormSelect
-        name="noiseStrategy"
+        name={
+          fieldNamePrefix ? `${fieldNamePrefix}.noiseStrategy` : "noiseStrategy"
+        }
         label="Strategy"
         options={bitNoiseStrategyOptions}
+        disabled={disabled}
       />
     </div>
   </div>

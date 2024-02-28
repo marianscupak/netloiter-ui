@@ -1,15 +1,32 @@
 import { FormTextField } from "../../wrapped-inputs/form-text-field";
+import { FieldNamePrefix } from "../../field-name-prefix";
 
-export const IPGuardFields = () => (
+interface Props extends FieldNamePrefix {
+  disabled?: boolean;
+}
+
+export const IPGuardFields = ({ fieldNamePrefix, disabled }: Props) => (
   <div>
     <div className="mt-4">
-      <FormTextField name="src" label="Source" />
+      <FormTextField
+        name={fieldNamePrefix ? `${fieldNamePrefix}.src` : "src"}
+        label="Source"
+        disabled={disabled}
+      />
     </div>
     <div className="mt-4">
-      <FormTextField name="dest" label="Destination" />
+      <FormTextField
+        name={fieldNamePrefix ? `${fieldNamePrefix}.dest` : "dest"}
+        label="Destination"
+        disabled={disabled}
+      />
     </div>
     <div className="mt-4">
-      <FormTextField name="any" label="Any" />
+      <FormTextField
+        name={fieldNamePrefix ? `${fieldNamePrefix}.any` : "any"}
+        label="Any"
+        disabled={disabled}
+      />
     </div>
   </div>
 );

@@ -4,7 +4,6 @@ import { numberWithValueGeneratorSchema } from "../value-generators/types";
 import { ipSchema } from "../../../utils/schemas";
 
 const createActionBaseFormValuesSchema = z.object({
-  name: z.string().refine((name) => name.length > 0, { message: "Required" }),
   type: z.nativeEnum(ActionType),
 });
 
@@ -65,7 +64,7 @@ const reorderActionValuesSchema = createActionBaseFormValuesSchema.extend({
 });
 
 const replicateActionValuesSchema = createActionBaseFormValuesSchema.extend({
-  type: z.literal(ActionType.Reorder),
+  type: z.literal(ActionType.Replicate),
   count: numberWithValueGeneratorSchema,
   // TODO: Action
 });
@@ -88,7 +87,7 @@ const throttleActionValuesSchema = createActionBaseFormValuesSchema.extend({
   limit: numberWithValueGeneratorSchema,
 });
 
-export const createActionFormValuesSchema = z.union([
+export const actionFormValuesSchema = z.discriminatedUnion("type", [
   bitNoiseActionValuesSchema,
   delayActionValuesSchema,
   dropActionValuesSchema,
@@ -101,6 +100,15 @@ export const createActionFormValuesSchema = z.union([
   socketTcpActionValuesSchema,
   throttleActionValuesSchema,
 ]);
+
+export type ActionFormValues = z.infer<typeof actionFormValuesSchema>;
+
+export const createActionFormValuesSchema = z.intersection(
+  actionFormValuesSchema,
+  z.object({
+    name: z.string().refine((name) => name.length > 0, { message: "Required" }),
+  }),
+);
 
 export type CreateActionFormValues = z.infer<
   typeof createActionFormValuesSchema

@@ -27,38 +27,44 @@ export const Home = () => {
 
   const { showSnackbar } = useSnackbar();
 
-  const getIsNlRunning = useCallback(async (shouldShowSnackbar?: boolean) => {
-    const response = await getIsNetLoiterRunning();
-    if (response.status === 200) {
-      const { runningFrom: newRunningFrom } = response.data;
-      setStatus((oldStatus) => ({ ...oldStatus, runningFrom: newRunningFrom }));
+  const getIsNlRunning = useCallback(
+    async (shouldShowSnackbar?: boolean) => {
+      const response = await getIsNetLoiterRunning();
+      if (response.status === 200) {
+        const { runningFrom: newRunningFrom } = response.data;
+        setStatus((oldStatus) => ({
+          ...oldStatus,
+          runningFrom: newRunningFrom,
+        }));
 
-      if (shouldShowSnackbar) {
-        if (newRunningFrom) {
-          showSnackbar("NetLoiter started successfully");
-          setStartOpen(false);
-        } else {
-          showSnackbar("Failed to start NetLoiter", "error");
+        if (shouldShowSnackbar) {
+          if (newRunningFrom) {
+            showSnackbar("NetLoiter started successfully");
+            setStartOpen(false);
+          } else {
+            showSnackbar("Failed to start NetLoiter", "error");
+          }
         }
+        setStatusLoading(false);
       }
-      setStatusLoading(false);
-    }
-  }, []);
+    },
+    [getIsNetLoiterRunning, setStatus, showSnackbar],
+  );
 
   const onStartNetLoiter = useCallback(async () => {
     setStatusLoading(true);
     await startNetLoiter();
     setTimeout(async () => await getIsNlRunning(true), NL_START_DURATION);
-  }, []);
+  }, [getIsNlRunning, startNetLoiter]);
 
   const onStopNetLoiter = useCallback(async () => {
     await stopNetLoiter();
     await getIsNlRunning();
-  }, []);
+  }, [stopNetLoiter, getIsNlRunning]);
 
   useEffect(() => {
     getIsNlRunning();
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className="flex justify-center items-center h-full">

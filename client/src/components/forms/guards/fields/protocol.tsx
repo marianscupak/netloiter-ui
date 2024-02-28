@@ -1,9 +1,18 @@
 import { FormTextField } from "../../wrapped-inputs/form-text-field";
+import { FieldNamePrefix } from "../../field-name-prefix";
 
-export const ProtocolGuardFields = () => (
+interface Props extends FieldNamePrefix {
+  disabled?: boolean;
+}
+
+export const ProtocolGuardFields = ({ fieldNamePrefix, disabled }: Props) => (
   <div>
     <div className="mt-4">
-      <FormTextField type="number" name="id" label="Protocol ID" />
+      <FormTextField
+        name={fieldNamePrefix ? `${fieldNamePrefix}.id` : "id"}
+        label="Protocol ID"
+        disabled={disabled}
+      />
     </div>
   </div>
 );

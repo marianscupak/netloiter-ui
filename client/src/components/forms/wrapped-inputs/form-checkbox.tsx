@@ -10,7 +10,9 @@ export const FormCheckbox = ({ name, ...rest }: Props) => {
 
   return (
     <Controller
-      render={({ field }) => <Checkbox {...rest} {...field} />}
+      render={({ field }) => (
+        <Checkbox {...rest} {...field} checked={field.value} />
+      )}
       name={name}
       control={control}
     />

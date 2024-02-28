@@ -1,9 +1,18 @@
 import { FormNumberWithGenerator } from "../../wrapped-inputs/form-number-with-generator";
+import { FieldNamePrefix } from "../../field-name-prefix";
 
-export const EveryNGuardFields = () => (
+interface Props extends FieldNamePrefix {
+  disabled?: boolean;
+}
+
+export const EveryNGuardFields = ({ fieldNamePrefix, disabled }: Props) => (
   <div>
     <div className="mt-4">
-      <FormNumberWithGenerator name="n" label="N" />
+      <FormNumberWithGenerator
+        name={fieldNamePrefix ? `${fieldNamePrefix}.n` : "n"}
+        label="N"
+        disabled={disabled}
+      />
     </div>
   </div>
 );

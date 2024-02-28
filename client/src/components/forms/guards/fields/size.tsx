@@ -2,6 +2,7 @@ import { FormTextField } from "../../wrapped-inputs/form-text-field";
 import { FormSelect } from "../../wrapped-inputs/form-select";
 import { SelectOption } from "../../select";
 import { SizeGuardOperation } from "../create-guard-form-types";
+import { FieldNamePrefix } from "../../field-name-prefix";
 
 const sizeGuardOperationOptions: SelectOption[] = [
   { value: SizeGuardOperation.Eq, label: SizeGuardOperation.Eq },
@@ -11,16 +12,26 @@ const sizeGuardOperationOptions: SelectOption[] = [
   { value: SizeGuardOperation.Ge, label: SizeGuardOperation.Ge },
 ];
 
-export const SizeGuardFields = () => (
+interface Props extends FieldNamePrefix {
+  disabled?: boolean;
+}
+
+export const SizeGuardFields = ({ fieldNamePrefix, disabled }: Props) => (
   <div>
     <div className="mt-4">
-      <FormTextField type="number" name="size" label="Size" />
+      <FormTextField
+        type="number"
+        name={fieldNamePrefix ? `${fieldNamePrefix}.size` : "size"}
+        label="Size"
+        disabled={disabled}
+      />
     </div>
     <div className="mt-4">
       <FormSelect
-        name="op"
+        name={fieldNamePrefix ? `${fieldNamePrefix}.op` : "op"}
         label="Operation"
         options={sizeGuardOperationOptions}
+        disabled={disabled}
       />
     </div>
   </div>

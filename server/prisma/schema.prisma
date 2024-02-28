@@ -25,10 +25,11 @@ enum ActionType {
 }
 
 model Action {
-  id Int @id @default(autoincrement())
-  type ActionType
-  name String
-  data Json?
+  id    Int            @id @default(autoincrement())
+  type  ActionType
+  name  String
+  data  Json?
+  rules ActionToRule[]
 }
 
 enum GuardType {
@@ -46,9 +47,43 @@ enum GuardType {
 }
 
 model Guard {
-  id Int @id @default(autoincrement())
-  type GuardType
-  name String
+  id     Int           @id @default(autoincrement())
+  type   GuardType
+  name   String
   invert Boolean
-  data Json?
+  data   Json?
+  rules  GuardToRule[]
+}
+
+model ActionToRule {
+  action Action @relation(fields: [actionId], references: [id])
+  rule   Rule   @relation(fields: [ruleId], references: [id])
+
+  actionId Int
+  ruleId   Int
+
+  @@id([actionId, ruleId])
+}
+
+model GuardToRule {
+  action Guard @relation(fields: [guardId], references: [id])
+  rule   Rule  @relation(fields: [ruleId], references: [id])
+
+  guardId Int
+  ruleId  Int
+
+  @@id([guardId, ruleId])
+}
+
+enum RuleType {
+  All
+  Any
+}
+
+model Rule {
+  id      Int            @id @default(autoincrement())
+  type    RuleType
+  name    String
+  actions ActionToRule[]
+  guards  GuardToRule[]
 }

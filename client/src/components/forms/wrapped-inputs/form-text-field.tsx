@@ -16,11 +16,15 @@ export const FormTextField = ({
           ? Number.parseFloat(e.target.value)
           : e.target.value;
 
-      if (typeof value === "string" || !isNaN(value)) {
+      if (typeof value === "string") {
         setValue(name, value);
+      } else if (!isNaN(value)) {
+        setValue(name, value);
+      } else {
+        setValue(name, "");
       }
     },
-    [rest.type],
+    [name, rest.type, setValue],
   );
 
   return (

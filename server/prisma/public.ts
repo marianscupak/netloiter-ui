@@ -14,3 +14,8 @@ export enum GuardType {
   Time = "Time",
   TimePeriod = "TimePeriod",
 }
+
+export enum RuleType {
+  All = "All",
+  Any = "Any",
+}

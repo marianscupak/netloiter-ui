@@ -20,4 +20,10 @@ export const actionRouter = createTRPCRouter({
       async ({ ctx, input }) =>
         await ctx.prisma.action.delete({ where: { id: input.id } }),
     ),
+  getActionDetail: publicProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(
+      async ({ ctx, input }) =>
+        await ctx.prisma.action.findUnique({ where: { id: input.id } }),
+    ),
 });

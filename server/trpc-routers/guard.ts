@@ -8,18 +8,22 @@ export const guardRouter = createTRPCRouter({
       select: { name: true, id: true },
     });
   }),
-  createGuard: publicProcedure
-    .input(createGuardFormValuesSchema)
-    .mutation(
-      async ({ ctx, input: { type, name, invert, ...rest } }) =>
-        await ctx.prisma.guard.create({
-          data: { type, name, invert, data: rest },
-        }),
-    ),
+  createGuard: publicProcedure.input(createGuardFormValuesSchema).mutation(
+    async ({ ctx, input: { type, name, invert, ...rest } }) =>
+      await ctx.prisma.guard.create({
+        data: { type, name, invert, data: rest },
+      }),
+  ),
   deleteGuard: publicProcedure
     .input(z.object({ id: z.number() }))
     .mutation(
       async ({ ctx, input }) =>
         await ctx.prisma.guard.delete({ where: { id: input.id } }),
+    ),
+  getGuardDetail: publicProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(
+      async ({ ctx, input }) =>
+        await ctx.prisma.guard.findUnique({ where: { id: input.id } }),
     ),
 });

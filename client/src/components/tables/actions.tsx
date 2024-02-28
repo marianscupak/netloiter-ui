@@ -28,7 +28,7 @@ export const ActionsTable = ({ actions }: Props) => {
       await trpcContext.action.getAll.invalidate();
       showSnackbar("Action successfully deleted");
     },
-    [showSnackbar],
+    [deleteAction, showSnackbar, trpcContext.action.getAll],
   );
 
   return (

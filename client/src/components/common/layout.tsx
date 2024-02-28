@@ -28,13 +28,13 @@ export const Layout = () => {
     };
 
     call();
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const [snackbar, setSnackbar] = useAtom(snackbarAtom);
 
   const onCloseSnackbar = useCallback(() => {
     setSnackbar((currentSnackbar) => ({ ...currentSnackbar, open: false }));
-  }, []);
+  }, [setSnackbar]);
 
   return (
     <div className="bg-gray h-full flex">
