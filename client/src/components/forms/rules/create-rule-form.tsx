@@ -38,7 +38,7 @@ export const defaultAction: ActionFormValues = {
   layer: 2,
 };
 
-const defaultValues: CreateRuleFormValues = {
+export const createRuleFormDefaultValues: CreateRuleFormValues = {
   type: RuleType.All,
   name: "",
   guards: [defaultGuard],
@@ -48,7 +48,7 @@ const defaultValues: CreateRuleFormValues = {
 export const CreateRuleForm = () => {
   const form = useForm<CreateRuleFormValues>({
     resolver: zodResolver(createRuleFormValuesSchema),
-    defaultValues,
+    defaultValues: createRuleFormDefaultValues,
   });
 
   const trpcContext = trpc.useContext();

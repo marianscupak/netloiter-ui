@@ -81,9 +81,33 @@ enum RuleType {
 }
 
 model Rule {
-  id      Int            @id @default(autoincrement())
-  type    RuleType
-  name    String
-  actions ActionToRule[]
-  guards  GuardToRule[]
+  id        Int              @id @default(autoincrement())
+  type      RuleType
+  name      String
+  actions   ActionToRule[]
+  guards    GuardToRule[]
+  scenarios RuleToScenario[]
+}
+
+model RuleToScenario {
+  rule     Rule     @relation(fields: [ruleId], references: [id])
+  scenario Scenario @relation(fields: [scenarioId], references: [id])
+
+  ruleId     Int
+  scenarioId Int
+
+  @@id([ruleId, scenarioId])
+}
+
+enum ScenarioType {
+  Sequential
+  // SequentialHttp TODO: maybe add support for this?
+}
+
+model Scenario {
+  id            Int              @id @default(autoincrement())
+  name          String
+  type          ScenarioType
+  defaultAction ActionType
+  rules         RuleToScenario[]
 }

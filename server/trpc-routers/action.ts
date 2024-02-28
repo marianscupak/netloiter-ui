@@ -3,11 +3,12 @@ import { createActionFormValuesSchema } from "netloier-ui/src/components/forms/a
 import { z } from "zod";
 
 export const actionRouter = createTRPCRouter({
-  getAll: publicProcedure.query(async ({ ctx }) => {
-    return await ctx.prisma.action.findMany({
-      select: { name: true, id: true },
-    });
-  }),
+  getAll: publicProcedure.query(
+    async ({ ctx }) =>
+      await ctx.prisma.action.findMany({
+        select: { name: true, id: true },
+      }),
+  ),
   createAction: publicProcedure.input(createActionFormValuesSchema).mutation(
     async ({ ctx, input: { type, name, ...rest } }) =>
       await ctx.prisma.action.create({
@@ -24,6 +25,6 @@ export const actionRouter = createTRPCRouter({
     .input(z.object({ id: z.number() }))
     .mutation(
       async ({ ctx, input }) =>
-        await ctx.prisma.action.findUnique({ where: { id: input.id } }),
+        await ctx.prisma.action.findUniqueOrThrow({ where: { id: input.id } }),
     ),
 });

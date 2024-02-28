@@ -24,6 +24,6 @@ export const guardRouter = createTRPCRouter({
     .input(z.object({ id: z.number() }))
     .mutation(
       async ({ ctx, input }) =>
-        await ctx.prisma.guard.findUnique({ where: { id: input.id } }),
+        await ctx.prisma.guard.findUniqueOrThrow({ where: { id: input.id } }),
     ),
 });

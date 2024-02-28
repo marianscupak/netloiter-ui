@@ -63,10 +63,19 @@ const reorderActionValuesSchema = createActionBaseFormValuesSchema.extend({
   reorderStrategy: z.nativeEnum(ReorderStrategy),
 });
 
+export const baseActionSchema = z.union([
+  z.literal(ActionType.Finish),
+  z.literal(ActionType.Drop),
+  z.literal(ActionType.Pause),
+  z.literal(ActionType.Skip),
+]);
+
+export type BaseAction = z.infer<typeof baseActionSchema>;
+
 const replicateActionValuesSchema = createActionBaseFormValuesSchema.extend({
   type: z.literal(ActionType.Replicate),
   count: numberWithValueGeneratorSchema,
-  // TODO: Action
+  action: baseActionSchema,
 });
 
 const socketTcpActionValuesSchema = createActionBaseFormValuesSchema.extend({

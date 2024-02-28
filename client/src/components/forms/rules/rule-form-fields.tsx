@@ -4,11 +4,7 @@ import { GuardFormFields } from "../guards/fields";
 import { ActionFormFields } from "../actions/fields";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { Select, SelectOption } from "../select";
-import {
-  GuardType,
-  RuleType,
-  ActionType,
-} from "../../../../../server/prisma/public";
+import { RuleType } from "../../../../../server/prisma/public";
 import { useCallback, useMemo, useState } from "react";
 import { defaultAction, defaultGuard } from "./create-rule-form";
 import { Button, SelectChangeEvent } from "@mui/material";
@@ -16,6 +12,12 @@ import { trpc } from "../../../utils/trpc";
 import { Modal } from "../../common/modal";
 import { useSnackbar } from "../../../utils/snackbar";
 import DeleteIcon from "@mui/icons-material/Delete";
+import {
+  convertActionToFormValues,
+  convertGuardToFormValues,
+} from "../../../utils/convert-model-to-form-values";
+import { TRPCClientErrorLike } from "@trpc/client";
+import { AppRouter } from "../../../../../server/trpc-routers";
 
 const ruleTypeOptions: SelectOption[] = [
   { value: RuleType.All, label: RuleType.All },
@@ -23,15 +25,25 @@ const ruleTypeOptions: SelectOption[] = [
 ];
 
 export const RuleFormFields = ({ fieldNamePrefix }: FieldNamePrefix) => {
-  const { control } = useFormContext();
+  const { control, watch } = useFormContext();
+
+  const { showSnackbar } = useSnackbar();
+
+  const onGetDetailError = useCallback(
+    (error: TRPCClientErrorLike<AppRouter>) => {
+      showSnackbar(error.message, "error");
+    },
+    [showSnackbar],
+  );
 
   const { data: allGuards } = trpc.guard.getAll.useQuery();
-  const { mutateAsync: getGuardDetail } =
-    trpc.guard.getGuardDetail.useMutation();
+  const { mutateAsync: getGuardDetail } = trpc.guard.getGuardDetail.useMutation(
+    { onError: onGetDetailError },
+  );
 
   const { data: allActions } = trpc.action.getAll.useQuery();
   const { mutateAsync: getActionDetail } =
-    trpc.action.getActionDetail.useMutation();
+    trpc.action.getActionDetail.useMutation({ onError: onGetDetailError });
 
   const {
     fields: guards,
@@ -69,35 +81,17 @@ export const RuleFormFields = ({ fieldNamePrefix }: FieldNamePrefix) => {
     setLoadGuardModalOpen(false);
   }, []);
 
-  const { showSnackbar } = useSnackbar();
-
   const loadGuard = useCallback(
     async (event: SelectChangeEvent<unknown>) => {
       const guard = await getGuardDetail({
         id: event.target.value as unknown as number,
       });
 
-      if (guard) {
-        const formGuard: {
-          invert: boolean;
-          loadedId: number;
-          type: GuardType;
-        } = {
-          // @ts-expect-error Guard data type hard to infer
-          ...guard.data,
-          type: guard.type as GuardType,
-          invert: guard.invert,
-          loadedId: guard.id,
-        };
-
-        appendGuard(formGuard);
-      } else {
-        showSnackbar("Failed to load guard", "error");
-      }
+      appendGuard(convertGuardToFormValues(guard));
 
       closeLoadGuardModal();
     },
-    [appendGuard, closeLoadGuardModal, getGuardDetail, showSnackbar],
+    [appendGuard, closeLoadGuardModal, getGuardDetail],
   );
 
   const loadGuardOptions = useMemo(
@@ -125,22 +119,11 @@ export const RuleFormFields = ({ fieldNamePrefix }: FieldNamePrefix) => {
         id: event.target.value as unknown as number,
       });
 
-      if (action) {
-        const formAction: { loadedId: number; type: ActionType } = {
-          // @ts-expect-error Action data type hard to infer
-          ...action.data,
-          type: action.type as ActionType,
-          loadedId: action.id,
-        };
-
-        appendAction(formAction);
-      } else {
-        showSnackbar("Failed to load action", "error");
-      }
+      appendAction(convertActionToFormValues(action));
 
       closeLoadActionModal();
     },
-    [appendAction, closeLoadActionModal, getActionDetail, showSnackbar],
+    [appendAction, closeLoadActionModal, getActionDetail],
   );
 
   const loadActionOptions = useMemo(
@@ -151,6 +134,13 @@ export const RuleFormFields = ({ fieldNamePrefix }: FieldNamePrefix) => {
     [allActions],
   );
 
+  const isLoaded = useMemo(
+    () =>
+      watch(fieldNamePrefix ? `${fieldNamePrefix}.loadedId` : "loadedId") !==
+      undefined,
+    [fieldNamePrefix, watch],
+  );
+
   return (
     <>
       <div className="mt-4">
@@ -158,6 +148,7 @@ export const RuleFormFields = ({ fieldNamePrefix }: FieldNamePrefix) => {
           name={fieldNamePrefix ? `${fieldNamePrefix}.type` : "type"}
           label="Type"
           options={ruleTypeOptions}
+          disabled={isLoaded}
         />
       </div>
       <div className="flex gap-4 mt-4">
@@ -165,14 +156,16 @@ export const RuleFormFields = ({ fieldNamePrefix }: FieldNamePrefix) => {
           <div>Guards</div>
           {guards.map((guard, index) => (
             <div className="p-2 border rounded-[4px] mb-4" key={guard.id}>
-              <div className="flex justify-end">
-                <div
-                  onClick={() => removeGuard(index)}
-                  className="cursor-pointer"
-                >
-                  <DeleteIcon color="error" />
+              {!isLoaded && (
+                <div className="flex justify-end">
+                  <div
+                    onClick={() => removeGuard(index)}
+                    className="cursor-pointer"
+                  >
+                    <DeleteIcon color="error" />
+                  </div>
                 </div>
-              </div>
+              )}
               <GuardFormFields
                 key={guard.id}
                 fieldNamePrefix={
@@ -183,27 +176,31 @@ export const RuleFormFields = ({ fieldNamePrefix }: FieldNamePrefix) => {
               />
             </div>
           ))}
-          <div className="mt-4 flex gap-2">
-            <Button onClick={appendDefaultGuard} variant="contained">
-              ADD GUARD
-            </Button>
-            <Button onClick={openLoadGuardModal} variant="contained">
-              LOAD GUARD
-            </Button>
-          </div>
+          {!isLoaded && (
+            <div className="mt-4 flex gap-2">
+              <Button onClick={appendDefaultGuard} variant="contained">
+                ADD GUARD
+              </Button>
+              <Button onClick={openLoadGuardModal} variant="contained">
+                LOAD GUARD
+              </Button>
+            </div>
+          )}
         </div>
         <div className="w-1/2">
           <div>Actions</div>
           {actions.map((action, index) => (
             <div className="p-2 border rounded-[4px] mb-4" key={action.id}>
-              <div className="flex justify-end">
-                <div
-                  onClick={() => removeAction(index)}
-                  className="cursor-pointer"
-                >
-                  <DeleteIcon color="error" />
+              {!isLoaded && (
+                <div className="flex justify-end">
+                  <div
+                    onClick={() => removeAction(index)}
+                    className="cursor-pointer"
+                  >
+                    <DeleteIcon color="error" />
+                  </div>
                 </div>
-              </div>
+              )}
               <ActionFormFields
                 key={action.id}
                 fieldNamePrefix={
@@ -214,14 +211,16 @@ export const RuleFormFields = ({ fieldNamePrefix }: FieldNamePrefix) => {
               />
             </div>
           ))}
-          <div className="mt-4 flex gap-2">
-            <Button onClick={appendDefaultAction} variant="contained">
-              ADD ACTION
-            </Button>
-            <Button onClick={openLoadActionModal} variant="contained">
-              LOAD ACTION
-            </Button>
-          </div>
+          {!isLoaded && (
+            <div className="mt-4 flex gap-2">
+              <Button onClick={appendDefaultAction} variant="contained">
+                ADD ACTION
+              </Button>
+              <Button onClick={openLoadActionModal} variant="contained">
+                LOAD ACTION
+              </Button>
+            </div>
+          )}
         </div>
         <Modal open={loadGuardModalOpen} onClose={closeLoadGuardModal}>
           <Select

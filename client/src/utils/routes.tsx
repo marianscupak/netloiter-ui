@@ -8,6 +8,8 @@ import { Guards } from "../screens/guards";
 import { CreateGuard } from "../screens/guards/create";
 import { Rules } from "../screens/rules";
 import { CreateRule } from "../screens/rules/create";
+import { Scenarios } from "../screens/scenarios";
+import { CreateScenario } from "../screens/scenarios/create";
 
 export const router = createBrowserRouter([
   {
@@ -22,6 +24,8 @@ export const router = createBrowserRouter([
       { path: "/guards/create", element: <CreateGuard /> },
       { path: "/rules", element: <Rules /> },
       { path: "/rules/create", element: <CreateRule /> },
+      { path: "/scenarios", element: <Scenarios /> },
+      { path: "/scenarios/create", element: <CreateScenario /> },
     ],
   },
 ]);

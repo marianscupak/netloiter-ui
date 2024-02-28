@@ -19,3 +19,8 @@ export enum RuleType {
   All = "All",
   Any = "Any",
 }
+
+export enum ScenarioType {
+  Sequential = "Sequential",
+  // SequentialHttp = "SequentialHttp",
+}
