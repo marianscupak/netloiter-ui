@@ -1,12 +1,14 @@
 import { Button } from "@mui/material";
 import { StartNetLoiterModal } from "../components/forms/start-net-loiter";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import dayjs from "dayjs";
 import { useNlStatusEndpoints } from "../utils/use-nl-status-endpoints";
 import { useAtom } from "jotai";
 import { statusAtom } from "../state/status";
 import { NavLink } from "react-router-dom";
 import { useSnackbar } from "../utils/snackbar";
+import { trpc } from "../utils/trpc";
+import { SelectOption } from "../components/forms/select";
 
 const NL_START_DURATION = 1000;
 
@@ -16,6 +18,25 @@ export const Home = () => {
   const [statusLoading, setStatusLoading] = useState(false);
   const { startNetLoiter, stopNetLoiter, getIsNetLoiterRunning } =
     useNlStatusEndpoints();
+
+  const { data: scenarios } = trpc.scenario.getAll.useQuery();
+  const { data: configs } = trpc.config.getAll.useQuery();
+
+  const scenarioOptions = useMemo(
+    (): SelectOption[] =>
+      scenarios
+        ? scenarios.map(({ id, name }) => ({ value: id, label: name }))
+        : [],
+    [scenarios],
+  );
+
+  const configOptions = useMemo(
+    (): SelectOption[] =>
+      configs
+        ? configs.map(({ id, name }) => ({ value: id, label: name }))
+        : [],
+    [configs],
+  );
 
   const onOpen = useCallback(() => {
     setStartOpen(true);
@@ -99,6 +120,8 @@ export const Home = () => {
       <StartNetLoiterModal
         open={startOpen}
         loading={statusLoading}
+        scenarioOptions={scenarioOptions}
+        configOptions={configOptions}
         onClose={onClose}
         onStartNetLoiter={onStartNetLoiter}
       />

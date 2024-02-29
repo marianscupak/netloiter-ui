@@ -24,3 +24,9 @@ export enum ScenarioType {
   Sequential = "Sequential",
   // SequentialHttp = "SequentialHttp",
 }
+
+export enum ConfigType {
+  nf_mark = "nf_mark",
+  socket = "socket",
+  tc_mark_vlan = "tc_mark_vlan",
+}

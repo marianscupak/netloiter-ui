@@ -4,11 +4,12 @@ import { createRuleFormValuesSchema } from "netloier-ui/src/components/forms/rul
 import { createRule, getRuleDetail } from "./utils/rule";
 
 export const ruleRouter = createTRPCRouter({
-  getAll: publicProcedure.query(async ({ ctx }) => {
-    return await ctx.prisma.rule.findMany({
-      select: { name: true, id: true },
-    });
-  }),
+  getAll: publicProcedure.query(
+    async ({ ctx }) =>
+      await ctx.prisma.rule.findMany({
+        select: { name: true, id: true },
+      }),
+  ),
   createRule: publicProcedure
     .input(createRuleFormValuesSchema)
     .mutation(async ({ ctx, input }) => await createRule(ctx, input)),

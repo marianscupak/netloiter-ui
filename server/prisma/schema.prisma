@@ -111,3 +111,16 @@ model Scenario {
   defaultAction ActionType
   rules         RuleToScenario[]
 }
+
+enum ConfigType {
+  nf_mark
+  socket
+  tc_mark_vlan
+}
+
+model Config {
+  id Int @id @default(autoincrement())
+  name String
+  type ConfigType
+  data Json
+}

@@ -1,10 +1,13 @@
 import { Button, CircularProgress } from "@mui/material";
-import { Select } from "./select";
+import { Select, SelectOption } from "./select";
 import { Modal } from "../common/modal";
+import { NavLink } from "react-router-dom";
 
 interface Props {
   open: boolean;
   loading: boolean;
+  scenarioOptions: SelectOption[];
+  configOptions: SelectOption[];
   onClose(): void;
   onStartNetLoiter(): void;
 }
@@ -12,6 +15,8 @@ interface Props {
 export const StartNetLoiterModal = ({
   open,
   loading,
+  scenarioOptions,
+  configOptions,
   onClose,
   onStartNetLoiter,
 }: Props) => (
@@ -19,19 +24,23 @@ export const StartNetLoiterModal = ({
     <div className="text-header">Start NetLoiter</div>
     <div className="flex w-full gap-4 my-4">
       <div className="w-[70%]">
-        <Select label="Scenario" options={[]} />
+        <Select label="Scenario" options={scenarioOptions} />
       </div>
-      <Button variant="outlined" className="w-[30%]">
-        NEW SCENARIO
-      </Button>
+      <NavLink to="/scenarios/create" className="w-[30%]">
+        <Button variant="outlined" className="w-full h-full">
+          NEW SCENARIO
+        </Button>
+      </NavLink>
     </div>
     <div className="flex w-full gap-4">
       <div className="w-[70%]">
-        <Select label="Config" options={[]} />
+        <Select label="Config" options={configOptions} />
       </div>
-      <Button variant="outlined" className="w-[30%]">
-        NEW CONFIG
-      </Button>
+      <NavLink to="/configs/create" className="w-[30%]">
+        <Button variant="outlined" className="w-full h-full">
+          NEW CONFIG
+        </Button>
+      </NavLink>
     </div>
     <div className="mt-4">
       <Button variant="contained" onClick={onStartNetLoiter} disabled={loading}>
