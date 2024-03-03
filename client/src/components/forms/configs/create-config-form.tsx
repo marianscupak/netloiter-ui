@@ -16,7 +16,7 @@ import { trpc } from "../../../utils/trpc";
 import { useSnackbar } from "../../../utils/snackbar";
 import { useNavigate } from "react-router-dom";
 
-const defaultValues: CreateConfigFormValues = {
+const createConfigDefaultValues: CreateConfigFormValues = {
   name: "",
   mode: ConfigMode.nf_mark,
   flows: [{ action: FlowActionType.Catch, ip: "127.0.0.1", port: 3001 }],
@@ -28,9 +28,13 @@ const configTypeOptions: SelectOption[] = [
   { value: ConfigMode.tc_mark_vlan, label: "TC Mark VLAN" },
 ];
 
-export const CreateConfigForm = () => {
+interface Props {
+  defaultValues?: CreateConfigFormValues;
+}
+
+export const CreateConfigForm = ({ defaultValues }: Props) => {
   const form = useForm<CreateConfigFormValues>({
-    defaultValues,
+    defaultValues: defaultValues ?? createConfigDefaultValues,
     resolver: zodResolver(createConfigFormValuesSchema),
     reValidateMode: "onSubmit",
   });

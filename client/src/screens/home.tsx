@@ -87,7 +87,7 @@ export const Home = () => {
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
-    <div className="flex justify-center items-center h-full">
+    <div className="flex justify-center items-center h-[100vh]">
       {status.runningFrom ? (
         <div>
           <div className="text-header">NetLoiter is up and running</div>

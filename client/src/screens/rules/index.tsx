@@ -9,7 +9,7 @@ export const Rules = () => {
   return (
     <div className="p-4 h-full">
       <div className="text-header">Rules</div>
-      <div className="flex justify-center items-center h-full">
+      <div className="flex justify-center items-center h-[100vh]">
         <div>
           <div className="mb-2">
             <NavLink to="/rules/create">

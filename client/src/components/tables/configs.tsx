@@ -10,6 +10,7 @@ import { RouterOutputs } from "../../../../server/trpc-routers";
 import { trpc } from "../../utils/trpc";
 import { useCallback } from "react";
 import { useSnackbar } from "../../utils/snackbar";
+import { NavLink } from "react-router-dom";
 
 interface Props {
   configs: RouterOutputs["config"]["getAll"] | undefined;
@@ -46,13 +47,18 @@ export const ConfigsTable = ({ configs }: Props) => {
               <TableCell>{config.name}</TableCell>
               <TableCell>
                 <div className="flex justify-end">
-                  <Button
-                    variant="contained"
-                    color="error"
-                    onClick={() => onDelete(config.id)}
-                  >
-                    DELETE
-                  </Button>
+                  <div className="flex gap-2">
+                    <NavLink to={`/configs/${config.id}`}>
+                      <Button variant="contained">DETAIL</Button>
+                    </NavLink>
+                    <Button
+                      variant="contained"
+                      color="error"
+                      onClick={() => onDelete(config.id)}
+                    >
+                      DELETE
+                    </Button>
+                  </div>
                 </div>
               </TableCell>
             </TableRow>

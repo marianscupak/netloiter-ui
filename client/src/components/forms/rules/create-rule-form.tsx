@@ -24,10 +24,14 @@ export const createRuleFormDefaultValues: CreateRuleFormValues = {
   actions: [createActionFormDefaultValues],
 };
 
-export const CreateRuleForm = () => {
+interface Props {
+  defaultValues?: CreateRuleFormValues;
+}
+
+export const CreateRuleForm = ({ defaultValues }: Props) => {
   const form = useForm<CreateRuleFormValues>({
     resolver: zodResolver(createRuleFormValuesSchema),
-    defaultValues: createRuleFormDefaultValues,
+    defaultValues: defaultValues ?? createRuleFormDefaultValues,
   });
 
   const trpcContext = trpc.useContext();

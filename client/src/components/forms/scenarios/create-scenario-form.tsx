@@ -26,7 +26,7 @@ import { useNavigate } from "react-router-dom";
 import { CreateActionFormValues } from "../actions/create-action-form-types";
 import { CreateGuardFormValues } from "../guards/create-guard-form-types";
 
-const defaultValues: CreateScenarioFormValues = {
+const defaultCreateScenarioValues: CreateScenarioFormValues = {
   name: "",
   type: ScenarioType.Sequential,
   defaultAction: ActionType.Finish,
@@ -44,9 +44,13 @@ const defaultActionOptions: SelectOption[] = [
   { value: ActionType.Skip, label: ActionType.Skip },
 ];
 
-export const CreateScenarioForm = () => {
+interface Props {
+  defaultValues?: CreateScenarioFormValues;
+}
+
+export const CreateScenarioForm = ({ defaultValues }: Props) => {
   const form = useForm<CreateScenarioFormValues>({
-    defaultValues,
+    defaultValues: defaultValues ?? defaultCreateScenarioValues,
     resolver: zodResolver(createScenarioFormValuesSchema),
     reValidateMode: "onSubmit",
   });

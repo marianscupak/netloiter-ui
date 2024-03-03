@@ -21,9 +21,13 @@ export const createGuardFormDefaultValues: CreateGuardFormValues = {
   invert: false,
 };
 
-export const CreateGuardForm = () => {
+interface Props {
+  defaultValues?: CreateGuardFormValues;
+}
+
+export const CreateGuardForm = ({ defaultValues }: Props) => {
   const form = useForm<CreateGuardFormValues>({
-    defaultValues: createGuardFormDefaultValues,
+    defaultValues: defaultValues ?? createGuardFormDefaultValues,
     resolver: zodResolver(createGuardFormValuesSchema),
     reValidateMode: "onSubmit",
   });

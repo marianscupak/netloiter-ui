@@ -3,6 +3,7 @@ import { createScenarioFormValuesSchema } from "netloier-ui/src/components/forms
 import { TRPCError } from "@trpc/server";
 import { createRule, getRuleDetail } from "./utils/rule";
 import { z } from "zod";
+import { getScenarioDetail } from "./utils/scenario";
 
 export const scenarioRouter = createTRPCRouter({
   getAll: publicProcedure.query(
@@ -63,21 +64,8 @@ export const scenarioRouter = createTRPCRouter({
     }),
   getScenarioDetail: publicProcedure
     .input(z.object({ id: z.number() }))
-    .mutation(async ({ ctx, input }) => {
-      const scenario = await ctx.prisma.scenario.findUniqueOrThrow({
-        where: { id: input.id },
-        include: { rules: true },
-      });
-
-      const rules = await Promise.all(
-        scenario.rules.map(
-          async (rule) => await getRuleDetail(ctx, rule.ruleId),
-        ),
-      );
-
-      return {
-        ...scenario,
-        rules,
-      };
-    }),
+    .mutation(async ({ ctx, input }) => await getScenarioDetail(ctx, input.id)),
+  getScenarioDetailQuery: publicProcedure
+    .input(z.object({ id: z.number() }))
+    .query(async ({ ctx, input }) => await getScenarioDetail(ctx, input.id)),
 });

@@ -65,10 +65,10 @@ interface Props extends FieldNamePrefix {
 }
 
 export const Flow = ({ fieldNamePrefix, remove }: Props) => {
-  const { watch } = useFormContext();
+  const { watch, setValue } = useFormContext();
 
   const values = useMemo(
-    () => watch(fieldNamePrefix),
+    () => watch(fieldNamePrefix ?? ""),
     [fieldNamePrefix, watch],
   );
 
@@ -93,13 +93,16 @@ export const Flow = ({ fieldNamePrefix, remove }: Props) => {
 
   const onParameterToggle = useCallback(
     (name: string) => () => {
+      if (parametersShown.find((x) => x.name === name)?.enabled) {
+        setValue(`${fieldNamePrefix}.${name}`, undefined);
+      }
       setParametersShown((old) =>
         old.map((param) =>
           param.name === name ? { ...param, enabled: !param.enabled } : param,
         ),
       );
     },
-    [],
+    [fieldNamePrefix, parametersShown, setValue],
   );
 
   return (

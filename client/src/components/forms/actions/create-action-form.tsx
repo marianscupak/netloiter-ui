@@ -18,9 +18,13 @@ export const createActionFormDefaultValues: CreateActionFormValues = {
   name: "",
 };
 
-export const CreateActionForm = () => {
+interface Props {
+  defaultValues?: CreateActionFormValues;
+}
+
+export const CreateActionForm = ({ defaultValues }: Props) => {
   const form = useForm<CreateActionFormValues>({
-    defaultValues: createActionFormDefaultValues,
+    defaultValues: defaultValues ?? createActionFormDefaultValues,
     resolver: zodResolver(createActionFormValuesSchema),
     reValidateMode: "onSubmit",
   });

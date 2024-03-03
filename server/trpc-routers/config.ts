@@ -30,4 +30,12 @@ export const configRouter = createTRPCRouter({
 
       return { id, name, mode, ...(data as ConfigData) };
     }),
+  getConfigDetailQuery: publicProcedure
+    .input(z.object({ id: z.number() }))
+    .query(async ({ ctx, input }) => {
+      const { id, name, mode, data } =
+        await ctx.prisma.config.findUniqueOrThrow({ where: { id: input.id } });
+
+      return { id, name, mode, ...(data as ConfigData) };
+    }),
 });

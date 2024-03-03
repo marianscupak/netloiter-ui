@@ -82,10 +82,20 @@ export const createRule = async (
   return newRule;
 };
 
-export const getRuleDetail = async (ctx: Context, id: number) => {
+export const getRuleDetail = async (
+  ctx: Context,
+  id: number,
+  includeName?: boolean,
+) => {
   const rule = await ctx.prisma.rule.findUniqueOrThrow({
     where: { id },
-    select: { type: true, id: true, actions: true, guards: true },
+    select: {
+      type: true,
+      id: true,
+      actions: true,
+      guards: true,
+      name: includeName,
+    },
   });
 
   const guardIds = rule.guards.map(({ guardId }) => guardId);
@@ -93,14 +103,14 @@ export const getRuleDetail = async (ctx: Context, id: number) => {
     await ctx.prisma.guard.findMany({
       where: { id: { in: guardIds } },
     })
-  ).map(convertGuardToFormValues);
+  ).map(convertGuardToFormValues());
 
   const actionIds = rule.actions.map(({ actionId }) => actionId);
   const actions = (
     await ctx.prisma.action.findMany({
       where: { id: { in: actionIds } },
     })
-  ).map(convertActionToFormValues);
+  ).map(convertActionToFormValues());
 
   return { ...rule, guards, actions };
 };

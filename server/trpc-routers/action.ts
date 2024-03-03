@@ -25,7 +25,14 @@ export const actionRouter = createTRPCRouter({
   getActionDetail: publicProcedure
     .input(z.object({ id: z.number() }))
     .mutation(async ({ ctx, input }) =>
-      convertActionToFormValues(
+      convertActionToFormValues()(
+        await ctx.prisma.action.findUniqueOrThrow({ where: { id: input.id } }),
+      ),
+    ),
+  getActionDetailQuery: publicProcedure
+    .input(z.object({ id: z.number() }))
+    .query(async ({ ctx, input }) =>
+      convertActionToFormValues(true)(
         await ctx.prisma.action.findUniqueOrThrow({ where: { id: input.id } }),
       ),
     ),

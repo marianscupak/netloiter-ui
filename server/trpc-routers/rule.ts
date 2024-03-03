@@ -23,4 +23,7 @@ export const ruleRouter = createTRPCRouter({
   getRuleDetail: publicProcedure
     .input(z.object({ id: z.number() }))
     .mutation(async ({ ctx, input }) => await getRuleDetail(ctx, input.id)),
+  getRuleDetailQuery: publicProcedure
+    .input(z.object({ id: z.number() }))
+    .query(async ({ ctx, input }) => await getRuleDetail(ctx, input.id, true)),
 });
