@@ -5,11 +5,12 @@ import {
   MessageWithPacketId,
 } from "../../../server/nl-status/message-types";
 import { useNlStatusEndpoints } from "../utils/use-nl-status-endpoints";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import dayjs from "dayjs";
 import { Button } from "@mui/material";
 import { PacketEventList } from "../components/events/packet-event-list";
 import { NavLink } from "react-router-dom";
+import { EventListControls } from "../components/events/event-list-controls";
 
 export const CurrentRun = () => {
   const { lastJsonMessage } = useWebSocket<{ messages: Message[] }>(
@@ -32,23 +33,29 @@ export const CurrentRun = () => {
     call();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
+  const [eventsShown, setEventsShown] = useState(100);
+
+  const onEventsShownChange = useCallback((n: number) => {
+    setEventsShown(n);
+  }, []);
+
   useEffect(() => {
     if (lastJsonMessage) {
       setMessages((oldMessages) =>
-        [...oldMessages, ...lastJsonMessage.messages].slice(0, 100),
+        [...oldMessages, ...lastJsonMessage.messages].slice(eventsShown * -1),
       );
     }
-  }, [lastJsonMessage]);
+  }, [eventsShown, lastJsonMessage]);
 
-  const messagesWithPackedIds = useMemo(
-    () =>
-      messages.filter(
-        (message) =>
-          message.type !== MessageType.StartingNetLoiter &&
-          message.type !== MessageType.UnknownMessage,
-      ) as MessageWithPacketId[],
-    [messages],
-  );
+  const [pausedMessages, setPausedMessages] = useState<Message[]>([]);
+
+  const onPause = useCallback(() => {
+    setPausedMessages(messages.slice(eventsShown * -1));
+  }, [eventsShown, messages]);
+
+  const onResume = useCallback(() => {
+    setPausedMessages([]);
+  }, []);
 
   return (
     <div className="p-4">
@@ -68,7 +75,16 @@ export const CurrentRun = () => {
         </Button>
       </div>
       <div className="text-subheader mt-6">Events</div>
-      <PacketEventList messages={messagesWithPackedIds} />
+      <EventListControls
+        eventsShown={eventsShown}
+        isPaused={pausedMessages.length !== 0}
+        onEventsShownChange={onEventsShownChange}
+        onPause={onPause}
+        onResume={onResume}
+      />
+      <PacketEventList
+        messages={pausedMessages.length === 0 ? messages : pausedMessages}
+      />
     </div>
   );
 };
