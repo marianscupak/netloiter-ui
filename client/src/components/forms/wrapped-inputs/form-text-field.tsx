@@ -5,15 +5,18 @@ import { ChangeEvent, useCallback } from "react";
 
 export const FormTextField = ({
   name,
+  int,
   ...rest
-}: TextFieldProps & { name: string }) => {
+}: TextFieldProps & { name: string; int?: boolean }) => {
   const { control, setValue } = useFormContext();
 
   const onChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
       const value =
         rest.type === "number"
-          ? Number.parseFloat(e.target.value)
+          ? int
+            ? Number.parseInt(e.target.value)
+            : Number.parseFloat(e.target.value)
           : e.target.value;
 
       if (typeof value === "string") {
@@ -24,7 +27,7 @@ export const FormTextField = ({
         setValue(name, "");
       }
     },
-    [name, rest.type, setValue],
+    [int, name, rest.type, setValue],
   );
 
   return (

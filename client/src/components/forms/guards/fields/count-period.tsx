@@ -15,6 +15,7 @@ export const CountPeriodGuardFields = ({
         name={fieldNamePrefix ? `${fieldNamePrefix}.truePeriod` : "truePeriod"}
         label="True period"
         disabled={disabled}
+        int
       />
     </div>
     <div className="mt-4">
@@ -24,6 +25,7 @@ export const CountPeriodGuardFields = ({
         }
         label="False period"
         disabled={disabled}
+        int
       />
     </div>
   </div>

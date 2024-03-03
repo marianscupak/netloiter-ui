@@ -16,8 +16,7 @@ interface Props {
 }
 
 export const ConfigsTable = ({ configs }: Props) => {
-  const { mutateAsync: deleteConfig } =
-    trpc.config.deleteScenario.useMutation();
+  const { mutateAsync: deleteConfig } = trpc.config.deleteConfig.useMutation();
 
   const trpcContext = trpc.useContext();
 

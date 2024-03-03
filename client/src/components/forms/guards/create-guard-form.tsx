@@ -13,17 +13,17 @@ import { useSnackbar } from "../../../utils/snackbar";
 import { useNavigate } from "react-router-dom";
 import { GuardFormFields } from "./fields";
 
-const defaultValues: CreateGuardFormValues = {
+export const createGuardFormDefaultValues: CreateGuardFormValues = {
   name: "",
   type: GuardType.Count,
   after: 5,
-  count: 5,
+  duration: 5,
   invert: false,
 };
 
 export const CreateGuardForm = () => {
   const form = useForm<CreateGuardFormValues>({
-    defaultValues,
+    defaultValues: createGuardFormDefaultValues,
     resolver: zodResolver(createGuardFormValuesSchema),
     reValidateMode: "onSubmit",
   });

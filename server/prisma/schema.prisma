@@ -112,7 +112,7 @@ model Scenario {
   rules         RuleToScenario[]
 }
 
-enum ConfigType {
+enum ConfigMode {
   nf_mark
   socket
   tc_mark_vlan
@@ -121,6 +121,6 @@ enum ConfigType {
 model Config {
   id Int @id @default(autoincrement())
   name String
-  type ConfigType
+  mode ConfigMode
   data Json
 }

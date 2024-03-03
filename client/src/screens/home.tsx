@@ -1,5 +1,5 @@
 import { Button } from "@mui/material";
-import { StartNetLoiterModal } from "../components/forms/start-net-loiter";
+import { StartNetLoiterModal } from "../components/forms/start-net-loiter/start-net-loiter-modal";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import dayjs from "dayjs";
 import { useNlStatusEndpoints } from "../utils/use-nl-status-endpoints";
@@ -16,7 +16,7 @@ export const Home = () => {
   const [startOpen, setStartOpen] = useState(false);
   const [status, setStatus] = useAtom(statusAtom);
   const [statusLoading, setStatusLoading] = useState(false);
-  const { startNetLoiter, stopNetLoiter, getIsNetLoiterRunning } =
+  const { startNetLoiter, stopNetLoiter, getNetLoiterStatus } =
     useNlStatusEndpoints();
 
   const { data: scenarios } = trpc.scenario.getAll.useQuery();
@@ -50,16 +50,12 @@ export const Home = () => {
 
   const getIsNlRunning = useCallback(
     async (shouldShowSnackbar?: boolean) => {
-      const response = await getIsNetLoiterRunning();
+      const response = await getNetLoiterStatus();
       if (response.status === 200) {
-        const { runningFrom: newRunningFrom } = response.data;
-        setStatus((oldStatus) => ({
-          ...oldStatus,
-          runningFrom: newRunningFrom,
-        }));
+        setStatus(response.data);
 
         if (shouldShowSnackbar) {
-          if (newRunningFrom) {
+          if (response.data.runningFrom) {
             showSnackbar("NetLoiter started successfully");
             setStartOpen(false);
           } else {
@@ -69,14 +65,17 @@ export const Home = () => {
         setStatusLoading(false);
       }
     },
-    [getIsNetLoiterRunning, setStatus, showSnackbar],
+    [getNetLoiterStatus, setStatus, showSnackbar],
   );
 
-  const onStartNetLoiter = useCallback(async () => {
-    setStatusLoading(true);
-    await startNetLoiter();
-    setTimeout(async () => await getIsNlRunning(true), NL_START_DURATION);
-  }, [getIsNlRunning, startNetLoiter]);
+  const onStartNetLoiter = useCallback(
+    async (scenarioId: number, configId: number) => {
+      setStatusLoading(true);
+      await startNetLoiter(scenarioId, configId);
+      setTimeout(async () => await getIsNlRunning(true), NL_START_DURATION);
+    },
+    [getIsNlRunning, startNetLoiter],
+  );
 
   const onStopNetLoiter = useCallback(async () => {
     await stopNetLoiter();
@@ -111,7 +110,7 @@ export const Home = () => {
             <Button variant="contained" onClick={onOpen}>
               START
             </Button>
-            <Button variant="contained" color="warning">
+            <Button variant="contained" color="warning" disabled>
               SEE LAST RUN
             </Button>
           </div>

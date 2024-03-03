@@ -12,6 +12,8 @@ export const ProtocolGuardFields = ({ fieldNamePrefix, disabled }: Props) => (
         name={fieldNamePrefix ? `${fieldNamePrefix}.id` : "id"}
         label="Protocol ID"
         disabled={disabled}
+        type="number"
+        int
       />
     </div>
   </div>

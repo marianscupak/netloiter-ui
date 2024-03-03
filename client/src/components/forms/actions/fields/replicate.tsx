@@ -22,6 +22,7 @@ export const ReplicateFields = ({ fieldNamePrefix, disabled }: Props) => (
         name={fieldNamePrefix ? `${fieldNamePrefix}.count` : "count"}
         label="Count"
         disabled={disabled}
+        int
       />
     </div>
     <div className="mt-4">

@@ -12,6 +12,7 @@ import { Scenarios } from "../screens/scenarios";
 import { CreateScenario } from "../screens/scenarios/create";
 import { Configs } from "../screens/configs";
 import { CreateConfig } from "../screens/configs/create";
+import { EditConfig } from "../screens/edit-config";
 
 export const router = createBrowserRouter([
   {
@@ -20,6 +21,7 @@ export const router = createBrowserRouter([
     children: [
       { path: "", element: <Home /> },
       { path: "/current-run", element: <CurrentRun /> },
+      { path: "/current-run/edit-config", element: <EditConfig /> },
       { path: "/actions", element: <Actions /> },
       { path: "/actions/create", element: <CreateAction /> },
       { path: "/guards", element: <Guards /> },

@@ -13,6 +13,7 @@ export const PortGuardFields = ({ fieldNamePrefix, disabled }: Props) => (
         name={fieldNamePrefix ? `${fieldNamePrefix}.src` : "src"}
         label="Source"
         disabled={disabled}
+        int
       />
     </div>
     <div className="mt-4">
@@ -21,6 +22,7 @@ export const PortGuardFields = ({ fieldNamePrefix, disabled }: Props) => (
         name={fieldNamePrefix ? `${fieldNamePrefix}.dest` : "dest"}
         label="Destination"
         disabled={disabled}
+        int
       />
     </div>
     <div className="mt-4">
@@ -29,6 +31,7 @@ export const PortGuardFields = ({ fieldNamePrefix, disabled }: Props) => (
         name={fieldNamePrefix ? `${fieldNamePrefix}.any` : "any"}
         label="Any"
         disabled={disabled}
+        int
       />
     </div>
   </div>

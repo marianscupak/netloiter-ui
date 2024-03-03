@@ -13,6 +13,7 @@ export const ICMPGuardFields = ({ fieldNamePrefix, disabled }: Props) => (
         name={fieldNamePrefix ? `${fieldNamePrefix}.icmpType` : "icmpType"}
         label="ICMP Type"
         disabled={disabled}
+        int
       />
     </div>
     <div className="mt-4">
@@ -21,6 +22,7 @@ export const ICMPGuardFields = ({ fieldNamePrefix, disabled }: Props) => (
         name={fieldNamePrefix ? `${fieldNamePrefix}.icmpCode` : "icmpCode"}
         label="ICMP Code"
         disabled={disabled}
+        int
       />
     </div>
   </div>

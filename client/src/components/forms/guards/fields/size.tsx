@@ -24,6 +24,7 @@ export const SizeGuardFields = ({ fieldNamePrefix, disabled }: Props) => (
         name={fieldNamePrefix ? `${fieldNamePrefix}.size` : "size"}
         label="Size"
         disabled={disabled}
+        int
       />
     </div>
     <div className="mt-4">

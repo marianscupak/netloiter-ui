@@ -4,45 +4,24 @@ import {
   createRuleFormValuesSchema,
 } from "./create-rule-form-types";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  ActionType,
-  GuardType,
-  RuleType,
-} from "../../../../../server/prisma/public";
+import { RuleType } from "../../../../../server/prisma/public";
 import { FormTextField } from "../wrapped-inputs/form-text-field";
 import { Button } from "@mui/material";
 import { useCallback, useMemo } from "react";
-import {
-  ActionFormValues,
-  BitNoiseStrategy,
-} from "../actions/create-action-form-types";
 import { RuleFormFields } from "./rule-form-fields";
-import { GuardFormValues } from "../guards/create-guard-form-types";
 import { trpc } from "../../../utils/trpc";
 import { useSnackbar } from "../../../utils/snackbar";
 import { useNavigate } from "react-router-dom";
 import { TRPCClientErrorLike } from "@trpc/client";
 import { AppRouter } from "../../../../../server/trpc-routers";
-
-export const defaultGuard: GuardFormValues = {
-  type: GuardType.Count,
-  after: 1,
-  count: 5,
-  invert: false,
-};
-
-export const defaultAction: ActionFormValues = {
-  type: ActionType.BitNoise,
-  percentageOfBitsToSwap: 0.4,
-  noiseStrategy: BitNoiseStrategy.Random,
-  layer: 2,
-};
+import { createGuardFormDefaultValues } from "../guards/create-guard-form";
+import { createActionFormDefaultValues } from "../actions/create-action-form";
 
 export const createRuleFormDefaultValues: CreateRuleFormValues = {
   type: RuleType.All,
   name: "",
-  guards: [defaultGuard],
-  actions: [defaultAction],
+  guards: [createGuardFormDefaultValues],
+  actions: [createActionFormDefaultValues],
 };
 
 export const CreateRuleForm = () => {

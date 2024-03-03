@@ -1,6 +1,10 @@
 import { Context } from "../../context";
 import { CreateRuleFormValues } from "netloier-ui/src/components/forms/rules/create-rule-form-types";
 import { TRPCError } from "@trpc/server";
+import {
+  convertActionToFormValues,
+  convertGuardToFormValues,
+} from "./convert-model-to-form-values";
 
 export const createRule = async (
   ctx: Context,
@@ -85,14 +89,18 @@ export const getRuleDetail = async (ctx: Context, id: number) => {
   });
 
   const guardIds = rule.guards.map(({ guardId }) => guardId);
-  const guards = await ctx.prisma.guard.findMany({
-    where: { id: { in: guardIds } },
-  });
+  const guards = (
+    await ctx.prisma.guard.findMany({
+      where: { id: { in: guardIds } },
+    })
+  ).map(convertGuardToFormValues);
 
   const actionIds = rule.actions.map(({ actionId }) => actionId);
-  const actions = await ctx.prisma.action.findMany({
-    where: { id: { in: actionIds } },
-  });
+  const actions = (
+    await ctx.prisma.action.findMany({
+      where: { id: { in: actionIds } },
+    })
+  ).map(convertActionToFormValues);
 
   return { ...rule, guards, actions };
 };

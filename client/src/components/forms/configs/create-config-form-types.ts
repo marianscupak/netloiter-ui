@@ -1,10 +1,10 @@
 import { z } from "zod";
-import { ConfigType } from "../../../../../server/prisma/public";
+import { ConfigMode } from "../../../../../server/prisma/public";
 import { ipSchema } from "../../../utils/schemas";
 
 const createConfigBaseFormValuesSchema = z.object({
   name: z.string().refine((name) => name.length > 0, { message: "Required" }),
-  type: z.nativeEnum(ConfigType),
+  mode: z.nativeEnum(ConfigMode),
 });
 
 export enum FlowActionType {
@@ -22,13 +22,13 @@ const flowSchema = z.object({
 });
 
 const nfMarkConfigFormValuesSchema = createConfigBaseFormValuesSchema.extend({
-  type: z.literal(ConfigType.nf_mark),
+  mode: z.literal(ConfigMode.nf_mark),
   flows: z.array(flowSchema),
 });
 
 const tcMarkVlanConfigFormValuesSchema =
   createConfigBaseFormValuesSchema.extend({
-    type: z.literal(ConfigType.tc_mark_vlan),
+    mode: z.literal(ConfigMode.tc_mark_vlan),
     flows: z.array(flowSchema),
   });
 
@@ -43,12 +43,12 @@ const socketSchema = z.object({
 });
 
 const socketConfigFormValuesSchema = createConfigBaseFormValuesSchema.extend({
-  type: z.literal(ConfigType.socket),
+  mode: z.literal(ConfigMode.socket),
   tcpAddresses: z.array(socketSchema).optional(),
   udpAddresses: z.array(socketSchema).optional(),
 });
 
-export const createConfigFormValuesSchema = z.discriminatedUnion("type", [
+export const createConfigFormValuesSchema = z.discriminatedUnion("mode", [
   nfMarkConfigFormValuesSchema,
   tcMarkVlanConfigFormValuesSchema,
   socketConfigFormValuesSchema,
@@ -57,3 +57,5 @@ export const createConfigFormValuesSchema = z.discriminatedUnion("type", [
 export type CreateConfigFormValues = z.infer<
   typeof createConfigFormValuesSchema
 >;
+
+export type ConfigData = Omit<CreateConfigFormValues, "mode" | "name">;

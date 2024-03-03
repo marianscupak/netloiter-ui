@@ -1,6 +1,7 @@
 import { createTRPCRouter, publicProcedure } from "../trpc";
 import { createGuardFormValuesSchema } from "netloier-ui/src/components/forms/guards/create-guard-form-types";
 import { z } from "zod";
+import { convertGuardToFormValues } from "./utils/convert-model-to-form-values";
 
 export const guardRouter = createTRPCRouter({
   getAll: publicProcedure.query(async ({ ctx }) => {
@@ -22,8 +23,9 @@ export const guardRouter = createTRPCRouter({
     ),
   getGuardDetail: publicProcedure
     .input(z.object({ id: z.number() }))
-    .mutation(
-      async ({ ctx, input }) =>
+    .mutation(async ({ ctx, input }) =>
+      convertGuardToFormValues(
         await ctx.prisma.guard.findUniqueOrThrow({ where: { id: input.id } }),
+      ),
     ),
 });

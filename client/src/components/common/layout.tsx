@@ -13,17 +13,13 @@ import {
 export const Layout = () => {
   const [, setStatus] = useAtom(statusAtom);
 
-  const { getIsNetLoiterRunning } = useNlStatusEndpoints();
+  const { getNetLoiterStatus } = useNlStatusEndpoints();
 
   useEffect(() => {
     const call = async () => {
-      const response = await getIsNetLoiterRunning();
+      const response = await getNetLoiterStatus();
       if (response.status === 200) {
-        const { runningFrom: newRunningFrom } = response.data;
-        setStatus((oldStatus) => ({
-          ...oldStatus,
-          runningFrom: newRunningFrom,
-        }));
+        setStatus(response.data);
       }
     };
 

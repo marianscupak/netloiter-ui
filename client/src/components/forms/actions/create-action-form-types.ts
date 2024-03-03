@@ -8,23 +8,23 @@ const createActionBaseFormValuesSchema = z.object({
 });
 
 export enum BitNoiseStrategy {
-  Left,
-  Right,
-  Random,
+  Left = "left",
+  Right = "right",
+  Random = "random",
 }
 
 const bitNoiseActionValuesSchema = createActionBaseFormValuesSchema.extend({
   type: z.literal(ActionType.BitNoise),
-  percentageOfBitsToSwap: numberWithValueGeneratorSchema.refine(
-    (n) => (typeof n === "number" ? n > 0 && n < 1 : true),
-    {
-      message: "Enter a value between 0 and 1",
-    },
-  ),
   layer: z.number().refine((l) => l > 0 && l < 5, {
     message: "Enter a value between 1 and 4",
   }),
   noiseStrategy: z.nativeEnum(BitNoiseStrategy),
+  percentageOfBitsToSwap: numberWithValueGeneratorSchema
+    .optional()
+    .refine((n) => (typeof n === "number" ? n > 0 && n < 1 : true), {
+      message: "Enter a value between 0 and 1",
+    }),
+  amountOfBitsToSwap: numberWithValueGeneratorSchema.optional(),
 });
 
 const delayActionValuesSchema = createActionBaseFormValuesSchema.extend({
@@ -53,8 +53,8 @@ const skipActionValuesSchema = createActionBaseFormValuesSchema.extend({
 });
 
 export enum ReorderStrategy {
-  Random,
-  Reverse,
+  Random = "random",
+  Reverse = "reverse",
 }
 
 const reorderActionValuesSchema = createActionBaseFormValuesSchema.extend({
@@ -83,12 +83,12 @@ const socketTcpActionValuesSchema = createActionBaseFormValuesSchema.extend({
   ip: ipSchema,
   port: z.number(),
   packFormat: z.string(),
-  mark: z.string(),
-  format: z.object({
-    meta: z.string(),
-    data: z.string(),
-    type: z.string(),
-  }),
+  mark: z.number(),
+  // format: z.object({
+  //   meta: z.string(),
+  //   data: z.string(),
+  //   type: z.string(),
+  // }),
 });
 
 const throttleActionValuesSchema = createActionBaseFormValuesSchema.extend({
@@ -122,3 +122,5 @@ export const createActionFormValuesSchema = z.intersection(
 export type CreateActionFormValues = z.infer<
   typeof createActionFormValuesSchema
 >;
+
+export type ActionData = Omit<CreateActionFormValues, "type" | "name">;

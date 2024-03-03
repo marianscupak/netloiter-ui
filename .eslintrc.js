@@ -31,6 +31,16 @@ module.exports = {
       version: "18.2.0",
     },
   },
-  rules: {},
+  rules: {
+    "no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      {
+        argsIgnorePattern: "^_",
+        varsIgnorePattern: "^_",
+        caughtErrorsIgnorePattern: "^_",
+      },
+    ],
+  },
   ignorePatterns: ["dist/"],
 };

@@ -11,7 +11,7 @@ const createGuardBaseFormValuesSchema = z.object({
 const countGuardValuesSchema = createGuardBaseFormValuesSchema.extend({
   type: z.literal(GuardType.Count),
   after: numberWithValueGeneratorSchema,
-  count: numberWithValueGeneratorSchema,
+  duration: numberWithValueGeneratorSchema,
 });
 
 const countPeriodGuardValuesSchema = createGuardBaseFormValuesSchema.extend({
@@ -31,6 +31,7 @@ const icmpGuardValuesSchema = createGuardBaseFormValuesSchema.extend({
   icmpCode: z.number(),
 });
 
+// TODO: If @ip argument is provided, then @src and @dst must not be provided!
 const ipGuardValuesSchema = createGuardBaseFormValuesSchema.extend({
   type: z.literal(GuardType.IP),
   src: ipSchema.optional(),
@@ -101,7 +102,9 @@ export const guardFormValuesSchema = z
     (x) =>
       !(
         (x.type === GuardType.IP || x.type === GuardType.Port) &&
-        (x.src !== undefined || x.dst !== undefined || x.any !== undefined)
+        (x.src === "" || x.src === undefined) &&
+        (x.dst === "" || x.dst === undefined) &&
+        (x.any === "" || x.any === undefined)
       ),
     { message: "Fill out at least one parameter", path: ["any"] },
   );
@@ -116,3 +119,5 @@ export const createGuardFormValuesSchema = z.intersection(
 );
 
 export type CreateGuardFormValues = z.infer<typeof createGuardFormValuesSchema>;
+
+export type GuardData = Omit<CreateGuardFormValues, "type" | "name" | "invert">;

@@ -4,7 +4,10 @@ import { createHTTPHandler } from "@trpc/server/adapters/standalone";
 import cors from "cors";
 import { appRouter } from "./trpc-routers";
 import { createContext } from "./context";
-import { getRunningFrom, startNetLoiter, stopNetLoiter } from "./nl-status";
+import { getStatus, startNetLoiter, stopNetLoiter } from "./nl-status";
+import { z } from "zod";
+import { createScenarioFormValuesSchema } from "netloier-ui/src/components/forms/scenarios/create-scenario-form-types";
+import { createConfigFormValuesSchema } from "netloier-ui/src/components/forms/configs/create-config-form-types";
 
 const trpcHandler = createHTTPHandler({
   middleware: cors(),
@@ -12,15 +15,26 @@ const trpcHandler = createHTTPHandler({
   createContext,
 });
 
-const app = express().use(cors());
+const app = express().use(cors(), express.json());
 
-app.get("/start", (req, res) => {
-  startNetLoiter();
+const startBodySchema = z.object({
+  scenario: createScenarioFormValuesSchema,
+  config: createConfigFormValuesSchema,
+});
+
+app.post("/start", (req, res) => {
+  const parsedBody = startBodySchema.safeParse(req.body);
+
+  if (parsedBody.success) {
+    startNetLoiter(parsedBody.data.scenario, parsedBody.data.config);
+  } else {
+    res.status(400);
+  }
   res.send();
 });
 
 app.get("/status", (req, res) => {
-  res.send({ runningFrom: getRunningFrom() });
+  res.send(getStatus());
 });
 
 app.get("/stop", (req, res) => {

@@ -9,6 +9,7 @@ import { useEffect, useMemo, useState } from "react";
 import dayjs from "dayjs";
 import { Button } from "@mui/material";
 import { PacketEventList } from "../components/events/packet-event-list";
+import { NavLink } from "react-router-dom";
 
 export const CurrentRun = () => {
   const { lastJsonMessage } = useWebSocket<{ messages: Message[] }>(
@@ -17,11 +18,11 @@ export const CurrentRun = () => {
   const [runningFrom, setRunningFrom] = useState<Date | false>(false);
   const [messages, setMessages] = useState<Message[]>([]);
 
-  const { getIsNetLoiterRunning, stopNetLoiter } = useNlStatusEndpoints();
+  const { getNetLoiterStatus, stopNetLoiter } = useNlStatusEndpoints();
 
   useEffect(() => {
     const call = async () => {
-      const response = await getIsNetLoiterRunning();
+      const response = await getNetLoiterStatus();
       if (response.status === 200) {
         const { runningFrom: newRunningFrom } = response.data;
         setRunningFrom(newRunningFrom);
@@ -33,11 +34,9 @@ export const CurrentRun = () => {
 
   useEffect(() => {
     if (lastJsonMessage) {
-      console.log(lastJsonMessage);
-      setMessages((oldMessages) => [
-        ...oldMessages,
-        ...lastJsonMessage.messages,
-      ]);
+      setMessages((oldMessages) =>
+        [...oldMessages, ...lastJsonMessage.messages].slice(0, 100),
+      );
     }
   }, [lastJsonMessage]);
 
@@ -58,9 +57,16 @@ export const CurrentRun = () => {
         Running from:{" "}
         {dayjs(runningFrom || undefined).format("DD. MM. HH:mm:ss")}
       </div>
-      <Button variant="contained" color="error" onClick={stopNetLoiter}>
-        STOP
-      </Button>
+      <div className="flex gap-2">
+        <NavLink to="/current-run/edit-config">
+          <Button variant="contained" color="warning">
+            EDIT CONFIG
+          </Button>
+        </NavLink>
+        <Button variant="contained" color="error" onClick={stopNetLoiter}>
+          STOP
+        </Button>
+      </div>
       <div className="text-subheader mt-6">Events</div>
       <PacketEventList messages={messagesWithPackedIds} />
     </div>

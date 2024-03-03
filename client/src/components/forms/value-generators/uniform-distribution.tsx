@@ -4,16 +4,27 @@ import { FormCheckbox } from "../wrapped-inputs/form-checkbox";
 interface Props {
   name: string;
   disabled?: boolean;
+  min?: number;
+  max?: number;
+  int?: boolean;
 }
 
-export const UniformDistribution = ({ name, disabled }: Props) => (
+export const UniformDistribution = ({
+  name,
+  disabled,
+  min,
+  max,
+  int,
+}: Props) => (
   <div>
     <div className="mt-4">
       <FormTextField
         name={`${name}.min`}
         type="number"
         label="Minimum"
-        disabled={disabled}
+        disabled={disabled || min !== undefined}
+        InputLabelProps={min !== undefined ? { shrink: true } : undefined}
+        int={int}
       />
     </div>
     <div className="mt-4">
@@ -21,7 +32,9 @@ export const UniformDistribution = ({ name, disabled }: Props) => (
         name={`${name}.max`}
         type="number"
         label="Maximum"
-        disabled={disabled}
+        disabled={disabled || max !== undefined}
+        InputLabelProps={max !== undefined ? { shrink: true } : undefined}
+        int={int}
       />
     </div>
     <div className="mt-4">

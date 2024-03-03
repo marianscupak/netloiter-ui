@@ -8,10 +8,20 @@ interface Props {
   name: string;
   label: string;
   disabled?: boolean;
+  int?: boolean;
+  min?: number;
+  max?: number;
 }
 
-export const FormNumberWithGenerator = ({ name, label, disabled }: Props) => {
-  const { watch } = useFormContext();
+export const FormNumberWithGenerator = ({
+  name,
+  label,
+  disabled,
+  int,
+  min,
+  max,
+}: Props) => {
+  const { watch, setValue } = useFormContext();
 
   const [useGenerator, setUseGenerator] = useState(
     typeof watch(name) === "object",
@@ -19,7 +29,8 @@ export const FormNumberWithGenerator = ({ name, label, disabled }: Props) => {
 
   const onCheckboxChange = useCallback(() => {
     setUseGenerator((old) => !old);
-  }, []);
+    setValue(name, undefined);
+  }, [name, setValue]);
 
   const generatorCheckbox = useMemo(
     () => (
@@ -41,7 +52,13 @@ export const FormNumberWithGenerator = ({ name, label, disabled }: Props) => {
             <div className="mb-2">{label}</div>
             {generatorCheckbox}
           </div>
-          <ValueGenerator name={name} disabled={disabled} />
+          <ValueGenerator
+            name={name}
+            disabled={disabled}
+            int={int}
+            min={min}
+            max={max}
+          />
         </div>
       ) : (
         <div className="flex items-center">
@@ -51,6 +68,7 @@ export const FormNumberWithGenerator = ({ name, label, disabled }: Props) => {
               name={name}
               label={label}
               disabled={disabled}
+              int={int}
             />
           </div>
           <div className="ml-2">{generatorCheckbox}</div>

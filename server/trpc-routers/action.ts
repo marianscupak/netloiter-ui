@@ -1,6 +1,7 @@
 import { createTRPCRouter, publicProcedure } from "../trpc";
 import { createActionFormValuesSchema } from "netloier-ui/src/components/forms/actions/create-action-form-types";
 import { z } from "zod";
+import { convertActionToFormValues } from "./utils/convert-model-to-form-values";
 
 export const actionRouter = createTRPCRouter({
   getAll: publicProcedure.query(
@@ -23,8 +24,9 @@ export const actionRouter = createTRPCRouter({
     ),
   getActionDetail: publicProcedure
     .input(z.object({ id: z.number() }))
-    .mutation(
-      async ({ ctx, input }) =>
+    .mutation(async ({ ctx, input }) =>
+      convertActionToFormValues(
         await ctx.prisma.action.findUniqueOrThrow({ where: { id: input.id } }),
+      ),
     ),
 });

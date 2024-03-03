@@ -20,13 +20,11 @@ import { createRuleFormDefaultValues } from "../rules/create-rule-form";
 import { Modal } from "../../common/modal";
 import { trpc } from "../../../utils/trpc";
 import { useSnackbar } from "../../../utils/snackbar";
-import {
-  convertActionToFormValues,
-  convertGuardToFormValues,
-} from "../../../utils/convert-model-to-form-values";
 import { TRPCClientErrorLike } from "@trpc/client";
 import { AppRouter } from "../../../../../server/trpc-routers";
 import { useNavigate } from "react-router-dom";
+import { CreateActionFormValues } from "../actions/create-action-form-types";
+import { CreateGuardFormValues } from "../guards/create-guard-form-types";
 
 const defaultValues: CreateScenarioFormValues = {
   name: "",
@@ -108,8 +106,8 @@ export const CreateScenarioForm = () => {
       appendRule({
         type: rule.type as RuleType,
         loadedId: rule.id,
-        actions: rule.actions.map(convertActionToFormValues),
-        guards: rule.guards.map(convertGuardToFormValues),
+        actions: rule.actions as unknown as CreateActionFormValues[],
+        guards: rule.guards as unknown as CreateGuardFormValues[],
       });
 
       closeLoadRuleModal();

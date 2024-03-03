@@ -13,14 +13,14 @@ import { useSnackbar } from "../../../utils/snackbar";
 import { useNavigate } from "react-router-dom";
 import { ActionFormFields } from "./fields";
 
-const defaultValues: CreateActionFormValues = {
+export const createActionFormDefaultValues: CreateActionFormValues = {
   type: ActionType.Finish,
   name: "",
 };
 
 export const CreateActionForm = () => {
   const form = useForm<CreateActionFormValues>({
-    defaultValues,
+    defaultValues: createActionFormDefaultValues,
     resolver: zodResolver(createActionFormValuesSchema),
     reValidateMode: "onSubmit",
   });
@@ -47,7 +47,18 @@ export const CreateActionForm = () => {
   const handleSubmit = useCallback(
     async (formValues: CreateActionFormValues) => {
       form.clearErrors("type");
-      await createAction(formValues);
+      if (formValues.type === ActionType.BitNoise) {
+        const { percentageOfBitsToSwap, amountOfBitsToSwap, ...rest } =
+          formValues;
+
+        if (percentageOfBitsToSwap === 0) {
+          await createAction({ ...rest, amountOfBitsToSwap });
+        } else {
+          await createAction({ ...rest, percentageOfBitsToSwap });
+        }
+      } else {
+        await createAction(formValues);
+      }
     },
     [createAction, form],
   );

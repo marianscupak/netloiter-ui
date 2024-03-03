@@ -12,13 +12,15 @@ export const CountGuardFields = ({ fieldNamePrefix, disabled }: Props) => (
         name={fieldNamePrefix ? `${fieldNamePrefix}.after` : "after"}
         label="After"
         disabled={disabled}
+        int
       />
     </div>
     <div className="mt-4">
       <FormNumberWithGenerator
-        name={fieldNamePrefix ? `${fieldNamePrefix}.count` : "count"}
-        label="Count"
+        name={fieldNamePrefix ? `${fieldNamePrefix}.duration` : "duration"}
+        label="Duration"
         disabled={disabled}
+        int
       />
     </div>
   </div>

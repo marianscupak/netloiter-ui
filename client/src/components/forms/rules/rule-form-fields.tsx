@@ -6,18 +6,15 @@ import { useFieldArray, useFormContext } from "react-hook-form";
 import { Select, SelectOption } from "../select";
 import { RuleType } from "../../../../../server/prisma/public";
 import { useCallback, useMemo, useState } from "react";
-import { defaultAction, defaultGuard } from "./create-rule-form";
 import { Button, SelectChangeEvent } from "@mui/material";
 import { trpc } from "../../../utils/trpc";
 import { Modal } from "../../common/modal";
 import { useSnackbar } from "../../../utils/snackbar";
 import DeleteIcon from "@mui/icons-material/Delete";
-import {
-  convertActionToFormValues,
-  convertGuardToFormValues,
-} from "../../../utils/convert-model-to-form-values";
 import { TRPCClientErrorLike } from "@trpc/client";
 import { AppRouter } from "../../../../../server/trpc-routers";
+import { createGuardFormDefaultValues } from "../guards/create-guard-form";
+import { createActionFormDefaultValues } from "../actions/create-action-form";
 
 const ruleTypeOptions: SelectOption[] = [
   { value: RuleType.All, label: RuleType.All },
@@ -64,11 +61,11 @@ export const RuleFormFields = ({ fieldNamePrefix }: FieldNamePrefix) => {
   });
 
   const appendDefaultGuard = useCallback(() => {
-    appendGuard(defaultGuard);
+    appendGuard(createGuardFormDefaultValues);
   }, [appendGuard]);
 
   const appendDefaultAction = useCallback(() => {
-    appendAction(defaultAction);
+    appendAction(createActionFormDefaultValues);
   }, [appendAction]);
 
   const [loadGuardModalOpen, setLoadGuardModalOpen] = useState<boolean>(false);
@@ -87,7 +84,7 @@ export const RuleFormFields = ({ fieldNamePrefix }: FieldNamePrefix) => {
         id: event.target.value as unknown as number,
       });
 
-      appendGuard(convertGuardToFormValues(guard));
+      appendGuard(guard);
 
       closeLoadGuardModal();
     },
@@ -119,7 +116,7 @@ export const RuleFormFields = ({ fieldNamePrefix }: FieldNamePrefix) => {
         id: event.target.value as unknown as number,
       });
 
-      appendAction(convertActionToFormValues(action));
+      appendAction(action);
 
       closeLoadActionModal();
     },

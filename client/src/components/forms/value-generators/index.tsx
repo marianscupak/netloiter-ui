@@ -2,14 +2,17 @@ import { useFormContext } from "react-hook-form";
 import { FormSelect } from "../wrapped-inputs/form-select";
 import { SelectOption } from "../select";
 import { ValueGeneratorType } from "./types";
-import { useMemo } from "react";
 import { NormalDistribution } from "./normal-distribution";
 import { UniformDistribution } from "./uniform-distribution";
 import { Sequence } from "./sequence";
+import { useEffect } from "react";
 
 interface Props {
   name: string;
   disabled?: boolean;
+  int?: boolean;
+  min?: number;
+  max?: number;
 }
 
 const generatorTypeOptions: SelectOption[] = [
@@ -20,22 +23,49 @@ const generatorTypeOptions: SelectOption[] = [
 
 const DEFAULT_VALUE = ValueGeneratorType.Normal;
 
-export const ValueGenerator = ({ name, disabled }: Props) => {
-  const { watch } = useFormContext();
+export const ValueGenerator = ({ name, disabled, int, min, max }: Props) => {
+  const { watch, setValue } = useFormContext();
 
-  const inputs = useMemo(() => {
-    switch (watch(`${name}.type`)) {
+  useEffect(() => {
+    if (min !== undefined) {
+      setValue(`${name}.min`, min);
+    }
+    if (max !== undefined) {
+      setValue(`${name}.max`, max);
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const inputs = (() => {
+    switch (watch(`${name}.type`) ?? DEFAULT_VALUE) {
       case ValueGeneratorType.Normal: {
-        return <NormalDistribution name={name} disabled={disabled} />;
+        return (
+          <NormalDistribution
+            name={name}
+            disabled={disabled}
+            min={min}
+            max={max}
+          />
+        );
       }
       case ValueGeneratorType.Uniform: {
-        return <UniformDistribution name={name} disabled={disabled} />;
+        return (
+          <UniformDistribution
+            name={name}
+            disabled={disabled}
+            min={min}
+            max={max}
+          />
+        );
       }
       case ValueGeneratorType.Sequence: {
-        return <Sequence name={name} disabled={disabled} />;
+        return <Sequence name={name} disabled={disabled} min={min} max={max} />;
       }
     }
-  }, [disabled, name, watch]);
+  })();
+
+  useEffect(() => {
+    setValue(`${name}.int`, int);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div>

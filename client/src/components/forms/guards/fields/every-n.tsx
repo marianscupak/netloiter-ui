@@ -12,6 +12,7 @@ export const EveryNGuardFields = ({ fieldNamePrefix, disabled }: Props) => (
         name={fieldNamePrefix ? `${fieldNamePrefix}.n` : "n"}
         label="N"
         disabled={disabled}
+        int
       />
     </div>
   </div>
