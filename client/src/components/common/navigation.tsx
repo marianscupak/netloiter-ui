@@ -10,6 +10,7 @@ interface NavigationItem {
 const getNavigationItems = (running: boolean): NavigationItem[] => [
   { path: "/", label: "Home" },
   ...(running ? [{ path: "/current-run", label: "Current run" }] : []),
+  { path: "/run-history", label: "Run history" },
   { path: "/configs", label: "Configs" },
   { path: "/scenarios", label: "Scenarios" },
   { path: "/rules", label: "Rules" },

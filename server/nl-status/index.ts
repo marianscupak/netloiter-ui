@@ -9,6 +9,7 @@ import {
   parseConfigForNl,
   parseScenarioForNl,
 } from "./parse-config-for-nl";
+import { initializeRun } from "../websocket";
 
 const configsPath = z.string().parse(process.env.CONFIGS_PATH);
 const nlHostIp = z.string().parse(process.env.NL_HOST_IP);
@@ -60,45 +61,48 @@ const sshClient = new Client().on("ready", () => {
     (err) => {
       if (err) throw err;
 
-      console.log(getNlStartCommand(scenarioFileName, configFileName));
+      const startCommand = getNlStartCommand(scenarioFileName, configFileName);
+      console.log(startCommand);
+
       let firstResponse = true;
-      sshClient.exec(
-        getNlStartCommand(scenarioFileName, configFileName),
-        { pty: true },
-        (err, channel) => {
-          if (err) throw err;
-          console.log(
-            `Starting NetLoiter with Scenario: ${scenario?.name}, Config: ${config?.name}`,
-          );
-          runningFrom = new Date();
-          channel
-            .on("data", (data: unknown) => {
-              if (firstResponse) {
-                firstResponse = false;
-                channel.write(nlHostPassword + "\n");
-              } else {
-                eventEmitter.emit("add", data);
-              }
-            })
-            .on("close", (code: unknown, signal: unknown) => {
-              console.log("Closed with code: " + code, signal);
-              sshClient.end();
-              runningFrom = false;
-              eventEmitter.emit("close");
-            });
-        },
-      );
+      sshClient.exec(startCommand, { pty: true }, (err, channel) => {
+        if (err) throw err;
+        console.log(
+          `Starting NetLoiter with Scenario: ${scenario?.name}, Config: ${config?.name}`,
+        );
+        runningFrom = new Date();
+        initializeRun(
+          runningFrom,
+          scenario && "id" in scenario ? (scenario.id as number) : undefined,
+          config && "id" in config ? (config.id as number) : undefined,
+        );
+        channel
+          .on("data", (data: unknown) => {
+            if (firstResponse) {
+              firstResponse = false;
+              channel.write(nlHostPassword + "\n");
+            } else {
+              eventEmitter.emit("add", data);
+            }
+          })
+          .on("close", (code: unknown, signal: unknown) => {
+            console.log("Closed with code: " + code, signal);
+            sshClient.end();
+            runningFrom = false;
+            eventEmitter.emit("close");
+          });
+      });
     },
   );
 });
 
 let runningFrom: Date | false = false;
 let scenario: CreateScenarioFormValues | undefined = undefined;
-let config: CreateConfigFormValues | undefined = undefined;
+let config: (CreateConfigFormValues & { id: number }) | undefined = undefined;
 
 export const startNetLoiter = (
   _scenario: CreateScenarioFormValues,
-  _config: CreateConfigFormValues,
+  _config: CreateConfigFormValues & { id: number },
 ) => {
   if (!runningFrom) {
     scenario = _scenario;

@@ -1,8 +1,9 @@
 import {
   FormControl,
   MenuItem,
+  OutlinedSelectProps,
   Select as MuiSelect,
-  SelectProps as MuiSelectProps,
+  SelectChangeEvent,
 } from "@mui/material";
 import { OutlinedInput } from "./input";
 import { withStyles } from "@mui/styles";
@@ -13,9 +14,10 @@ export interface SelectOption {
   value: number | string;
 }
 
-export interface SelectProps extends MuiSelectProps {
+export interface SelectProps extends OutlinedSelectProps {
   label: string;
   options: SelectOption[];
+  onChange?(event: SelectChangeEvent<unknown>): void;
 }
 
 const CustomSelect = withStyles(() => ({
@@ -24,7 +26,12 @@ const CustomSelect = withStyles(() => ({
   },
 }))(MuiSelect);
 
-export const Select = ({ label, options, ...props }: SelectProps) => (
+export const Select = ({
+  label,
+  options,
+  classes: _,
+  ...props
+}: Omit<SelectProps, "variant">) => (
   <FormControl fullWidth variant="outlined">
     <InputLabel id={`${label}-label`} error={props.error}>
       {label}

@@ -1,9 +1,9 @@
 import { createTRPCRouter, publicProcedure } from "../trpc";
 import { createScenarioFormValuesSchema } from "netloier-ui/src/components/forms/scenarios/create-scenario-form-types";
 import { TRPCError } from "@trpc/server";
-import { createRule, getRuleDetail } from "./utils/rule";
-import { z } from "zod";
+import { createRule } from "./utils/rule";
 import { getScenarioDetail } from "./utils/scenario";
+import { objectWithId } from "./utils/object-with-id";
 
 export const scenarioRouter = createTRPCRouter({
   getAll: publicProcedure.query(
@@ -55,7 +55,7 @@ export const scenarioRouter = createTRPCRouter({
       return newScenario;
     }),
   deleteScenario: publicProcedure
-    .input(z.object({ id: z.number() }))
+    .input(objectWithId)
     .mutation(async ({ ctx, input }) => {
       await ctx.prisma.ruleToScenario.deleteMany({
         where: { scenarioId: input.id },
@@ -63,9 +63,9 @@ export const scenarioRouter = createTRPCRouter({
       return await ctx.prisma.scenario.delete({ where: { id: input.id } });
     }),
   getScenarioDetail: publicProcedure
-    .input(z.object({ id: z.number() }))
+    .input(objectWithId)
     .mutation(async ({ ctx, input }) => await getScenarioDetail(ctx, input.id)),
   getScenarioDetailQuery: publicProcedure
-    .input(z.object({ id: z.number() }))
+    .input(objectWithId)
     .query(async ({ ctx, input }) => await getScenarioDetail(ctx, input.id)),
 });

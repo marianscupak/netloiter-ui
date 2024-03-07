@@ -5,6 +5,7 @@ import { guardRouter } from "./guard";
 import { ruleRouter } from "./rule";
 import { scenarioRouter } from "./scenario";
 import { configRouter } from "./config";
+import { runHistoryRouter } from "./run-history";
 
 export const appRouter = router({
   action: actionRouter,
@@ -12,6 +13,7 @@ export const appRouter = router({
   rule: ruleRouter,
   scenario: scenarioRouter,
   config: configRouter,
+  runHistory: runHistoryRouter,
 });
 
 export type AppRouter = typeof appRouter;

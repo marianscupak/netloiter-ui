@@ -8,6 +8,8 @@ import { getStatus, startNetLoiter, stopNetLoiter } from "./nl-status";
 import { z } from "zod";
 import { createScenarioFormValuesSchema } from "netloier-ui/src/components/forms/scenarios/create-scenario-form-types";
 import { createConfigFormValuesSchema } from "netloier-ui/src/components/forms/configs/create-config-form-types";
+import { initHyperTable, sequelize } from "./sequelize";
+import { objectWithId } from "./trpc-routers/utils/object-with-id";
 
 const trpcHandler = createHTTPHandler({
   middleware: cors(),
@@ -17,9 +19,11 @@ const trpcHandler = createHTTPHandler({
 
 const app = express().use(cors(), express.json());
 
+sequelize.sync().then(initHyperTable);
+
 const startBodySchema = z.object({
-  scenario: createScenarioFormValuesSchema,
-  config: createConfigFormValuesSchema,
+  scenario: createScenarioFormValuesSchema.merge(objectWithId),
+  config: z.intersection(createConfigFormValuesSchema, objectWithId),
 });
 
 app.post("/start", (req, res) => {

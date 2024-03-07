@@ -33,9 +33,17 @@ export const PacketEventList = ({ messages }: Props) => {
   return Object.keys(groupedEvents).map((key) => (
     <div className="my-2" key={key}>
       <Accordion slotProps={{ transition: { unmountOnExit: true } }}>
-        <AccordionSummary>Packet ID: {key}</AccordionSummary>
+        {groupedEvents[key].sourceIp ? (
+          <AccordionSummary>
+            Source: {groupedEvents[key].sourceIp}:
+            {groupedEvents[key].sourcePort} {"->"} Destination:{" "}
+            {groupedEvents[key].destIp}:{groupedEvents[key].destPort}
+          </AccordionSummary>
+        ) : (
+          <AccordionSummary>Packet ID: {key}</AccordionSummary>
+        )}
         <AccordionDetails>
-          {groupedEvents[key].map((message, index) => (
+          {groupedEvents[key].messages.map((message, index) => (
             <div className="my-2" key={index}>
               <Event message={message} />
             </div>

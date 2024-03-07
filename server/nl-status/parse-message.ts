@@ -8,7 +8,7 @@ const parseLog = (log: string): Message => {
   if (messageType === MessageType.StartingNetLoiter) {
     return { type: MessageType.StartingNetLoiter };
   }
-  const packetId = parts[1];
+  const packetId = Number.parseInt(parts[1]);
 
   switch (messageType) {
     case MessageType.EvaluatingAllRule: {
@@ -66,9 +66,18 @@ const parseLog = (log: string): Message => {
       };
     }
     case MessageType.StartingPacketProcessing: {
+      const sourceIp = parts[2];
+      const sourcePort = Number.parseInt(parts[3]);
+      const destIp = parts[4];
+      const destPort = Number.parseInt(parts[5]);
+
       return {
         type: MessageType.StartingPacketProcessing,
         packetId,
+        sourceIp,
+        sourcePort,
+        destIp,
+        destPort,
       };
     }
     case MessageType.EndingPacketProcessing: {

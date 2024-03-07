@@ -25,7 +25,42 @@ export enum MessageType {
   ThrottleActionDelay,
 }
 
-const messageTypeSchema = z.nativeEnum(MessageType);
+interface SelectOption {
+  label: string;
+  value: number | string;
+}
+
+export const messageTypeOptions: SelectOption[] = [
+  { value: MessageType.StartingNetLoiter, label: "Starting NetLoiter" },
+  { value: MessageType.EvaluatingAllRule, label: "Evaluating All Rule" },
+  { value: MessageType.AllRuleFailure, label: "All Rule Failure" },
+  { value: MessageType.AllRuleSuccess, label: "All Rule Success" },
+  { value: MessageType.EvaluatingAnyRule, label: "Evaluating Any Rule" },
+  { value: MessageType.AnyRuleFailure, label: "Any Rule Failure" },
+  { value: MessageType.AnyRuleSuccess, label: "Any Rule Success" },
+  {
+    value: MessageType.StartingPacketProcessing,
+    label: "Starting Packet Processing",
+  },
+  {
+    value: MessageType.EndingPacketProcessing,
+    label: "Ending Packet Processing",
+  },
+  { value: MessageType.BitNoiseAction, label: "Bit Noise Action" },
+  { value: MessageType.DelayAction, label: "Delay Action" },
+  { value: MessageType.DropAction, label: "Drop Action" },
+  { value: MessageType.FinishAction, label: "Finish Action" },
+  { value: MessageType.PauseAction, label: "Pause Action" },
+  { value: MessageType.ReorderAction, label: "Reorder Action" },
+  { value: MessageType.ReplicateAction, label: "Replicate Action" },
+  { value: MessageType.RestartAction, label: "Restart Action" },
+  { value: MessageType.SkipAction, label: "Skip Action" },
+  { value: MessageType.SocketTcpAction, label: "Socket TCP Action" },
+  { value: MessageType.ThrottleActionPass, label: "Throttle Action Pass" },
+  { value: MessageType.ThrottleActionDelay, label: "Throttle Action Delay" },
+];
+
+export const messageTypeSchema = z.nativeEnum(MessageType);
 
 const baseMessageSchema = z.object({
   type: messageTypeSchema,
@@ -36,7 +71,7 @@ const startingNLMessageSchema = baseMessageSchema.extend({
 });
 
 const baseMessageWithPacketIdSchema = baseMessageSchema.merge(
-  z.object({ packetId: z.string() }),
+  z.object({ packetId: z.number() }),
 );
 
 const evaluatingAllRuleMessageSchema = baseMessageWithPacketIdSchema.extend({
@@ -74,6 +109,10 @@ const anyRuleSuccessMessageSchema = baseMessageWithPacketIdSchema.extend({
 const startingPacketProcessingMessageSchema =
   baseMessageWithPacketIdSchema.extend({
     type: z.literal(MessageType.StartingPacketProcessing),
+    sourceIp: z.string(),
+    sourcePort: z.number(),
+    destIp: z.string(),
+    destPort: z.number(),
   });
 
 const endingPacketProcessingMessageSchema =

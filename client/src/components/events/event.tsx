@@ -78,7 +78,20 @@ export const Event = ({ message }: Props) => {
         );
       }
       case MessageType.StartingPacketProcessing: {
-        return <div>Starting packet processing</div>;
+        const { sourceIp, sourcePort, destIp, destPort, packetId } = message;
+
+        return (
+          <div className="flex-col">
+            <div>Starting packet processing</div>
+            <div>Packet ID: {packetId}</div>
+            <div>
+              Source: {sourceIp}:{sourcePort}
+            </div>
+            <div>
+              Destination: {destIp}:{destPort}
+            </div>
+          </div>
+        );
       }
       case MessageType.EndingPacketProcessing: {
         return <div>Ending packet processing</div>;

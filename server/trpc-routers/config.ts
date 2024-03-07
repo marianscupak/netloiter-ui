@@ -3,7 +3,7 @@ import {
   ConfigData,
   createConfigFormValuesSchema,
 } from "netloier-ui/src/components/forms/configs/create-config-form-types";
-import { z } from "zod";
+import { objectWithId } from "./utils/object-with-id";
 
 export const configRouter = createTRPCRouter({
   getAll: publicProcedure.query(
@@ -17,13 +17,13 @@ export const configRouter = createTRPCRouter({
         await ctx.prisma.config.create({ data: { name, mode, data: rest } }),
     ),
   deleteConfig: publicProcedure
-    .input(z.object({ id: z.number() }))
+    .input(objectWithId)
     .mutation(
       async ({ ctx, input }) =>
         await ctx.prisma.config.delete({ where: { id: input.id } }),
     ),
   getConfigDetail: publicProcedure
-    .input(z.object({ id: z.number() }))
+    .input(objectWithId)
     .mutation(async ({ ctx, input }) => {
       const { id, name, mode, data } =
         await ctx.prisma.config.findUniqueOrThrow({ where: { id: input.id } });
@@ -31,7 +31,7 @@ export const configRouter = createTRPCRouter({
       return { id, name, mode, ...(data as ConfigData) };
     }),
   getConfigDetailQuery: publicProcedure
-    .input(z.object({ id: z.number() }))
+    .input(objectWithId)
     .query(async ({ ctx, input }) => {
       const { id, name, mode, data } =
         await ctx.prisma.config.findUniqueOrThrow({ where: { id: input.id } });

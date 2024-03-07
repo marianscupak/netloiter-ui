@@ -1,7 +1,7 @@
 import { Controller, useFormContext } from "react-hook-form";
 import { Select, SelectProps } from "../select";
 
-interface Props extends SelectProps {
+interface Props extends Omit<SelectProps, "variant"> {
   name: string;
 }
 

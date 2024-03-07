@@ -1,11 +1,7 @@
 import useWebSocket from "react-use-websocket";
-import {
-  Message,
-  MessageType,
-  MessageWithPacketId,
-} from "../../../server/nl-status/message-types";
+import { Message } from "../../../server/nl-status/message-types";
 import { useNlStatusEndpoints } from "../utils/use-nl-status-endpoints";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import dayjs from "dayjs";
 import { Button } from "@mui/material";
 import { PacketEventList } from "../components/events/packet-event-list";
@@ -33,7 +29,7 @@ export const CurrentRun = () => {
     call();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const [eventsShown, setEventsShown] = useState(100);
+  const [eventsShown, setEventsShown] = useState(1000);
 
   const onEventsShownChange = useCallback((n: number) => {
     setEventsShown(n);
@@ -81,6 +77,7 @@ export const CurrentRun = () => {
         onEventsShownChange={onEventsShownChange}
         onPause={onPause}
         onResume={onResume}
+        showPause
       />
       <PacketEventList
         messages={pausedMessages.length === 0 ? messages : pausedMessages}

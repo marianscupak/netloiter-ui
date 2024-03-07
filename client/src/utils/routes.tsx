@@ -18,6 +18,8 @@ import { ActionDetail } from "../screens/actions/detail";
 import { ConfigDetail } from "../screens/configs/detail";
 import { GuardDetail } from "../screens/guards/detail";
 import { RuleDetail } from "../screens/rules/detail";
+import { RunHistory } from "../screens/run-history";
+import { RunHistoryDetail } from "../screens/run-history/detail";
 
 export const router = createBrowserRouter([
   {
@@ -42,6 +44,8 @@ export const router = createBrowserRouter([
       { path: "/configs", element: <Configs /> },
       { path: "/configs/create", element: <CreateConfig /> },
       { path: "/configs/:id", element: <ConfigDetail /> },
+      { path: "/run-history", element: <RunHistory /> },
+      { path: "/run-history/:id", element: <RunHistoryDetail /> },
     ],
   },
 ]);

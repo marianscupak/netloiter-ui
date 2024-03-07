@@ -10,9 +10,10 @@ import {
 
 export const parseConfigForNl = ({
   mode,
-  name: _,
+  name: _name,
+  id: _id,
   ...data
-}: CreateConfigFormValues) => {
+}: CreateConfigFormValues & { id: number }) => {
   return { mode, ...data };
 };
 
