@@ -26,9 +26,10 @@ export const createRuleFormDefaultValues: CreateRuleFormValues = {
 
 interface Props {
   defaultValues?: CreateRuleFormValues;
+  readOnly?: boolean;
 }
 
-export const CreateRuleForm = ({ defaultValues }: Props) => {
+export const CreateRuleForm = ({ defaultValues, readOnly }: Props) => {
   const form = useForm<CreateRuleFormValues>({
     resolver: zodResolver(createRuleFormValuesSchema),
     defaultValues: defaultValues ?? createRuleFormDefaultValues,
@@ -71,13 +72,15 @@ export const CreateRuleForm = ({ defaultValues }: Props) => {
   return (
     <FormProvider {...form}>
       <div className="bg-dark-gray p-4 w-[80%]">
-        <FormTextField name="name" label="Name" />
-        <RuleFormFields />
-        <div className="mt-4">
-          <Button variant="contained" onClick={onSubmit}>
-            SAVE
-          </Button>
-        </div>
+        <FormTextField name="name" label="Name" disabled={readOnly} />
+        <RuleFormFields readOnly={readOnly} />
+        {!readOnly && (
+          <div className="mt-4">
+            <Button variant="contained" onClick={onSubmit}>
+              SAVE
+            </Button>
+          </div>
+        )}
       </div>
     </FormProvider>
   );

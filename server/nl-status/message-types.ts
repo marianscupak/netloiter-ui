@@ -1,8 +1,10 @@
 import { z } from "zod";
+import { createRuleValuesSchema } from "netloiter-ui-fe/src/components/forms/rules/create-rule-form-types";
 
 export enum MessageType {
   UnknownMessage = -1,
-  StartingNetLoiter = 1,
+  RulesReplaced,
+  StartingNetLoiter,
   EvaluatingAllRule,
   AllRuleFailure,
   AllRuleSuccess,
@@ -58,6 +60,7 @@ export const messageTypeOptions: SelectOption[] = [
   { value: MessageType.SocketTcpAction, label: "Socket TCP Action" },
   { value: MessageType.ThrottleActionPass, label: "Throttle Action Pass" },
   { value: MessageType.ThrottleActionDelay, label: "Throttle Action Delay" },
+  { value: MessageType.RulesReplaced, label: "Rules Replaced" },
 ];
 
 export const messageTypeSchema = z.nativeEnum(MessageType);
@@ -179,6 +182,13 @@ const unknownMessageSchema = baseMessageSchema.extend({
   type: z.literal(MessageType.UnknownMessage),
 });
 
+const rulesReplacedMessageSchema = baseMessageSchema.extend({
+  type: z.literal(MessageType.RulesReplaced),
+  newRules: z.array(createRuleValuesSchema),
+});
+
+export type RulesReplacedMessage = z.infer<typeof rulesReplacedMessageSchema>;
+
 export const messageWithPacketIdSchema = z.union([
   evaluatingAllRuleMessageSchema,
   evaluatingAllRuleMessageSchema,
@@ -209,6 +219,7 @@ export const messageSchema = z.union([
   messageWithPacketIdSchema,
   startingNLMessageSchema,
   unknownMessageSchema,
+  rulesReplacedMessageSchema,
 ]);
 
 export type Message = z.infer<typeof messageSchema>;

@@ -22,7 +22,7 @@ export enum RuleType {
 
 export enum ScenarioType {
   Sequential = "Sequential",
-  // SequentialHttp = "SequentialHttp",
+  SequentialHTTP = "SequentialHTTP",
 }
 
 export enum ConfigMode {

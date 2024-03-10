@@ -1,7 +1,7 @@
 import { Client } from "ssh2";
 import { eventEmitter } from "../event-emitter";
-import { CreateScenarioFormValues } from "netloier-ui/src/components/forms/scenarios/create-scenario-form-types";
-import { CreateConfigFormValues } from "netloier-ui/src/components/forms/configs/create-config-form-types";
+import { CreateScenarioFormValues } from "netloiter-ui-fe/src/components/forms/scenarios/create-scenario-form-types";
+import { CreateConfigFormValues } from "netloiter-ui-fe/src/components/forms/configs/create-config-form-types";
 import { z } from "zod";
 import {
   NlConfig,

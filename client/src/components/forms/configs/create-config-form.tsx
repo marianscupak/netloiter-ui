@@ -30,9 +30,10 @@ const configTypeOptions: SelectOption[] = [
 
 interface Props {
   defaultValues?: CreateConfigFormValues;
+  readOnly?: boolean;
 }
 
-export const CreateConfigForm = ({ defaultValues }: Props) => {
+export const CreateConfigForm = ({ defaultValues, readOnly }: Props) => {
   const form = useForm<CreateConfigFormValues>({
     defaultValues: defaultValues ?? createConfigDefaultValues,
     resolver: zodResolver(createConfigFormValuesSchema),
@@ -74,17 +75,24 @@ export const CreateConfigForm = ({ defaultValues }: Props) => {
     <FormProvider {...form}>
       <div className="bg-dark-gray p-4 w-[50%]">
         <div className="mt-4">
-          <FormTextField name="name" label="Name" />
+          <FormTextField name="name" label="Name" disabled={readOnly} />
         </div>
         <div className="mt-4">
-          <FormSelect name="mode" label="Mode" options={configTypeOptions} />
+          <FormSelect
+            name="mode"
+            label="Mode"
+            options={configTypeOptions}
+            disabled={readOnly}
+          />
         </div>
-        <ConfigSpecificFields type={form.watch("mode")} />
-        <div className="mt-4">
-          <Button variant="contained" onClick={onSubmit}>
-            SAVE
-          </Button>
-        </div>
+        <ConfigSpecificFields type={form.watch("mode")} readOnly={readOnly} />
+        {!readOnly && (
+          <div className="mt-4">
+            <Button variant="contained" onClick={onSubmit}>
+              SAVE
+            </Button>
+          </div>
+        )}
       </div>
     </FormProvider>
   );

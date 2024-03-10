@@ -6,8 +6,8 @@ import { appRouter } from "./trpc-routers";
 import { createContext } from "./context";
 import { getStatus, startNetLoiter, stopNetLoiter } from "./nl-status";
 import { z } from "zod";
-import { createScenarioFormValuesSchema } from "netloier-ui/src/components/forms/scenarios/create-scenario-form-types";
-import { createConfigFormValuesSchema } from "netloier-ui/src/components/forms/configs/create-config-form-types";
+import { createScenarioFormValuesSchema } from "netloiter-ui-fe/src/components/forms/scenarios/create-scenario-form-types";
+import { createConfigFormValuesSchema } from "netloiter-ui-fe/src/components/forms/configs/create-config-form-types";
 import { initHyperTable, sequelize } from "./sequelize";
 import { objectWithId } from "./trpc-routers/utils/object-with-id";
 

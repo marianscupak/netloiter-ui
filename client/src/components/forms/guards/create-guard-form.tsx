@@ -23,9 +23,10 @@ export const createGuardFormDefaultValues: CreateGuardFormValues = {
 
 interface Props {
   defaultValues?: CreateGuardFormValues;
+  readOnly?: boolean;
 }
 
-export const CreateGuardForm = ({ defaultValues }: Props) => {
+export const CreateGuardForm = ({ defaultValues, readOnly }: Props) => {
   const form = useForm<CreateGuardFormValues>({
     defaultValues: defaultValues ?? createGuardFormDefaultValues,
     resolver: zodResolver(createGuardFormValuesSchema),
@@ -71,13 +72,15 @@ export const CreateGuardForm = ({ defaultValues }: Props) => {
   return (
     <FormProvider {...form}>
       <div className="bg-dark-gray p-4 w-[50%]">
-        <FormTextField name="name" label="Name" />
+        <FormTextField name="name" label="Name" disabled={readOnly} />
         <GuardFormFields />
-        <div className="mt-4">
-          <Button variant="contained" onClick={onSubmit}>
-            SAVE
-          </Button>
-        </div>
+        {!readOnly && (
+          <div className="mt-4">
+            <Button variant="contained" onClick={onSubmit}>
+              SAVE
+            </Button>
+          </div>
+        )}
       </div>
     </FormProvider>
   );

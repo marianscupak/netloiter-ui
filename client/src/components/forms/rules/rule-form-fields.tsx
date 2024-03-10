@@ -21,7 +21,10 @@ const ruleTypeOptions: SelectOption[] = [
   { value: RuleType.Any, label: RuleType.Any },
 ];
 
-export const RuleFormFields = ({ fieldNamePrefix }: FieldNamePrefix) => {
+export const RuleFormFields = ({
+  fieldNamePrefix,
+  readOnly,
+}: FieldNamePrefix & { readOnly?: boolean }) => {
   const { control, watch } = useFormContext();
 
   const { showSnackbar } = useSnackbar();
@@ -145,7 +148,7 @@ export const RuleFormFields = ({ fieldNamePrefix }: FieldNamePrefix) => {
           name={fieldNamePrefix ? `${fieldNamePrefix}.type` : "type"}
           label="Type"
           options={ruleTypeOptions}
-          disabled={isLoaded}
+          disabled={isLoaded || readOnly}
         />
       </div>
       <div className="flex gap-4 mt-4">
@@ -153,7 +156,7 @@ export const RuleFormFields = ({ fieldNamePrefix }: FieldNamePrefix) => {
           <div>Guards</div>
           {guards.map((guard, index) => (
             <div className="p-2 border rounded-[4px] mb-4" key={guard.id}>
-              {!isLoaded && (
+              {!isLoaded && !readOnly && (
                 <div className="flex justify-end">
                   <div
                     onClick={() => removeGuard(index)}
@@ -173,7 +176,7 @@ export const RuleFormFields = ({ fieldNamePrefix }: FieldNamePrefix) => {
               />
             </div>
           ))}
-          {!isLoaded && (
+          {!isLoaded && !readOnly && (
             <div className="mt-4 flex gap-2">
               <Button onClick={appendDefaultGuard} variant="contained">
                 ADD GUARD
@@ -188,7 +191,7 @@ export const RuleFormFields = ({ fieldNamePrefix }: FieldNamePrefix) => {
           <div>Actions</div>
           {actions.map((action, index) => (
             <div className="p-2 border rounded-[4px] mb-4" key={action.id}>
-              {!isLoaded && (
+              {!isLoaded && !readOnly && (
                 <div className="flex justify-end">
                   <div
                     onClick={() => removeAction(index)}
@@ -208,7 +211,7 @@ export const RuleFormFields = ({ fieldNamePrefix }: FieldNamePrefix) => {
               />
             </div>
           ))}
-          {!isLoaded && (
+          {!isLoaded && !readOnly && (
             <div className="mt-4 flex gap-2">
               <Button onClick={appendDefaultAction} variant="contained">
                 ADD ACTION

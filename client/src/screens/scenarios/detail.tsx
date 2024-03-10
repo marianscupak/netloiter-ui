@@ -18,6 +18,7 @@ export const ScenarioDetail = () => {
         {data && (
           <CreateScenarioForm
             defaultValues={data as CreateScenarioFormValues}
+            readOnly
           />
         )}
       </div>

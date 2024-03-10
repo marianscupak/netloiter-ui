@@ -6,7 +6,10 @@ import { objectWithId } from "./utils/object-with-id";
 import { getScenarioDetail } from "./utils/scenario";
 import { TRPCError } from "@trpc/server";
 import { Op } from "@sequelize/core";
-import { messageTypeSchema } from "../nl-status/message-types";
+import { MessageType, messageTypeSchema } from "../nl-status/message-types";
+import { editRunConfigFormValuesSchema } from "netloiter-ui-fe/src/components/forms/edit-run-config/edit-run-config-form-types";
+import axios from "axios";
+import { NL_REST_PORT, parseRuleForNl } from "../nl-status/parse-config-for-nl";
 
 export const runHistoryRouter = createTRPCRouter({
   getAll: publicProcedure.query(async () => await Run.findAll()),
@@ -63,4 +66,33 @@ export const runHistoryRouter = createTRPCRouter({
           subQuery: false,
         }),
     ),
+  getLastRun: publicProcedure.query(
+    async () => await Run.findOne({ order: [["dateTime", "DESC"]] }),
+  ),
+  editRunConfig: publicProcedure
+    .input(editRunConfigFormValuesSchema)
+    .mutation(async ({ input }) => {
+      try {
+        const nlHostIp = z.string().parse(process.env.NL_HOST_IP);
+        const response = await axios.post(
+          `http://${nlHostIp}:${NL_REST_PORT}/rules/replace`,
+          input.rules.map(parseRuleForNl),
+        );
+
+        if (response.status === 204) {
+          const currentRun = await Run.findOne({
+            order: [["dateTime", "DESC"]],
+          });
+          if (currentRun) {
+            await RunMessage.create({
+              runId: currentRun.id,
+              time: new Date(),
+              data: { type: MessageType.RulesReplaced, newRules: input.rules },
+            });
+          }
+        }
+      } catch (e) {
+        throw new TRPCError({ code: "BAD_REQUEST" });
+      }
+    }),
 });

@@ -16,7 +16,10 @@ export const ActionDetail = () => {
       <div className="text-header">{`Action ${data?.name}`}</div>
       <div className="min-h-[calc(100vh-100px)] flex justify-center items-center my-4">
         {data && (
-          <CreateActionForm defaultValues={data as CreateActionFormValues} />
+          <CreateActionForm
+            defaultValues={data as CreateActionFormValues}
+            readOnly
+          />
         )}
       </div>
     </div>

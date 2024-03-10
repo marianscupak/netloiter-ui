@@ -41,11 +41,16 @@ const FlowParameter = ({
   fieldNamePrefix,
   label,
   type,
-}: FlowParameter & FieldNamePrefix) => {
+  readOnly,
+}: FlowParameter & FieldNamePrefix & { readOnly?: boolean }) => {
   switch (type) {
     case "string":
       return (
-        <FormTextField name={`${fieldNamePrefix}.${name}`} label={label} />
+        <FormTextField
+          name={`${fieldNamePrefix}.${name}`}
+          label={label}
+          disabled={readOnly}
+        />
       );
     case "number":
       return (
@@ -53,18 +58,26 @@ const FlowParameter = ({
           name={`${fieldNamePrefix}.${name}`}
           label={label}
           type="number"
+          disabled={readOnly}
         />
       );
     case "boolean":
-      return <FormCheckbox name={`${fieldNamePrefix}.${name}`} label={label} />;
+      return (
+        <FormCheckbox
+          name={`${fieldNamePrefix}.${name}`}
+          label={label}
+          disabled={readOnly}
+        />
+      );
   }
 };
 
 interface Props extends FieldNamePrefix {
+  readOnly?: boolean;
   remove(): void;
 }
 
-export const Flow = ({ fieldNamePrefix, remove }: Props) => {
+export const Flow = ({ fieldNamePrefix, readOnly, remove }: Props) => {
   const { watch, setValue } = useFormContext();
 
   const values = useMemo(
@@ -107,26 +120,35 @@ export const Flow = ({ fieldNamePrefix, remove }: Props) => {
 
   return (
     <div className="p-2 border rounded-[4px] mb-4">
-      <div className="flex justify-end">
-        <div onClick={remove} className="cursor-pointer">
-          <DeleteIcon color="error" />
+      {!readOnly && (
+        <div className="flex justify-end">
+          <div onClick={remove} className="cursor-pointer">
+            <DeleteIcon color="error" />
+          </div>
         </div>
-      </div>
+      )}
       <div className="mt-4">
         <FormSelect
           name={`${fieldNamePrefix}.action`}
           label="Action"
           options={flowActionTypeOptions}
+          disabled={readOnly}
         />
         {parametersShown.map((param) =>
           param.enabled ? (
             <div key={param.name} className="mt-4">
-              <FlowParameter {...param} fieldNamePrefix={fieldNamePrefix} />
+              <FlowParameter
+                {...param}
+                fieldNamePrefix={fieldNamePrefix}
+                readOnly={readOnly}
+              />
             </div>
           ) : null,
         )}
       </div>
-      <Button onClick={openParametersModal}>EDIT PARAMETERS</Button>
+      {!readOnly && (
+        <Button onClick={openParametersModal}>EDIT PARAMETERS</Button>
+      )}
       <Modal open={parametersModalOpen} onClose={closeParametersModal}>
         <div>
           <div>Parameters</div>

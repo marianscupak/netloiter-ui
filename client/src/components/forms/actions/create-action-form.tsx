@@ -20,9 +20,10 @@ export const createActionFormDefaultValues: CreateActionFormValues = {
 
 interface Props {
   defaultValues?: CreateActionFormValues;
+  readOnly?: boolean;
 }
 
-export const CreateActionForm = ({ defaultValues }: Props) => {
+export const CreateActionForm = ({ defaultValues, readOnly }: Props) => {
   const form = useForm<CreateActionFormValues>({
     defaultValues: defaultValues ?? createActionFormDefaultValues,
     resolver: zodResolver(createActionFormValuesSchema),
@@ -79,13 +80,15 @@ export const CreateActionForm = ({ defaultValues }: Props) => {
   return (
     <FormProvider {...form}>
       <div className="bg-dark-gray p-4 w-[50%]">
-        <FormTextField name="name" label="Name" />
+        <FormTextField name="name" label="Name" disabled={readOnly} />
         <ActionFormFields />
-        <div className="mt-4">
-          <Button variant="contained" onClick={onSubmit}>
-            SAVE
-          </Button>
-        </div>
+        {!readOnly && (
+          <div className="mt-4">
+            <Button variant="contained" onClick={onSubmit}>
+              SAVE
+            </Button>
+          </div>
+        )}
       </div>
     </FormProvider>
   );

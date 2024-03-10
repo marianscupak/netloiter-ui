@@ -1,5 +1,5 @@
 import { createTRPCRouter, publicProcedure } from "../trpc";
-import { createActionFormValuesSchema } from "netloier-ui/src/components/forms/actions/create-action-form-types";
+import { createActionFormValuesSchema } from "netloiter-ui-fe/src/components/forms/actions/create-action-form-types";
 import { convertActionToFormValues } from "./utils/convert-model-to-form-values";
 import { objectWithId } from "./utils/object-with-id";
 

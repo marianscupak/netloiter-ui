@@ -101,7 +101,7 @@ model RuleToScenario {
 
 enum ScenarioType {
   Sequential
-  // SequentialHttp TODO: maybe add support for this?
+  SequentialHTTP
 }
 
 model Scenario {

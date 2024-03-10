@@ -4,7 +4,11 @@ import { useCallback } from "react";
 import { Button } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-export const SocketConfigFields = () => {
+interface Props {
+  readOnly?: boolean;
+}
+
+export const SocketConfigFields = ({ readOnly }: Props) => {
   const { control } = useFormContext();
 
   const {
@@ -39,19 +43,22 @@ export const SocketConfigFields = () => {
       <div>
         {tcpAddresses.map((tcp, index) => (
           <div key={tcp.id}>
-            <div className="flex justify-end items-center mt-2">
-              <div
-                onClick={() => removeTcpAddress(index)}
-                className="cursor-pointer"
-              >
-                <DeleteIcon color="error" />
+            {!readOnly && (
+              <div className="flex justify-end items-center mt-2">
+                <div
+                  onClick={() => removeTcpAddress(index)}
+                  className="cursor-pointer"
+                >
+                  <DeleteIcon color="error" />
+                </div>
               </div>
-            </div>
+            )}
             <div className="flex mt-2 gap-2">
               <div className="w-[75%]">
                 <FormTextField
                   name={`tcpAddresses.${index}.local.ip`}
                   label="Local IP"
+                  disabled={readOnly}
                 />
               </div>
               <div className="w-[25%]">
@@ -59,6 +66,7 @@ export const SocketConfigFields = () => {
                   name={`tcpAddresses.${index}.local.port`}
                   label="Port"
                   type="number"
+                  disabled={readOnly}
                 />
               </div>
             </div>
@@ -67,6 +75,7 @@ export const SocketConfigFields = () => {
                 <FormTextField
                   name={`tcpAddresses.${index}.remote.ip`}
                   label="Remote IP"
+                  disabled={readOnly}
                 />
               </div>
               <div className="w-[25%]">
@@ -74,34 +83,40 @@ export const SocketConfigFields = () => {
                   name={`tcpAddresses.${index}.remote.port`}
                   label="Port"
                   type="number"
+                  disabled={readOnly}
                 />
               </div>
             </div>
           </div>
         ))}
-        <div className="mt-4">
-          <Button onClick={appendDefaultTcpAddress} variant="contained">
-            ADD TCP
-          </Button>
-        </div>
+        {!readOnly && (
+          <div className="mt-4">
+            <Button onClick={appendDefaultTcpAddress} variant="contained">
+              ADD TCP
+            </Button>
+          </div>
+        )}
       </div>
       <div className="mt-4">UDP Addresses</div>
       <div>
         {udpAddresses.map((tcp, index) => (
           <div key={tcp.id}>
-            <div className="flex justify-end items-center mt-2">
-              <div
-                onClick={() => removeUdpAddress(index)}
-                className="cursor-pointer"
-              >
-                <DeleteIcon color="error" />
+            {!readOnly && (
+              <div className="flex justify-end items-center mt-2">
+                <div
+                  onClick={() => removeUdpAddress(index)}
+                  className="cursor-pointer"
+                >
+                  <DeleteIcon color="error" />
+                </div>
               </div>
-            </div>
+            )}
             <div className="flex mt-2 gap-2">
               <div className="w-[75%]">
                 <FormTextField
                   name={`udpAddresses.${index}.local.ip`}
                   label="Local IP"
+                  disabled={readOnly}
                 />
               </div>
               <div className="w-[25%]">
@@ -109,6 +124,7 @@ export const SocketConfigFields = () => {
                   name={`udpAddresses.${index}.local.port`}
                   label="Port"
                   type="number"
+                  disabled={readOnly}
                 />
               </div>
             </div>
@@ -117,6 +133,7 @@ export const SocketConfigFields = () => {
                 <FormTextField
                   name={`udpAddresses.${index}.remote.ip`}
                   label="Remote IP"
+                  disabled={readOnly}
                 />
               </div>
               <div className="w-[25%]">
@@ -124,16 +141,19 @@ export const SocketConfigFields = () => {
                   name={`udpAddresses.${index}.remote.port`}
                   label="Port"
                   type="number"
+                  disabled={readOnly}
                 />
               </div>
             </div>
           </div>
         ))}
-        <div className="mt-4">
-          <Button onClick={appendDefaultUdpAddress} variant="contained">
-            ADD UDP
-          </Button>
-        </div>
+        {!readOnly && (
+          <div className="mt-4">
+            <Button onClick={appendDefaultUdpAddress} variant="contained">
+              ADD UDP
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -7,6 +7,9 @@ import { Button } from "@mui/material";
 import { PacketEventList } from "../components/events/packet-event-list";
 import { NavLink } from "react-router-dom";
 import { EventListControls } from "../components/events/event-list-controls";
+import { useAtom } from "jotai";
+import { statusAtom } from "../state/status";
+import { ScenarioType } from "../../../server/prisma/public";
 
 export const CurrentRun = () => {
   const { lastJsonMessage } = useWebSocket<{ messages: Message[] }>(
@@ -14,6 +17,7 @@ export const CurrentRun = () => {
   );
   const [runningFrom, setRunningFrom] = useState<Date | false>(false);
   const [messages, setMessages] = useState<Message[]>([]);
+  const [{ scenario }] = useAtom(statusAtom);
 
   const { getNetLoiterStatus, stopNetLoiter } = useNlStatusEndpoints();
 
@@ -57,15 +61,18 @@ export const CurrentRun = () => {
     <div className="p-4">
       <div className="text-header">Current run</div>
       <div className="mb-2">
-        Running from:{" "}
-        {dayjs(runningFrom || undefined).format("DD. MM. HH:mm:ss")}
+        {runningFrom
+          ? `Running from: ${dayjs(runningFrom).format("DD. MM. HH:mm:ss")}`
+          : "Not Running"}
       </div>
       <div className="flex gap-2">
-        <NavLink to="/current-run/edit-config">
-          <Button variant="contained" color="warning">
-            EDIT CONFIG
-          </Button>
-        </NavLink>
+        {scenario?.type === ScenarioType.SequentialHTTP && (
+          <NavLink to="/current-run/edit-config">
+            <Button variant="contained" color="warning">
+              EDIT CONFIG
+            </Button>
+          </NavLink>
+        )}
         <Button variant="contained" color="error" onClick={stopNetLoiter}>
           STOP
         </Button>

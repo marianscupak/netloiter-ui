@@ -16,7 +16,10 @@ export const ConfigDetail = () => {
       <div className="text-header">{`Config ${data?.name}`}</div>
       <div className="min-h-[calc(100vh-100px)] flex justify-center items-center my-4">
         {data && (
-          <CreateConfigForm defaultValues={data as CreateConfigFormValues} />
+          <CreateConfigForm
+            defaultValues={data as CreateConfigFormValues}
+            readOnly
+          />
         )}
       </div>
     </div>

@@ -2,7 +2,7 @@ import { createTRPCRouter, publicProcedure } from "../trpc";
 import {
   ConfigData,
   createConfigFormValuesSchema,
-} from "netloier-ui/src/components/forms/configs/create-config-form-types";
+} from "netloiter-ui-fe/src/components/forms/configs/create-config-form-types";
 import { objectWithId } from "./utils/object-with-id";
 
 export const configRouter = createTRPCRouter({

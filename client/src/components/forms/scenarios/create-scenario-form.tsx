@@ -4,27 +4,21 @@ import {
   createScenarioFormValuesSchema,
 } from "./create-scenario-form-types";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  ActionType,
-  RuleType,
-  ScenarioType,
-} from "../../../../../server/prisma/public";
+import { ActionType, ScenarioType } from "../../../../../server/prisma/public";
 import { FormTextField } from "../wrapped-inputs/form-text-field";
-import { Button, SelectChangeEvent } from "@mui/material";
+import { Button } from "@mui/material";
 import { FormSelect } from "../wrapped-inputs/form-select";
-import { Select, SelectOption } from "../select";
-import { useCallback, useMemo, useState } from "react";
+import { SelectOption } from "../select";
+import { useCallback, useMemo } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { RuleFormFields } from "../rules/rule-form-fields";
 import { createRuleFormDefaultValues } from "../rules/create-rule-form";
-import { Modal } from "../../common/modal";
 import { trpc } from "../../../utils/trpc";
 import { useSnackbar } from "../../../utils/snackbar";
 import { TRPCClientErrorLike } from "@trpc/client";
 import { AppRouter } from "../../../../../server/trpc-routers";
 import { useNavigate } from "react-router-dom";
-import { CreateActionFormValues } from "../actions/create-action-form-types";
-import { CreateGuardFormValues } from "../guards/create-guard-form-types";
+import { useLoadRuleModal } from "../../../utils/use-load-rule-modal";
 
 const defaultCreateScenarioValues: CreateScenarioFormValues = {
   name: "",
@@ -35,6 +29,7 @@ const defaultCreateScenarioValues: CreateScenarioFormValues = {
 
 const scenarioTypeOptions: SelectOption[] = [
   { value: ScenarioType.Sequential, label: ScenarioType.Sequential },
+  { value: ScenarioType.SequentialHTTP, label: "Sequential HTTP" },
 ];
 
 const defaultActionOptions: SelectOption[] = [
@@ -46,9 +41,10 @@ const defaultActionOptions: SelectOption[] = [
 
 interface Props {
   defaultValues?: CreateScenarioFormValues;
+  readOnly?: boolean;
 }
 
-export const CreateScenarioForm = ({ defaultValues }: Props) => {
+export const CreateScenarioForm = ({ defaultValues, readOnly }: Props) => {
   const form = useForm<CreateScenarioFormValues>({
     defaultValues: defaultValues ?? defaultCreateScenarioValues,
     resolver: zodResolver(createScenarioFormValuesSchema),
@@ -70,54 +66,7 @@ export const CreateScenarioForm = ({ defaultValues }: Props) => {
     appendRule(createRuleFormDefaultValues);
   }, [appendRule]);
 
-  const [loadRuleModalOpen, setLoadActionModalOpen] = useState<boolean>(false);
-
-  const openLoadRuleModal = useCallback(() => {
-    setLoadActionModalOpen(true);
-  }, []);
-
-  const closeLoadRuleModal = useCallback(() => {
-    setLoadActionModalOpen(false);
-  }, []);
-
-  const { data: allRules } = trpc.rule.getAll.useQuery();
-
-  const loadRuleOptions = useMemo(
-    (): SelectOption[] =>
-      allRules
-        ? allRules.map(({ name, id }) => ({ value: id, label: name }))
-        : [],
-    [allRules],
-  );
-
-  const onGetRuleDetailError = useCallback(
-    (error: TRPCClientErrorLike<AppRouter>) => {
-      showSnackbar(error.message, "error");
-    },
-    [showSnackbar],
-  );
-
-  const { mutateAsync: getRuleDetail } = trpc.rule.getRuleDetail.useMutation({
-    onError: onGetRuleDetailError,
-  });
-
-  const loadRule = useCallback(
-    async (event: SelectChangeEvent<unknown>) => {
-      const rule = await getRuleDetail({
-        id: event.target.value as unknown as number,
-      });
-
-      appendRule({
-        type: rule.type as RuleType,
-        loadedId: rule.id,
-        actions: rule.actions as unknown as CreateActionFormValues[],
-        guards: rule.guards as unknown as CreateGuardFormValues[],
-      });
-
-      closeLoadRuleModal();
-    },
-    [appendRule, closeLoadRuleModal, getRuleDetail],
-  );
+  const { openLoadRuleModal, modal } = useLoadRuleModal(appendRule);
 
   const trpcContext = trpc.useContext();
   const navigate = useNavigate();
@@ -154,16 +103,22 @@ export const CreateScenarioForm = ({ defaultValues }: Props) => {
     <FormProvider {...form}>
       <div className="bg-dark-gray p-4 w-[80%]">
         <div className="mt-4">
-          <FormTextField name="name" label="Name" />
+          <FormTextField name="name" label="Name" disabled={readOnly} />
         </div>
         <div className="mt-4">
-          <FormSelect name="type" label="Type" options={scenarioTypeOptions} />
+          <FormSelect
+            name="type"
+            label="Type"
+            options={scenarioTypeOptions}
+            disabled={readOnly}
+          />
         </div>
         <div className="mt-4">
           <FormSelect
             name="defaultAction"
             label="Default action"
             options={defaultActionOptions}
+            disabled={readOnly}
           />
         </div>
         <div className="mt-4">
@@ -171,34 +126,41 @@ export const CreateScenarioForm = ({ defaultValues }: Props) => {
           {rules.map((rule, index) => (
             <div className="p-2 border rounded-[4px] mb-4" key={rule.id}>
               <div className="flex justify-end">
-                <div
-                  onClick={() => removeRule(index)}
-                  className="cursor-pointer"
-                >
-                  <DeleteIcon color="error" />
-                </div>
+                {!readOnly && (
+                  <div
+                    onClick={() => removeRule(index)}
+                    className="cursor-pointer"
+                  >
+                    <DeleteIcon color="error" />
+                  </div>
+                )}
               </div>
-              <RuleFormFields fieldNamePrefix={`rules.${index}`} />
+              <RuleFormFields
+                fieldNamePrefix={`rules.${index}`}
+                readOnly={readOnly}
+              />
             </div>
           ))}
-          <div className="mt-4 flex gap-2">
-            <Button onClick={appendDefaultRule} variant="contained">
-              ADD RULE
-            </Button>
-            <Button onClick={openLoadRuleModal} variant="contained">
-              LOAD RULE
+          {!readOnly && (
+            <div className="mt-4 flex gap-2">
+              <Button onClick={appendDefaultRule} variant="contained">
+                ADD RULE
+              </Button>
+              <Button onClick={openLoadRuleModal} variant="contained">
+                LOAD RULE
+              </Button>
+            </div>
+          )}
+        </div>
+        {!readOnly && (
+          <div className="mt-4">
+            <Button variant="contained" onClick={onSubmit}>
+              SAVE
             </Button>
           </div>
-        </div>
-        <div className="mt-4">
-          <Button variant="contained" onClick={onSubmit}>
-            SAVE
-          </Button>
-        </div>
+        )}
       </div>
-      <Modal open={loadRuleModalOpen} onClose={closeLoadRuleModal}>
-        <Select label="Rule" options={loadRuleOptions} onChange={loadRule} />
-      </Modal>
+      {modal}
     </FormProvider>
   );
 };

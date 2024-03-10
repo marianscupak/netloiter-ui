@@ -6,7 +6,11 @@ import { FlowActionType } from "../create-config-form-types";
 
 const defaultFlow = { action: FlowActionType.Catch };
 
-export const MarkConfigFields = () => {
+interface Props {
+  readOnly?: boolean;
+}
+
+export const MarkConfigFields = ({ readOnly }: Props) => {
   const { control } = useFormContext();
 
   const {
@@ -31,13 +35,16 @@ export const MarkConfigFields = () => {
             key={flow.id}
             fieldNamePrefix={`flows.${index}`}
             remove={() => removeFlow(index)}
+            readOnly={readOnly}
           />
         ))}
-        <div className="mt-4">
-          <Button variant="contained" onClick={appendDefaultFlow}>
-            ADD FLOW
-          </Button>
-        </div>
+        {!readOnly && (
+          <div className="mt-4">
+            <Button variant="contained" onClick={appendDefaultFlow}>
+              ADD FLOW
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   );

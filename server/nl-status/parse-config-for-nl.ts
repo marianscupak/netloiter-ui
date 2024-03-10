@@ -1,12 +1,13 @@
-import { CreateConfigFormValues } from "netloier-ui/src/components/forms/configs/create-config-form-types";
-import { CreateScenarioFormValues } from "netloier-ui/src/components/forms/scenarios/create-scenario-form-types";
-import { ActionType, GuardType } from "../prisma/public";
-import { SizeGuardOperation } from "netloier-ui/src/components/forms/guards/create-guard-form-types";
+import { CreateConfigFormValues } from "netloiter-ui-fe/src/components/forms/configs/create-config-form-types";
+import { CreateScenarioFormValues } from "netloiter-ui-fe/src/components/forms/scenarios/create-scenario-form-types";
+import { ActionType, GuardType, ScenarioType } from "../prisma/public";
+import { SizeGuardOperation } from "netloiter-ui-fe/src/components/forms/guards/create-guard-form-types";
 import {
   SequenceMode,
   ValueGenerator,
   ValueGeneratorType,
-} from "netloier-ui/src/components/forms/value-generators/types";
+} from "netloiter-ui-fe/src/components/forms/value-generators/types";
+import { CreateRuleFormValues } from "netloiter-ui-fe/src/components/forms/rules/create-rule-form-types";
 
 export const parseConfigForNl = ({
   mode,
@@ -238,21 +239,32 @@ const parseActionForNl = (
   return { $type: type, ...rest };
 };
 
+export const NL_REST_PORT = 4444;
+
+export const parseRuleForNl = ({
+  type,
+  guards,
+  actions,
+}: Omit<CreateRuleFormValues, "name">) => ({
+  $type: type,
+  guards: guards.map(parseGuardForNl),
+  actions: actions.map(parseActionForNl),
+});
+
 export const parseScenarioForNl = ({
   type,
   rules,
   defaultAction,
 }: CreateScenarioFormValues) => {
-  const parsedRules = rules.map(({ type, guards, actions }) => ({
-    $type: type,
-    guards: guards.map(parseGuardForNl),
-    actions: actions.map(parseActionForNl),
-  }));
+  const parsedRules = rules.map(parseRuleForNl);
 
   return {
     $type: type,
     default_action: defaultAction.toLowerCase(),
     rules: parsedRules,
+    ...(type === ScenarioType.SequentialHTTP
+      ? { server_address: ["0.0.0.0", NL_REST_PORT] }
+      : {}),
   };
 };
 

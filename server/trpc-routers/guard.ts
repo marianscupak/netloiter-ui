@@ -1,5 +1,5 @@
 import { createTRPCRouter, publicProcedure } from "../trpc";
-import { createGuardFormValuesSchema } from "netloier-ui/src/components/forms/guards/create-guard-form-types";
+import { createGuardFormValuesSchema } from "netloiter-ui-fe/src/components/forms/guards/create-guard-form-types";
 import { convertGuardToFormValues } from "./utils/convert-model-to-form-values";
 import { objectWithId } from "./utils/object-with-id";
 

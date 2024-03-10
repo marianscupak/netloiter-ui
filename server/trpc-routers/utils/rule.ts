@@ -1,5 +1,5 @@
 import { Context } from "../../context";
-import { CreateRuleFormValues } from "netloier-ui/src/components/forms/rules/create-rule-form-types";
+import { CreateRuleFormValues } from "netloiter-ui-fe/src/components/forms/rules/create-rule-form-types";
 import { TRPCError } from "@trpc/server";
 import {
   convertActionToFormValues,

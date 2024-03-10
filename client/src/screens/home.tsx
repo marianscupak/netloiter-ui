@@ -86,6 +86,8 @@ export const Home = () => {
     getIsNlRunning();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
+  const { data: lastRun } = trpc.runHistory.getLastRun.useQuery();
+
   return (
     <div className="flex justify-center items-center h-[100vh]">
       {status.runningFrom ? (
@@ -110,9 +112,17 @@ export const Home = () => {
             <Button variant="contained" onClick={onOpen}>
               START
             </Button>
-            <Button variant="contained" color="warning" disabled>
-              SEE LAST RUN
-            </Button>
+            {lastRun ? (
+              <NavLink to={`/run-history/${"id" in lastRun ? lastRun.id : 0}`}>
+                <Button variant="contained" color="warning">
+                  SEE LAST RUN
+                </Button>
+              </NavLink>
+            ) : (
+              <Button variant="contained" color="warning" disabled>
+                SEE LAST RUN
+              </Button>
+            )}
           </div>
         </div>
       )}

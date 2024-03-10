@@ -7,6 +7,7 @@ import { useAtom } from "jotai";
 import { statusAtom } from "../../state/status";
 import { Button } from "@mui/material";
 import { NavLink } from "react-router-dom";
+import { RulesReplacedEvent } from "./rules-replaced-event";
 
 interface Props {
   message: Message;
@@ -29,18 +30,22 @@ export const Event = ({ message }: Props) => {
       case MessageType.AllRuleFailure: {
         const { ruleIndex, failedGuardIndex } = message;
 
+        const failedGuardId =
+          scenario?.rules[ruleIndex - 1]?.guards[failedGuardIndex - 1]
+            ?.loadedId;
+
         return (
           <div>
             <div className="mb-2">
               All Rule Failure (Rule index = {ruleIndex - 1})
             </div>
-            <NavLink
-              to={`/guards/${scenario?.rules[ruleIndex - 1]?.guards[
-                failedGuardIndex - 1
-              ]?.loadedId}`}
-            >
-              <Button variant="contained">FAILED GUARD</Button>
-            </NavLink>
+            {failedGuardId ? (
+              <NavLink to={`/guards/${failedGuardId}`}>
+                <Button variant="contained">FAILED GUARD</Button>
+              </NavLink>
+            ) : (
+              <div>Failed guard index: {failedGuardIndex}</div>
+            )}
           </div>
         );
       }
@@ -62,18 +67,22 @@ export const Event = ({ message }: Props) => {
       case MessageType.AnyRuleSuccess: {
         const { ruleIndex, passedGuardIndex } = message;
 
+        const passedGuardId =
+          scenario?.rules[ruleIndex - 1]?.guards[passedGuardIndex - 1]
+            ?.loadedId;
+
         return (
           <div>
             <div className="mb-2">
               Any Rule Success (Rule index = {ruleIndex - 1})
             </div>
-            <NavLink
-              to={`/guards/${scenario?.rules[ruleIndex - 1]?.guards[
-                passedGuardIndex - 1
-              ]?.loadedId}`}
-            >
-              <Button variant="contained">PASSED GUARD</Button>
-            </NavLink>
+            {passedGuardId !== undefined ? (
+              <NavLink to={`/guards/${passedGuardId}`}>
+                <Button variant="contained">PASSED GUARD</Button>
+              </NavLink>
+            ) : (
+              <div>Passed guard index: {passedGuardIndex - 1}</div>
+            )}
           </div>
         );
       }
@@ -178,6 +187,9 @@ export const Event = ({ message }: Props) => {
             <div>Packet was delayed</div>
           </div>
         );
+      }
+      case MessageType.RulesReplaced: {
+        return <RulesReplacedEvent message={message} />;
       }
     }
   }, [message, scenario?.rules]);

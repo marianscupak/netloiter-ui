@@ -16,7 +16,10 @@ export const GuardDetail = () => {
       <div className="text-header">{`Guard ${data?.name}`}</div>
       <div className="min-h-[calc(100vh-100px)] flex justify-center items-center my-4">
         {data && (
-          <CreateGuardForm defaultValues={data as CreateGuardFormValues} />
+          <CreateGuardForm
+            defaultValues={data as CreateGuardFormValues}
+            readOnly
+          />
         )}
       </div>
     </div>

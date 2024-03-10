@@ -1,5 +1,5 @@
 import { createTRPCRouter, publicProcedure } from "../trpc";
-import { createRuleFormValuesSchema } from "netloier-ui/src/components/forms/rules/create-rule-form-types";
+import { createRuleFormValuesSchema } from "netloiter-ui-fe/src/components/forms/rules/create-rule-form-types";
 import { createRule, getRuleDetail } from "./utils/rule";
 import { objectWithId } from "./utils/object-with-id";
 
