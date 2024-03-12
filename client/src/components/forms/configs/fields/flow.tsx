@@ -13,6 +13,7 @@ import { useFormContext } from "react-hook-form";
 
 const flowActionTypeOptions: SelectOption[] = [
   { value: FlowActionType.Catch, label: "Catch" },
+  { value: FlowActionType.Ignore, label: "Ignore" },
 ];
 
 interface FlowParameter {

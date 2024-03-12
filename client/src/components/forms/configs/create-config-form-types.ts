@@ -9,6 +9,7 @@ const createConfigBaseFormValuesSchema = z.object({
 
 export enum FlowActionType {
   Catch = "catch",
+  Ignore = "ignore",
 }
 
 const flowSchema = z.object({
