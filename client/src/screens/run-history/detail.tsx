@@ -84,7 +84,7 @@ export const RunHistoryDetail = () => {
           ? dayjs(runHistory.dateTime).format("DD. MM. YYYY HH:mm")
           : "History"}
       </div>
-      <div className="flex gap-2">
+      <div className="flex gap-2 mb-2">
         {runHistory?.scenarioId ? (
           <NavLink to={`/scenarios/${runHistory.scenarioId}`}>
             <Button variant="contained">SCENARIO</Button>
@@ -96,6 +96,11 @@ export const RunHistoryDetail = () => {
           </NavLink>
         ) : null}
       </div>
+      <NavLink to={`/run-history/${id}/statistics`}>
+        <Button variant="contained" color="warning">
+          STATISTICS
+        </Button>
+      </NavLink>
       <div>
         <div className="w-full">
           <div className="text-subheader mt-6 mb-4">Events</div>

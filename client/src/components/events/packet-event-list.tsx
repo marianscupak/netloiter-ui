@@ -54,9 +54,14 @@ export const PacketEventList = ({ messages }: Props) => {
           <Accordion slotProps={{ transition: { unmountOnExit: true } }}>
             {groupedEvents[key].sourceIp ? (
               <AccordionSummary>
-                Source: {groupedEvents[key].sourceIp}:
-                {groupedEvents[key].sourcePort} {"->"} Destination:{" "}
-                {groupedEvents[key].destIp}:{groupedEvents[key].destPort}
+                Source: {groupedEvents[key].sourceIp}
+                {groupedEvents[key].sourcePort !== -1
+                  ? `:${groupedEvents[key].destPort}`
+                  : ""}{" "}
+                {"->"} Destination: {groupedEvents[key].destIp}
+                {groupedEvents[key].destPort !== -1
+                  ? `:${groupedEvents[key].destPort}`
+                  : ""}
               </AccordionSummary>
             ) : (
               <AccordionSummary>Packet ID: {key}</AccordionSummary>

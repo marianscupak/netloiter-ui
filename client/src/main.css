@@ -5,3 +5,7 @@
 html {
     @apply text-white;
 }
+
+.MuiChartsLegend-series text {
+    fill: #F2F2F3 !important;
+}

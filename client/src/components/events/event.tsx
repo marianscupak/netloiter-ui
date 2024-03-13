@@ -94,10 +94,11 @@ export const Event = ({ message }: Props) => {
             <div>Starting packet processing</div>
             <div>Packet ID: {packetId}</div>
             <div>
-              Source: {sourceIp}:{sourcePort}
+              Source: {sourceIp}:
+              {sourcePort !== -1 ? sourcePort : "Unkown port"}
             </div>
             <div>
-              Destination: {destIp}:{destPort}
+              Destination: {destIp}:{destPort !== -1 ? destPort : "Unkown port"}
             </div>
           </div>
         );

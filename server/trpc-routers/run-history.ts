@@ -10,6 +10,7 @@ import { MessageType, messageTypeSchema } from "../nl-status/message-types";
 import { editRunConfigFormValuesSchema } from "netloiter-ui-fe/src/components/forms/edit-run-config/edit-run-config-form-types";
 import axios from "axios";
 import { NL_REST_PORT, parseRuleForNl } from "../nl-status/parse-config-for-nl";
+import { sequelize } from "../sequelize";
 
 export const runHistoryRouter = createTRPCRouter({
   getAll: publicProcedure.query(async () => await Run.findAll()),
@@ -94,5 +95,60 @@ export const runHistoryRouter = createTRPCRouter({
       } catch (e) {
         throw new TRPCError({ code: "BAD_REQUEST" });
       }
+    }),
+  getRunStatistics: publicProcedure
+    .input(objectWithId)
+    .query(async ({ input: { id } }) => {
+      const packetsProcessed = await RunMessage.count({
+        where: {
+          runId: id,
+          data: { type: MessageType.StartingPacketProcessing },
+        },
+      });
+
+      const packetsByTime = (await RunMessage.findAll({
+        where: {
+          runId: id,
+          data: { type: MessageType.StartingPacketProcessing },
+        },
+        group: "time",
+        attributes: [
+          "time",
+          [sequelize.fn("COUNT", sequelize.col("id")), "packetsCount"],
+        ],
+      })) as unknown as { time: Date; packetsCount: number }[];
+
+      const packetsDroppedCount = await RunMessage.count({
+        where: { runId: id, data: { type: MessageType.DropAction } },
+      });
+
+      const packetsDroppedByTime = (await RunMessage.findAll({
+        where: { runId: id, data: { type: MessageType.DropAction } },
+        group: "time",
+        attributes: [
+          "time",
+          [sequelize.fn("COUNT", sequelize.col("id")), "packetsCount"],
+        ],
+      })) as unknown as { time: Date; packetsCount: number }[];
+
+      const messageCountByType = (
+        await sequelize.query(
+          "SELECT data->>'type' as type, COUNT(*) as \"messagesCount\" " +
+            'FROM "public"."RunMessage" ' +
+            `WHERE "runId" = ${id} ` +
+            "GROUP BY data->>'type'",
+        )
+      )[0] as unknown as {
+        type: MessageType;
+        messagesCount: number;
+      }[];
+
+      return {
+        packetsProcessed,
+        packetsByTime,
+        packetsDroppedCount,
+        packetsDroppedByTime,
+        messageCountByType,
+      };
     }),
 });
