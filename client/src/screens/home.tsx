@@ -5,7 +5,7 @@ import dayjs from "dayjs";
 import { useNlStatusEndpoints } from "../utils/use-nl-status-endpoints";
 import { useAtom } from "jotai";
 import { statusAtom } from "../state/status";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useSnackbar } from "../utils/snackbar";
 import { trpc } from "../utils/trpc";
 import { SelectOption } from "../components/forms/select";
@@ -48,6 +48,8 @@ export const Home = () => {
 
   const { showSnackbar } = useSnackbar();
 
+  const navigate = useNavigate();
+
   const getIsNlRunning = useCallback(
     async (shouldShowSnackbar?: boolean) => {
       const response = await getNetLoiterStatus();
@@ -56,6 +58,7 @@ export const Home = () => {
 
         if (shouldShowSnackbar) {
           if (response.data.runningFrom) {
+            navigate("/current-run");
             showSnackbar("NetLoiter started successfully");
             setStartOpen(false);
           } else {
@@ -65,7 +68,7 @@ export const Home = () => {
         setStatusLoading(false);
       }
     },
-    [getNetLoiterStatus, setStatus, showSnackbar],
+    [getNetLoiterStatus, navigate, setStatus, showSnackbar],
   );
 
   const onStartNetLoiter = useCallback(
