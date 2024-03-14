@@ -9,7 +9,7 @@ export const Configs = () => {
   return (
     <div className="p-4 h-full">
       <div className="text-header">Configs</div>
-      <div className="flex justify-center items-center h-[100vh]">
+      <div className="flex justify-center items-center min-h-[calc(100vh-100px)]">
         <div>
           <div className="mb-2">
             <NavLink to="/configs/create">

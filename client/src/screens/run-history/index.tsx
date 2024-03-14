@@ -6,9 +6,9 @@ export const RunHistory = () => {
   const { data: runs } = trpc.runHistory.getAll.useQuery();
 
   return (
-    <div className="p-4 h-full">
+    <div className="p-4 min-h-[100vh]">
       <div className="text-header">Run History</div>
-      <div className="flex justify-center items-center h-[100vh]">
+      <div className="flex justify-center items-center">
         <div className="w-[500px]">
           <RunsTable runs={runs as Run[] | undefined} />
         </div>

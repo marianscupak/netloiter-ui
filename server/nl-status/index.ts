@@ -48,8 +48,8 @@ const sshConfig = {
 
 const sshClient = new Client().on("ready", () => {
   if (!scenario || !config) throw new Error();
-  const scenarioFileName = scenario.name.replace(" ", "_");
-  const configFileName = config.name.replace(" ", "_");
+  const scenarioFileName = scenario.name.replace(new RegExp(" ", "g"), "_");
+  const configFileName = config.name.replace(new RegExp(" ", "g"), "_");
 
   sshClient.exec(
     getInitConfigsCommands(
