@@ -1,7 +1,6 @@
 import { Button } from "@mui/material";
 import { StartNetLoiterModal } from "../components/forms/start-net-loiter/start-net-loiter-modal";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import dayjs from "dayjs";
 import { useNlStatusEndpoints } from "../utils/use-nl-status-endpoints";
 import { useAtom } from "jotai";
 import { statusAtom } from "../state/status";
@@ -9,6 +8,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { useSnackbar } from "../utils/snackbar";
 import { trpc } from "../utils/trpc";
 import { SelectOption } from "../components/forms/select";
+import { useRunningFor } from "../utils/use-running-for";
 
 const NL_START_DURATION = 1000;
 
@@ -91,14 +91,14 @@ export const Home = () => {
 
   const { data: lastRun } = trpc.runHistory.getLastRun.useQuery();
 
+  const runningFor = useRunningFor(status.runningFrom);
+
   return (
     <div className="flex justify-center items-center h-[100vh]">
       {status.runningFrom ? (
         <div>
           <div className="text-header">NetLoiter is up and running</div>
-          <div className="mb-2 text-center">
-            Running from: {dayjs(status.runningFrom).format("DD. MM. HH:mm:ss")}
-          </div>
+          <div className="mb-2 text-center">Running for: {runningFor}</div>
           <div className="flex justify-center gap-2">
             <NavLink to="/current-run">
               <Button variant="contained">OVERVIEW</Button>

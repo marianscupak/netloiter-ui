@@ -2,7 +2,6 @@ import useWebSocket from "react-use-websocket";
 import { Message } from "../../../server/nl-status/message-types";
 import { useNlStatusEndpoints } from "../utils/use-nl-status-endpoints";
 import { useCallback, useEffect, useState } from "react";
-import dayjs from "dayjs";
 import { Button } from "@mui/material";
 import { PacketEventList } from "../components/events/packet-event-list";
 import { NavLink } from "react-router-dom";
@@ -13,28 +12,21 @@ import { ScenarioType } from "../../../server/prisma/public";
 import { Modal } from "../components/common/modal";
 import { CreateScenarioForm } from "../components/forms/scenarios/create-scenario-form";
 import { CreateConfigForm } from "../components/forms/configs/create-config-form";
+import { useRunningFor } from "../utils/use-running-for";
 
 export const CurrentRun = () => {
   const { lastJsonMessage } = useWebSocket<{ messages: Message[] }>(
     "ws://localhost:2022",
   );
-  const [runningFrom, setRunningFrom] = useState<Date | false>(false);
   const [messages, setMessages] = useState<Message[]>([]);
-  const [{ scenario, config }] = useAtom(statusAtom);
+  const [{ scenario, config, runningFrom }, setStatus] = useAtom(statusAtom);
 
-  const { getNetLoiterStatus, stopNetLoiter } = useNlStatusEndpoints();
+  const { stopNetLoiter } = useNlStatusEndpoints();
 
-  useEffect(() => {
-    const call = async () => {
-      const response = await getNetLoiterStatus();
-      if (response.status === 200) {
-        const { runningFrom: newRunningFrom } = response.data;
-        setRunningFrom(newRunningFrom);
-      }
-    };
-
-    call();
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  const onStopNetLoiter = useCallback(async () => {
+    await stopNetLoiter();
+    setStatus((prev) => ({ ...prev, runningFrom: false }));
+  }, [setStatus, stopNetLoiter]);
 
   const [eventsShown, setEventsShown] = useState(1000);
 
@@ -80,13 +72,13 @@ export const CurrentRun = () => {
     setConfigModalOpen(false);
   }, []);
 
+  const runningFor = useRunningFor(runningFrom);
+
   return (
     <div className="p-4">
       <div className="text-header">Current run</div>
       <div className="mb-2">
-        {runningFrom
-          ? `Running from: ${dayjs(runningFrom).format("DD. MM. HH:mm:ss")}`
-          : "Not Running"}
+        {runningFrom ? `Running for: ${runningFor}` : "Not Running"}
       </div>
       <div className="flex gap-2 mb-2">
         <Button variant="contained" onClick={openScenarioModal}>
@@ -104,7 +96,7 @@ export const CurrentRun = () => {
             </Button>
           </NavLink>
         )}
-        <Button variant="contained" color="error" onClick={stopNetLoiter}>
+        <Button variant="contained" color="error" onClick={onStopNetLoiter}>
           STOP
         </Button>
       </div>

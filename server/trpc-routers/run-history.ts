@@ -13,7 +13,9 @@ import { NL_REST_PORT, parseRuleForNl } from "../nl-status/parse-config-for-nl";
 import { sequelize } from "../sequelize";
 
 export const runHistoryRouter = createTRPCRouter({
-  getAll: publicProcedure.query(async () => await Run.findAll()),
+  getAll: publicProcedure.query(
+    async () => await Run.findAll({ order: [["dateTime", "DESC"]] }),
+  ),
   deleteRunHistory: publicProcedure
     .input(objectWithId)
     .mutation(async ({ input: { id } }) => {

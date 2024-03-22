@@ -35,7 +35,7 @@ const translateSizeGuardOperation = (op: SizeGuardOperation) => {
   }
 };
 
-const parseValueGenerator = (
+export const parseValueGenerator = (
   generator: number | ValueGenerator | undefined,
 ) => {
   if (generator === undefined) return undefined;
@@ -86,7 +86,7 @@ const parseValueGenerator = (
   }
 };
 
-const parseGuardForNl = (
+export const parseGuardForNl = (
   guard: CreateScenarioFormValues["rules"][number]["guards"][number],
 ) => {
   const { type, invert, loadedId: _, ...rest } = guard;
@@ -170,7 +170,7 @@ const parseGuardForNl = (
   }
 };
 
-const parseActionForNl = (
+export const parseActionForNl = (
   action: CreateScenarioFormValues["rules"][number]["actions"][number],
 ) => {
   const { type, loadedId: _, ...rest } = action;

@@ -3,7 +3,7 @@ import {
   MessageWithPacketId,
 } from "../../../server/nl-status/message-types";
 
-type GroupedMessages = {
+export type GroupedMessages = {
   [key: string]: {
     messages: MessageWithPacketId[];
     sourceIp?: string;
@@ -16,8 +16,7 @@ type GroupedMessages = {
 export const groupMessagesByPacketId = (
   messages: MessageWithPacketId[],
 ): GroupedMessages =>
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  messages.reduce((acc: any, item) => {
+  messages.reduce((acc: GroupedMessages, item) => {
     if (!acc[item.packetId]) {
       acc[item.packetId] = { messages: [] };
     }

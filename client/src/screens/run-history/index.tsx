@@ -8,7 +8,7 @@ export const RunHistory = () => {
   return (
     <div className="p-4 min-h-[100vh]">
       <div className="text-header">Run History</div>
-      <div className="flex justify-center items-center">
+      <div className="flex justify-center items-center min-h-[calc(100vh-100px)]">
         <div className="w-[500px]">
           <RunsTable runs={runs as Run[] | undefined} />
         </div>
