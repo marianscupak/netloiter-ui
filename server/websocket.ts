@@ -12,10 +12,8 @@ const broadcast = (clients: Set<WebSocket>, message: string) => {
   });
 };
 
-const CLIENT_SEND_BATCH_INTERVAL = 1000;
 const DB_SAVE_MESSAGE_INTERVAL = 1000;
 
-let dbMessagesBatch: Message[] = [];
 let messagesBatch: Message[] = [];
 
 let DbRun: Run | undefined;
@@ -41,34 +39,33 @@ export const wsWrapper = (expressServer: Server) => {
 
   eventEmitter.on("add", (data) => {
     const messages = parseMessage(String.fromCharCode(...data));
-    dbMessagesBatch.push(...messages);
     messagesBatch.push(...messages);
   });
 
   eventEmitter.on("close", () => {
-    dbMessagesBatch = [];
     messagesBatch = [];
   });
 
-  setInterval(() => {
-    broadcast(
-      websocketServer.clients,
-      JSON.stringify({ messages: messagesBatch }),
-    );
-    messagesBatch = [];
-  }, CLIENT_SEND_BATCH_INTERVAL);
-
-  setInterval(() => {
+  setInterval(async () => {
     if (DbRun) {
       const now = new Date();
-      RunMessage.bulkCreate(
-        dbMessagesBatch.map((message) => ({
+      await RunMessage.bulkCreate(
+        messagesBatch.map((message) => ({
           data: { ...message },
           runId: DbRun!.id,
           time: now,
         })),
       );
-      dbMessagesBatch = [];
+      messagesBatch = [];
+
+      const messagesCount = await RunMessage.count({
+        where: { runId: DbRun.id },
+      });
+
+      broadcast(
+        websocketServer.clients,
+        JSON.stringify({ messagesCount, runId: DbRun.id }),
+      );
     }
   }, DB_SAVE_MESSAGE_INTERVAL);
 

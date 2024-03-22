@@ -38,8 +38,6 @@ export const RunStatistics = () => {
     id,
   });
 
-  console.log(statistics);
-
   return (
     <div className="p-4">
       <div className="text-header">
