@@ -2,6 +2,7 @@ import { z } from "zod";
 import { ActionType } from "../../../../../server/prisma/public";
 import { numberWithValueGeneratorSchema } from "../value-generators/types";
 import { ipSchema } from "../../../utils/schemas";
+import { SelectOption } from "../select";
 
 const createActionBaseFormValuesSchema = z.object({
   type: z.nativeEnum(ActionType),
@@ -124,3 +125,17 @@ export type CreateActionFormValues = z.infer<
 >;
 
 export type ActionData = Omit<CreateActionFormValues, "type" | "name">;
+
+export const actionTypeOptions: SelectOption[] = [
+  { value: ActionType.BitNoise, label: ActionType.BitNoise },
+  { value: ActionType.Delay, label: ActionType.Delay },
+  { value: ActionType.Drop, label: ActionType.Drop },
+  { value: ActionType.Finish, label: ActionType.Finish },
+  { value: ActionType.Pause, label: ActionType.Pause },
+  { value: ActionType.Reorder, label: ActionType.Reorder },
+  { value: ActionType.Replicate, label: ActionType.Replicate },
+  { value: ActionType.Restart, label: ActionType.Restart },
+  { value: ActionType.Skip, label: ActionType.Skip },
+  { value: ActionType.SocketTcp, label: ActionType.SocketTcp },
+  { value: ActionType.Throttle, label: ActionType.Throttle },
+];

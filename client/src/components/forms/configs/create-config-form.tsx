@@ -9,7 +9,7 @@ import { ConfigMode } from "../../../../../server/prisma/public";
 import { FormTextField } from "../wrapped-inputs/form-text-field";
 import { FormSelect } from "../wrapped-inputs/form-select";
 import { SelectOption } from "../select";
-import { ConfigSpecificFields } from "../guards/config-specific-fields";
+import { ConfigSpecificFields } from "./config-specific-fields";
 import { Button } from "@mui/material";
 import { useCallback, useMemo } from "react";
 import { trpc } from "../../../utils/trpc";

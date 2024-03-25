@@ -2,24 +2,9 @@ import { FormSelect } from "../../wrapped-inputs/form-select";
 import { GuardSpecificFields } from "../guard-specific-fields";
 import { FormCheckbox } from "../../wrapped-inputs/form-checkbox";
 import { useFormContext } from "react-hook-form";
-import { SelectOption } from "../../select";
-import { GuardType } from "../../../../../../server/prisma/public";
 import { FieldNamePrefix } from "../../field-name-prefix";
 import { useMemo } from "react";
-
-const guardTypeOptions: SelectOption[] = [
-  { value: GuardType.Count, label: GuardType.Count },
-  { value: GuardType.CountPeriod, label: GuardType.CountPeriod },
-  { value: GuardType.EveryN, label: GuardType.EveryN },
-  { value: GuardType.ICMP, label: GuardType.ICMP },
-  { value: GuardType.IP, label: GuardType.IP },
-  { value: GuardType.Port, label: GuardType.Port },
-  { value: GuardType.Prob, label: GuardType.Prob },
-  { value: GuardType.Protocol, label: GuardType.Protocol },
-  { value: GuardType.Size, label: GuardType.Size },
-  { value: GuardType.Time, label: GuardType.Time },
-  { value: GuardType.TimePeriod, label: GuardType.TimePeriod },
-];
+import { guardTypeOptions } from "../create-guard-form-types";
 
 export const GuardFormFields = ({ fieldNamePrefix }: FieldNamePrefix) => {
   const { watch } = useFormContext();

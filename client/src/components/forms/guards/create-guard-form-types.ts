@@ -2,6 +2,7 @@ import { z } from "zod";
 import { GuardType } from "../../../../../server/prisma/public";
 import { numberWithValueGeneratorSchema } from "../value-generators/types";
 import { ipSchema } from "../../../utils/schemas";
+import { SelectOption } from "../select";
 
 const createGuardBaseFormValuesSchema = z.object({
   type: z.nativeEnum(GuardType),
@@ -121,3 +122,17 @@ export const createGuardFormValuesSchema = z.intersection(
 export type CreateGuardFormValues = z.infer<typeof createGuardFormValuesSchema>;
 
 export type GuardData = Omit<CreateGuardFormValues, "type" | "name" | "invert">;
+
+export const guardTypeOptions: SelectOption[] = [
+  { value: GuardType.Count, label: GuardType.Count },
+  { value: GuardType.CountPeriod, label: GuardType.CountPeriod },
+  { value: GuardType.EveryN, label: GuardType.EveryN },
+  { value: GuardType.ICMP, label: GuardType.ICMP },
+  { value: GuardType.IP, label: GuardType.IP },
+  { value: GuardType.Port, label: GuardType.Port },
+  { value: GuardType.Prob, label: GuardType.Prob },
+  { value: GuardType.Protocol, label: GuardType.Protocol },
+  { value: GuardType.Size, label: GuardType.Size },
+  { value: GuardType.Time, label: GuardType.Time },
+  { value: GuardType.TimePeriod, label: GuardType.TimePeriod },
+];

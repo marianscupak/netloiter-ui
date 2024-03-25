@@ -3,7 +3,9 @@ import {
   createGuard,
   deleteGuard,
   goToPath,
+  useSelect,
 } from "../support";
+import { guardTypeOptions } from "netloiter-ui-fe/src/components/forms/guards/create-guard-form-types";
 
 const createdGuardName = "Cypress Test Guard";
 
@@ -17,5 +19,18 @@ describe("guards module", () => {
     cy.get("body").compareSnapshot("created_guard_detail");
 
     deleteGuard(createdGuardName);
+  });
+  it("Renders all guard types correctly", () => {
+    goToPath("/guards/create");
+
+    for (const option of guardTypeOptions) {
+      useSelect("type", option.value);
+      cy.get('input[name="name"]')
+        .parent()
+        .parent()
+        .parent()
+        .parent()
+        .compareSnapshot(`${option.value}_guard`);
+    }
   });
 });
