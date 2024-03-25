@@ -1,0 +1,29 @@
+{
+  "$type": "SequentialHTTP",
+  "default_action": "finish",
+  "rules": [
+    {
+      "$type": "Any",
+      "guards": [
+        {
+          "$type": "TimePeriod",
+          "invert": false,
+          "t": 5,
+          "f": 5,
+          "instant": true
+        }
+      ],
+      "actions": [
+        {
+          "$type": "Reorder",
+          "n": 5,
+          "strategy": "random"
+        }
+      ]
+    }
+  ],
+  "server_address": [
+    "0.0.0.0",
+    4444
+  ]
+}

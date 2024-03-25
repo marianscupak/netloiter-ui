@@ -19,7 +19,9 @@ export const ScenarioDetail = () => {
     downloadFile({
       // @ts-expect-error DB enum type mismatch
       data: data ? parseScenarioForNl(data) : {},
-      fileName: `${data?.name ?? "scenario"}.json`,
+      fileName: `${
+        data?.name.replace(new RegExp(" ", "g"), "_") ?? "scenario"
+      }.json`,
     });
   }, [data]);
 

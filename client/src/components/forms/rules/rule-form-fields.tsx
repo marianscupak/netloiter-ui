@@ -227,6 +227,7 @@ export const RuleFormFields = ({
             label="Guard"
             options={loadGuardOptions}
             onChange={loadGuard}
+            id="loadGuardSelect"
           />
         </Modal>
         <Modal open={loadActionModalOpen} onClose={closeLoadActionModal}>
@@ -234,6 +235,7 @@ export const RuleFormFields = ({
             label="Action"
             options={loadActionOptions}
             onChange={loadAction}
+            id="loadActionSelect"
           />
         </Modal>
       </div>

@@ -75,7 +75,12 @@ export const useLoadRuleModal = <
   const modal = useMemo(
     () => (
       <Modal open={loadRuleModalOpen} onClose={closeLoadRuleModal}>
-        <Select label="Rule" options={loadRuleOptions} onChange={loadRule} />
+        <Select
+          label="Rule"
+          options={loadRuleOptions}
+          onChange={loadRule}
+          id="loadRuleSelect"
+        />
       </Modal>
     ),
     [closeLoadRuleModal, loadRule, loadRuleModalOpen, loadRuleOptions],

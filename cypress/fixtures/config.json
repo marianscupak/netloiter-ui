@@ -1,0 +1,13 @@
+{
+  "mode": "nf_mark",
+  "flows": [
+    {
+      "all": true,
+      "action": "catch"
+    },
+    {
+      "ip": "127.0.0.1",
+      "action": "ignore"
+    }
+  ]
+}

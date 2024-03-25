@@ -118,6 +118,7 @@ export const runHistoryRouter = createTRPCRouter({
           "time",
           [sequelize.fn("COUNT", sequelize.col("id")), "packetsCount"],
         ],
+        order: ["time"],
       })) as unknown as { time: Date; packetsCount: number }[];
 
       const packetsDroppedCount = await RunMessage.count({
@@ -131,6 +132,7 @@ export const runHistoryRouter = createTRPCRouter({
           "time",
           [sequelize.fn("COUNT", sequelize.col("id")), "packetsCount"],
         ],
+        order: ["time"],
       })) as unknown as { time: Date; packetsCount: number }[];
 
       const messageCountByType = (

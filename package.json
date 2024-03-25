@@ -18,13 +18,16 @@
     "lint": "eslint --cache --ext \".js,.ts,.tsx\" --report-unused-disable-directives client server",
     "type-check": "concurrently \"bun type-check:client\" \"bun type-check:server\"",
     "type-check:client": "cd client && tsc --noEmit",
-    "type-check:server": "cd server && tsc --noEmit"
+    "type-check:server": "cd server && tsc --noEmit",
+    "run-e2e": "concurrently \"bun dev\" \"bun cypress run\""
   },
   "devDependencies": {
     "@types/jest": "^29.5.12",
     "@typescript-eslint/eslint-plugin": "6.21.0",
     "@typescript-eslint/parser": "6.21.0",
     "concurrently": "8.2.2",
+    "cypress": "^13.7.1",
+    "cypress-visual-regression": "^5.0.0",
     "eslint": "8.56.0",
     "eslint-plugin-react": "7.33.2",
     "eslint-plugin-react-hooks": "^4.6.0",

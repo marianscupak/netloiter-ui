@@ -38,79 +38,97 @@ export const RunStatistics = () => {
     id,
   });
 
+  const normalizedStats = useMemo(() => {
+    if (statistics) {
+      const times = statistics.packetsByTime.map((p) =>
+        dayjs(p.time).set("milliseconds", 0),
+      );
+
+      const stats = times.map((time) => {
+        const packets =
+          statistics.packetsByTime.find((p) =>
+            dayjs(p.time).set("milliseconds", 0).isSame(time),
+          )?.packetsCount || 0;
+
+        const droppedPackets =
+          statistics.packetsDroppedByTime.find((d) =>
+            dayjs(d.time).set("milliseconds", 0).isSame(time),
+          )?.packetsCount || 0;
+
+        return { packets, droppedPackets };
+      });
+
+      return { times, stats };
+    }
+
+    return undefined;
+  }, [statistics]);
+
+  const normalizedTimes = useMemo(() => {
+    if (normalizedStats) {
+      const startTime = normalizedStats.times[0];
+
+      return normalizedStats.times.map((time) =>
+        time.diff(startTime, "seconds"),
+      );
+    }
+
+    return undefined;
+  }, [normalizedStats]);
+
   return (
     <div className="p-4">
       <div className="text-header">
         Run{" "}
         {runHistory
-          ? dayjs(runHistory.dateTime).format("DD. MM. YYYY HH:mm")
+          ? dayjs(runHistory.dateTime).format("DD. MM. YYYY HH:mm:ss")
           : "History"}{" "}
         Statistics
       </div>
       {statistics ? (
         <div>
-          <div className="text-subheader">
+          <div className="text-subsubheader mt-4">
             Packets Processed: {statistics.packetsProcessed}
+          </div>
+          <div className="text-subsubheader mt-2">
+            {statistics.packetsDroppedCount > 0
+              ? `Packets Dropped: ${statistics.packetsDroppedCount} (${
+                  Math.round(
+                    (statistics.packetsDroppedCount /
+                      statistics.packetsProcessed) *
+                      10000,
+                  ) / 100
+                }
+                % of total)`
+              : "No packets dropped."}
           </div>
           <div className="bg-dark-gray mt-2 border rounded-[4px] p-4">
             <LineChart
               series={[
                 {
-                  data: statistics.packetsByTime.map((x) => x.packetsCount),
+                  data: normalizedStats?.stats.map((x) => x.packets),
                   color: "#64D22D",
+                  label: "Packets processed",
+                },
+                {
+                  data: normalizedStats?.stats.map((x) => x.droppedPackets),
+                  color: "#D41121",
+                  label: "Packets dropped",
                 },
               ]}
               height={400}
               xAxis={[
                 {
                   id: "time",
-                  data: statistics.packetsByTime.map((x) =>
-                    dayjs(x.time).format("HH:mm:ss"),
-                  ),
+                  data: normalizedTimes,
                   scaleType: "band",
+                  label: "Time (s)",
+                  labelStyle: { fill: "#F2F2F3" },
                 },
               ]}
               sx={chartStyles}
             />
           </div>
-          {statistics.packetsDroppedCount > 0 ? (
-            <div className="mt-4">
-              <div className="text-subheader">
-                Packets Dropped: {statistics.packetsDroppedCount} (
-                {Math.round(
-                  (statistics.packetsDroppedCount /
-                    statistics.packetsProcessed) *
-                    10000,
-                ) / 100}
-                % of total)
-              </div>
-              <div className="bg-dark-gray mt-2 border rounded-[4px] p-4">
-                <LineChart
-                  series={[
-                    {
-                      data: statistics.packetsDroppedByTime.map(
-                        (x) => x.packetsCount,
-                      ),
-                      color: "#64D22D",
-                    },
-                  ]}
-                  height={400}
-                  xAxis={[
-                    {
-                      id: "time",
-                      data: statistics.packetsDroppedByTime.map((x) =>
-                        dayjs(x.time).format("HH:mm:ss"),
-                      ),
-                      scaleType: "band",
-                    },
-                  ]}
-                  sx={chartStyles}
-                />
-              </div>
-            </div>
-          ) : (
-            <div className="mt-4 text-subheader">No packets dropped.</div>
-          )}
           <div className="mt-4">
             <div className="text-subheader mb-4">Message Types</div>
             <PieChart

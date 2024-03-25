@@ -19,7 +19,9 @@ export const ConfigDetail = () => {
     downloadFile({
       // @ts-expect-error DB enum type mismatch
       data: data ? parseConfigForNl(data) : {},
-      fileName: `${data?.name ?? "config"}.json`,
+      fileName: `${
+        data?.name.replace(new RegExp(" ", "g"), "_") ?? "config"
+      }.json`,
     });
   }, [data]);
 
