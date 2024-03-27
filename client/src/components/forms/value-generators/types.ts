@@ -58,11 +58,39 @@ export const valueGeneratorSchema = z
       return true;
     },
     {
-      message:
-        "Required at least min and step (>0) or max and step (<0) parameters!",
+      message: "Required at least min and step (>0) or max and step (<0)",
       path: ["step"],
     },
+  )
+  .refine(
+    (gen) => {
+      if (gen.min !== undefined && gen.max !== undefined)
+        return gen.min < gen.max;
+      return true;
+    },
+    {
+      message: "Minimum should be lower than maximum",
+      path: ["min"],
+    },
   );
+
+export const nonNegativeNumberWithValueGeneratorSchema = z.union([
+  z.number().positive(),
+  valueGeneratorSchema.refine((x) => x.min !== undefined && x.min >= 0, {
+    message: "Value should be non negative",
+    path: ["min"],
+  }),
+]);
+
+export const positiveNumberWithValueGeneratorSchema = z.union([
+  z
+    .number()
+    .refine((x) => x > 0, { message: "Value should be greater than 0" }),
+  valueGeneratorSchema.refine((x) => x.min !== undefined && x.min > 0, {
+    message: "Value should be greater than 0",
+    path: ["min"],
+  }),
+]);
 
 export const numberWithValueGeneratorSchema = z.union([
   z.number(),

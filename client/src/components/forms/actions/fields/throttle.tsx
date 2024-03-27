@@ -11,6 +11,8 @@ export const ThrottleFields = ({ fieldNamePrefix, disabled }: Props) => (
       name={fieldNamePrefix ? `${fieldNamePrefix}.limit` : "limit"}
       label="Limit"
       disabled={disabled}
+      int
+      once
     />
   </div>
 );

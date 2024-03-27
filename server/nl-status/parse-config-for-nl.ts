@@ -178,7 +178,7 @@ export const parseActionForNl = (
   switch (action.type) {
     case ActionType.BitNoise: {
       const {
-        layer: _,
+        layer,
         noiseStrategy,
         percentageOfBitsToSwap,
         amountOfBitsToSwap,
@@ -186,8 +186,7 @@ export const parseActionForNl = (
 
       return {
         $type: type,
-        // TODO: layer
-        layer: "L2",
+        layer,
         x: parseValueGenerator(percentageOfBitsToSwap),
         n: parseValueGenerator(amountOfBitsToSwap),
         strategy: noiseStrategy,

@@ -13,6 +13,7 @@ interface Props {
   int?: boolean;
   min?: number;
   max?: number;
+  once?: boolean;
 }
 
 const generatorTypeOptions: SelectOption[] = [
@@ -23,7 +24,14 @@ const generatorTypeOptions: SelectOption[] = [
 
 const DEFAULT_VALUE = ValueGeneratorType.Normal;
 
-export const ValueGenerator = ({ name, disabled, int, min, max }: Props) => {
+export const ValueGenerator = ({
+  name,
+  disabled,
+  int,
+  min,
+  max,
+  once,
+}: Props) => {
   const { watch, setValue } = useFormContext();
 
   useEffect(() => {
@@ -32,6 +40,9 @@ export const ValueGenerator = ({ name, disabled, int, min, max }: Props) => {
     }
     if (max !== undefined) {
       setValue(`${name}.max`, max);
+    }
+    if (once) {
+      setValue(`${name}.once`, once);
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -44,6 +55,7 @@ export const ValueGenerator = ({ name, disabled, int, min, max }: Props) => {
             disabled={disabled}
             min={min}
             max={max}
+            once={once}
           />
         );
       }
@@ -54,6 +66,7 @@ export const ValueGenerator = ({ name, disabled, int, min, max }: Props) => {
             disabled={disabled}
             min={min}
             max={max}
+            once={once}
           />
         );
       }

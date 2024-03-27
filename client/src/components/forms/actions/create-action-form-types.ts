@@ -1,6 +1,10 @@
 import { z } from "zod";
 import { ActionType } from "../../../../../server/prisma/public";
-import { numberWithValueGeneratorSchema } from "../value-generators/types";
+import {
+  numberWithValueGeneratorSchema,
+  nonNegativeNumberWithValueGeneratorSchema,
+  positiveNumberWithValueGeneratorSchema,
+} from "../value-generators/types";
 import { ipSchema } from "../../../utils/schemas";
 import { SelectOption } from "../select";
 
@@ -14,23 +18,28 @@ export enum BitNoiseStrategy {
   Random = "random",
 }
 
+export enum BitNoiseLayer {
+  L2 = "L2",
+  L3 = "L3",
+  L4 = "L4",
+}
+
 const bitNoiseActionValuesSchema = createActionBaseFormValuesSchema.extend({
   type: z.literal(ActionType.BitNoise),
-  layer: z.number().refine((l) => l > 0 && l < 5, {
-    message: "Enter a value between 1 and 4",
-  }),
+  layer: z.nativeEnum(BitNoiseLayer),
   noiseStrategy: z.nativeEnum(BitNoiseStrategy),
-  percentageOfBitsToSwap: numberWithValueGeneratorSchema
-    .optional()
-    .refine((n) => (typeof n === "number" ? n > 0 && n < 1 : true), {
-      message: "Enter a value between 0 and 1",
-    }),
-  amountOfBitsToSwap: numberWithValueGeneratorSchema.optional(),
+  usingPercentage: z.boolean(),
+  percentageOfBitsToSwap: z
+    .union([nonNegativeNumberWithValueGeneratorSchema, z.undefined()])
+    .optional(),
+  amountOfBitsToSwap: z
+    .union([nonNegativeNumberWithValueGeneratorSchema, z.undefined()])
+    .optional(),
 });
 
 const delayActionValuesSchema = createActionBaseFormValuesSchema.extend({
   type: z.literal(ActionType.Delay),
-  n: numberWithValueGeneratorSchema,
+  n: nonNegativeNumberWithValueGeneratorSchema,
 });
 
 const dropActionValuesSchema = createActionBaseFormValuesSchema.extend({
@@ -60,7 +69,7 @@ export enum ReorderStrategy {
 
 const reorderActionValuesSchema = createActionBaseFormValuesSchema.extend({
   type: z.literal(ActionType.Reorder),
-  count: numberWithValueGeneratorSchema,
+  count: positiveNumberWithValueGeneratorSchema,
   reorderStrategy: z.nativeEnum(ReorderStrategy),
 });
 
@@ -75,7 +84,7 @@ export type BaseAction = z.infer<typeof baseActionSchema>;
 
 const replicateActionValuesSchema = createActionBaseFormValuesSchema.extend({
   type: z.literal(ActionType.Replicate),
-  count: numberWithValueGeneratorSchema,
+  count: positiveNumberWithValueGeneratorSchema,
   action: baseActionSchema,
 });
 
@@ -94,22 +103,62 @@ const socketTcpActionValuesSchema = createActionBaseFormValuesSchema.extend({
 
 const throttleActionValuesSchema = createActionBaseFormValuesSchema.extend({
   type: z.literal(ActionType.Throttle),
-  limit: numberWithValueGeneratorSchema,
+  limit: positiveNumberWithValueGeneratorSchema,
 });
 
-export const actionFormValuesSchema = z.discriminatedUnion("type", [
-  bitNoiseActionValuesSchema,
-  delayActionValuesSchema,
-  dropActionValuesSchema,
-  finishActionValuesSchema,
-  pauseActionValuesSchema,
-  restartActionValuesSchema,
-  skipActionValuesSchema,
-  reorderActionValuesSchema,
-  replicateActionValuesSchema,
-  socketTcpActionValuesSchema,
-  throttleActionValuesSchema,
-]);
+export const actionFormValuesSchema = z
+  .discriminatedUnion("type", [
+    bitNoiseActionValuesSchema,
+    delayActionValuesSchema,
+    dropActionValuesSchema,
+    finishActionValuesSchema,
+    pauseActionValuesSchema,
+    restartActionValuesSchema,
+    skipActionValuesSchema,
+    reorderActionValuesSchema,
+    replicateActionValuesSchema,
+    socketTcpActionValuesSchema,
+    throttleActionValuesSchema,
+  ])
+  .refine(
+    (x) =>
+      x.type === ActionType.BitNoise && x.usingPercentage
+        ? x.percentageOfBitsToSwap !== undefined
+        : true,
+    { message: "Required", path: ["percentageOfBitsToSwap"] },
+  )
+  .refine(
+    (x) =>
+      x.type === ActionType.BitNoise && !x.usingPercentage
+        ? x.amountOfBitsToSwap !== undefined
+        : true,
+    { message: "Required", path: ["amountOfBitsToSwap"] },
+  )
+  .refine(
+    (x) =>
+      x.type === ActionType.BitNoise &&
+      x.usingPercentage &&
+      typeof x.percentageOfBitsToSwap === "number"
+        ? x.percentageOfBitsToSwap >= 0 && x.percentageOfBitsToSwap <= 1
+        : true,
+    {
+      message: "Enter a value between 0 and 1",
+      path: ["percentageOfBitsToSwap"],
+    },
+  )
+  .refine(
+    (x) =>
+      x.type === ActionType.BitNoise &&
+      x.usingPercentage &&
+      typeof x.percentageOfBitsToSwap !== "number"
+        ? x.percentageOfBitsToSwap?.max !== undefined &&
+          x.percentageOfBitsToSwap.max <= 1
+        : true,
+    {
+      message: "Value should be 1 or less",
+      path: ["percentageOfBitsToSwap", "max"],
+    },
+  );
 
 export type ActionFormValues = z.infer<typeof actionFormValuesSchema>;
 

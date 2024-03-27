@@ -15,6 +15,7 @@ describe("guard validations module", () => {
         type: ValueGeneratorType.Normal,
         average: 5,
         deviation: 1,
+        min: 3,
       },
       invert: false,
       instant: true,

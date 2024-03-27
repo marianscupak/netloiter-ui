@@ -14,14 +14,12 @@ import { useSnackbar } from "../../../utils/snackbar";
 import { useNavigate } from "react-router-dom";
 import { TRPCClientErrorLike } from "@trpc/client";
 import { AppRouter } from "../../../../../server/trpc-routers";
-import { createGuardFormDefaultValues } from "../guards/create-guard-form";
-import { createActionFormDefaultValues } from "../actions/create-action-form";
 
 export const createRuleFormDefaultValues: CreateRuleFormValues = {
   type: RuleType.All,
   name: "",
-  guards: [createGuardFormDefaultValues],
-  actions: [createActionFormDefaultValues],
+  guards: [],
+  actions: [],
 };
 
 interface Props {

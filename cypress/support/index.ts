@@ -72,10 +72,6 @@ export const createRule = (
 
   useSelect("type", "Any");
 
-  // delete prefilled guard and action
-  cy.get("div.cursor-pointer").first().click();
-  cy.get("div.cursor-pointer").click();
-
   cy.get("button").contains("LOAD GUARD").click();
   cy.get("#loadGuardSelect").parent().click();
   cy.get("li").contains(guardName).click();

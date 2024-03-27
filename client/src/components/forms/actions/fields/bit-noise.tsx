@@ -1,10 +1,10 @@
 import { FormTextField } from "../../wrapped-inputs/form-text-field";
 import { FormSelect } from "../../wrapped-inputs/form-select";
 import { SelectOption } from "../../select";
-import { BitNoiseStrategy } from "../create-action-form-types";
+import { BitNoiseLayer, BitNoiseStrategy } from "../create-action-form-types";
 import { FormNumberWithGenerator } from "../../wrapped-inputs/form-number-with-generator";
 import { FieldNamePrefix } from "../../field-name-prefix";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Checkbox } from "../../checkbox";
 import { useFormContext } from "react-hook-form";
 
@@ -12,6 +12,12 @@ const bitNoiseStrategyOptions: SelectOption[] = [
   { label: "Left", value: BitNoiseStrategy.Left },
   { label: "Right", value: BitNoiseStrategy.Right },
   { label: "Random", value: BitNoiseStrategy.Random },
+];
+
+const bitNoiseLayerOptions: SelectOption[] = [
+  { label: "Layer 2", value: BitNoiseLayer.L2 },
+  { label: "Layer 3", value: BitNoiseLayer.L3 },
+  { label: "Layer 4", value: BitNoiseLayer.L4 },
 ];
 
 interface Props extends FieldNamePrefix {
@@ -29,6 +35,15 @@ export const BitNoiseActionFields = ({ fieldNamePrefix, disabled }: Props) => {
     ) === undefined,
   );
 
+  useEffect(() => {
+    setValue(
+      fieldNamePrefix
+        ? `${fieldNamePrefix}.usingPercentage`
+        : "usingPercentage",
+      usePercentage,
+    );
+  }, [fieldNamePrefix, setValue, usePercentage]);
+
   const onUsePercentageChange = useCallback(() => {
     setUsePercentage((old) => !old);
 
@@ -37,14 +52,14 @@ export const BitNoiseActionFields = ({ fieldNamePrefix, disabled }: Props) => {
         fieldNamePrefix
           ? `${fieldNamePrefix}.percentageOfBitsToSwap`
           : "percentageOfBitsToSwap",
-        0,
+        undefined,
       );
     } else {
       setValue(
         fieldNamePrefix
           ? `${fieldNamePrefix}.amountOfBitsToSwap`
           : "amountOfBitsToSwap",
-        0,
+        undefined,
       );
     }
   }, [fieldNamePrefix, setValue, usePercentage]);
@@ -59,8 +74,6 @@ export const BitNoiseActionFields = ({ fieldNamePrefix, disabled }: Props) => {
         }
         label="Percentage of bits to swap"
         disabled={disabled}
-        min={0}
-        max={1}
         key="percentage"
       />
     ),
@@ -91,16 +104,17 @@ export const BitNoiseActionFields = ({ fieldNamePrefix, disabled }: Props) => {
           label="Use percentage"
           checked={usePercentage}
           onChange={onUsePercentageChange}
+          disabled={disabled}
         />
       </div>
       <div className="mt-4">
         {usePercentage ? percentageInput : amountInput}
       </div>
       <div className="mt-4">
-        <FormTextField
-          type="number"
+        <FormSelect
           name={fieldNamePrefix ? `${fieldNamePrefix}.layer` : "layer"}
           label="Layer"
+          options={bitNoiseLayerOptions}
           disabled={disabled}
         />
       </div>

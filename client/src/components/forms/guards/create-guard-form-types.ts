@@ -1,6 +1,9 @@
 import { z } from "zod";
 import { GuardType } from "../../../../../server/prisma/public";
-import { numberWithValueGeneratorSchema } from "../value-generators/types";
+import {
+  positiveNumberWithValueGeneratorSchema,
+  nonNegativeNumberWithValueGeneratorSchema,
+} from "../value-generators/types";
 import { ipSchema } from "../../../utils/schemas";
 import { SelectOption } from "../select";
 
@@ -11,19 +14,19 @@ const createGuardBaseFormValuesSchema = z.object({
 
 const countGuardValuesSchema = createGuardBaseFormValuesSchema.extend({
   type: z.literal(GuardType.Count),
-  after: numberWithValueGeneratorSchema,
-  duration: numberWithValueGeneratorSchema,
+  after: positiveNumberWithValueGeneratorSchema,
+  duration: positiveNumberWithValueGeneratorSchema,
 });
 
 const countPeriodGuardValuesSchema = createGuardBaseFormValuesSchema.extend({
   type: z.literal(GuardType.CountPeriod),
-  truePeriod: numberWithValueGeneratorSchema,
-  falsePeriod: numberWithValueGeneratorSchema,
+  truePeriod: positiveNumberWithValueGeneratorSchema,
+  falsePeriod: positiveNumberWithValueGeneratorSchema,
 });
 
 const everyNGuardValuesSchema = createGuardBaseFormValuesSchema.extend({
   type: z.literal(GuardType.EveryN),
-  n: numberWithValueGeneratorSchema,
+  n: positiveNumberWithValueGeneratorSchema,
 });
 
 const icmpGuardValuesSchema = createGuardBaseFormValuesSchema.extend({
@@ -49,7 +52,14 @@ const portGuardValuesSchema = createGuardBaseFormValuesSchema.extend({
 
 const probGuardValuesSchema = createGuardBaseFormValuesSchema.extend({
   type: z.literal(GuardType.Prob),
-  prob: numberWithValueGeneratorSchema,
+  prob: nonNegativeNumberWithValueGeneratorSchema
+    .refine((x) => (typeof x === "number" ? x < 1 : true), {
+      message: "Value should be less than 1",
+    })
+    .refine(
+      (x) => (typeof x !== "number" ? x.max !== undefined && x.max < 1 : true),
+      { message: "Value should be less than 1", path: ["max"] },
+    ),
 });
 
 const protocolGuardValuesSchema = createGuardBaseFormValuesSchema.extend({
@@ -67,21 +77,21 @@ export enum SizeGuardOperation {
 
 const sizeGuardValuesSchema = createGuardBaseFormValuesSchema.extend({
   type: z.literal(GuardType.Size),
-  size: z.number(),
+  size: z.number().positive(),
   op: z.nativeEnum(SizeGuardOperation),
 });
 
 const timeGuardValuesSchema = createGuardBaseFormValuesSchema.extend({
   type: z.literal(GuardType.Time),
-  after: numberWithValueGeneratorSchema,
-  duration: numberWithValueGeneratorSchema,
+  after: positiveNumberWithValueGeneratorSchema,
+  duration: positiveNumberWithValueGeneratorSchema,
   instant: z.boolean(),
 });
 
 const timePeriodGuardValuesSchema = createGuardBaseFormValuesSchema.extend({
   type: z.literal(GuardType.TimePeriod),
-  truePeriod: numberWithValueGeneratorSchema,
-  falsePeriod: numberWithValueGeneratorSchema,
+  truePeriod: positiveNumberWithValueGeneratorSchema,
+  falsePeriod: positiveNumberWithValueGeneratorSchema,
   instant: z.boolean(),
 });
 

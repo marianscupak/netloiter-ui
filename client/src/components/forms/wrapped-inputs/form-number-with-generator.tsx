@@ -11,6 +11,7 @@ interface Props {
   int?: boolean;
   min?: number;
   max?: number;
+  once?: boolean;
 }
 
 export const FormNumberWithGenerator = ({
@@ -20,6 +21,7 @@ export const FormNumberWithGenerator = ({
   int,
   min,
   max,
+  once,
 }: Props) => {
   const { watch, setValue } = useFormContext();
 
@@ -58,6 +60,7 @@ export const FormNumberWithGenerator = ({
             int={int}
             min={min}
             max={max}
+            once={once}
           />
         </div>
       ) : (

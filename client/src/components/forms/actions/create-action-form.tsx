@@ -53,13 +53,21 @@ export const CreateActionForm = ({ defaultValues, readOnly }: Props) => {
     async (formValues: CreateActionFormValues) => {
       form.clearErrors("type");
       if (formValues.type === ActionType.BitNoise) {
-        const { percentageOfBitsToSwap, amountOfBitsToSwap, ...rest } =
-          formValues;
+        const {
+          percentageOfBitsToSwap,
+          amountOfBitsToSwap,
+          usingPercentage,
+          ...rest
+        } = formValues;
 
-        if (percentageOfBitsToSwap === 0) {
-          await createAction({ ...rest, amountOfBitsToSwap });
+        if (usingPercentage) {
+          await createAction({
+            ...rest,
+            percentageOfBitsToSwap,
+            usingPercentage,
+          });
         } else {
-          await createAction({ ...rest, percentageOfBitsToSwap });
+          await createAction({ ...rest, amountOfBitsToSwap, usingPercentage });
         }
       } else {
         await createAction(formValues);

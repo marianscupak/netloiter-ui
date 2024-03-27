@@ -19,7 +19,7 @@ import { useNavigate } from "react-router-dom";
 const createConfigDefaultValues: CreateConfigFormValues = {
   name: "",
   mode: ConfigMode.nf_mark,
-  flows: [{ action: FlowActionType.Catch, ip: "127.0.0.1", port: 3001 }],
+  flows: [{ action: FlowActionType.Catch }],
 };
 
 const configTypeOptions: SelectOption[] = [

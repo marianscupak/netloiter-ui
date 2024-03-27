@@ -33,6 +33,7 @@ const rule: Omit<CreateRuleFormValues, "name"> = {
         type: ValueGeneratorType.Normal,
         average: 5,
         deviation: 1,
+        min: 3,
       },
       invert: false,
       instant: true,

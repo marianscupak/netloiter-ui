@@ -7,6 +7,7 @@ interface Props {
   min?: number;
   max?: number;
   int?: boolean;
+  once?: boolean;
 }
 
 export const NormalDistribution = ({
@@ -15,6 +16,7 @@ export const NormalDistribution = ({
   min,
   max,
   int,
+  once,
 }: Props) => (
   <div>
     <div className="mt-4">
@@ -38,7 +40,12 @@ export const NormalDistribution = ({
       />
     </div>
     <div className="mt-2">
-      <FormCheckbox name={`${name}.once`} label="Once" disabled={disabled} />
+      <FormCheckbox
+        name={`${name}.once`}
+        label="Once"
+        disabled={disabled || once}
+        checked={once}
+      />
     </div>
     <div className="mt-2">
       <FormTextField

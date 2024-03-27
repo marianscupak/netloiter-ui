@@ -16,8 +16,10 @@ import { GuardFormFields } from "./fields";
 export const createGuardFormDefaultValues: CreateGuardFormValues = {
   name: "",
   type: GuardType.Count,
-  after: 5,
-  duration: 5,
+  // @ts-expect-error Default value should be empty
+  after: undefined,
+  // @ts-expect-error Default value should be empty
+  duration: undefined,
   invert: false,
 };
 

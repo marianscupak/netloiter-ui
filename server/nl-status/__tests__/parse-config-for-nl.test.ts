@@ -20,7 +20,10 @@ import {
   ValueGenerator,
   ValueGeneratorType,
 } from "netloiter-ui-fe/src/components/forms/value-generators/types";
-import { BitNoiseStrategy } from "netloiter-ui-fe/src/components/forms/actions/create-action-form-types";
+import {
+  BitNoiseLayer,
+  BitNoiseStrategy,
+} from "netloiter-ui-fe/src/components/forms/actions/create-action-form-types";
 import {
   CreateConfigFormValues,
   FlowActionType,
@@ -52,6 +55,7 @@ const guardWithValueGenerator: CreateScenarioFormValues["rules"][number]["guards
       once: false,
       average: 5,
       deviation: 2,
+      min: 2,
     },
     invert: false,
   };
@@ -60,8 +64,9 @@ const simpleAction: CreateScenarioFormValues["rules"][number]["actions"][number]
   {
     type: ActionType.BitNoise,
     percentageOfBitsToSwap: 0.4,
-    layer: 2,
+    layer: BitNoiseLayer.L2,
     noiseStrategy: BitNoiseStrategy.Random,
+    usingPercentage: true,
   };
 
 const actionWithValueGenerator: CreateScenarioFormValues["rules"][number]["actions"][number] =
@@ -99,6 +104,7 @@ const expectedSimpleRuleResult: ReturnType<typeof parseRuleForNl> = {
         $type: "NormalInt",
         m: 5,
         s: 2,
+        min: 2,
         once: false,
       },
     },
@@ -106,7 +112,7 @@ const expectedSimpleRuleResult: ReturnType<typeof parseRuleForNl> = {
   actions: [
     {
       $type: ActionType.BitNoise,
-      layer: "L2",
+      layer: BitNoiseLayer.L2,
       x: 0.4,
       // @ts-expect-error Different naming for bit noise strategy
       strategy: "random",
@@ -156,15 +162,18 @@ describe("parse config for NetLoiter module", () => {
         m: 5,
         s: 2,
         once: false,
+        min: 2,
       },
     };
 
-    expect(parseGuardForNl(guardWithValueGenerator)).toEqual(expectedResult);
+    expect(
+      parseGuardForNl(JSON.parse(JSON.stringify(guardWithValueGenerator))),
+    ).toEqual(expectedResult);
   });
   test("parses action", () => {
     const expectedResult: ReturnType<typeof parseActionForNl> = {
       $type: ActionType.BitNoise,
-      layer: "L2",
+      layer: BitNoiseLayer.L2,
       x: 0.4,
       // @ts-expect-error Different naming for bit noise strategy
       strategy: "random",
@@ -190,12 +199,14 @@ describe("parse config for NetLoiter module", () => {
     expect(parseRuleForNl(simpleRule)).toEqual(expectedSimpleRuleResult);
   });
   test("parses scenario", () => {
-    const simpleScenario: CreateScenarioFormValues = {
-      type: ScenarioType.Sequential,
-      rules: [simpleRule],
-      name: "scenario",
-      defaultAction: ActionType.Finish,
-    };
+    const simpleScenario: CreateScenarioFormValues = JSON.parse(
+      JSON.stringify({
+        type: ScenarioType.Sequential,
+        rules: [simpleRule],
+        name: "scenario",
+        defaultAction: ActionType.Finish,
+      }),
+    );
 
     const expectedResult: ReturnType<typeof parseScenarioForNl> = {
       $type: ScenarioType.Sequential,
@@ -219,6 +230,8 @@ describe("parse config for NetLoiter module", () => {
       default_action: "finish",
       server_address: ["0.0.0.0", NL_REST_PORT],
     };
+    console.log(parseScenarioForNl(httpScenario).rules[0].guards);
+    console.log(expectedResult.rules[0].guards);
 
     expect(parseScenarioForNl(httpScenario)).toEqual(expectedResult);
   });

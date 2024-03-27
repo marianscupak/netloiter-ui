@@ -52,7 +52,7 @@ export const Sequence = ({ name, disabled, min, max, int }: Props) => (
       <FormTextField
         name={`${name}.t`}
         type="number"
-        label="Number of calls"
+        label="Number of calls required to change value"
         disabled={disabled}
         int={int}
       />
