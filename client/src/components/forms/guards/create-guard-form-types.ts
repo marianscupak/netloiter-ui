@@ -85,14 +85,14 @@ const timeGuardValuesSchema = createGuardBaseFormValuesSchema.extend({
   type: z.literal(GuardType.Time),
   after: positiveNumberWithValueGeneratorSchema,
   duration: positiveNumberWithValueGeneratorSchema,
-  instant: z.boolean(),
+  instant: z.boolean().optional(),
 });
 
 const timePeriodGuardValuesSchema = createGuardBaseFormValuesSchema.extend({
   type: z.literal(GuardType.TimePeriod),
   truePeriod: positiveNumberWithValueGeneratorSchema,
   falsePeriod: positiveNumberWithValueGeneratorSchema,
-  instant: z.boolean(),
+  instant: z.boolean().optional(),
 });
 
 export const guardFormValuesSchema = z

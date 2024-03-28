@@ -50,7 +50,9 @@ app.route("*").all(async (req, res) => {
   await trpcHandler(req, res);
 });
 
-export const httpServer = app.listen(2022);
+const port = z.coerce.number().parse(process.env.BE_PORT);
+
+export const httpServer = app.listen(port);
 wsWrapper(httpServer);
 
-console.log("✅  Server listening at http://localhost:2022");
+console.log(`✅  Server listening at http://localhost:${port}`);

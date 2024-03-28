@@ -4,6 +4,7 @@ import {
   createConfigFormValuesSchema,
 } from "netloiter-ui-fe/src/components/forms/configs/create-config-form-types";
 import { objectWithId } from "./utils/object-with-id";
+import { parseConfigForNl } from "../nl-status/parse-config-for-nl";
 
 export const configRouter = createTRPCRouter({
   getAll: publicProcedure.query(
@@ -38,4 +39,7 @@ export const configRouter = createTRPCRouter({
 
       return { id, name, mode, ...(data as ConfigData) };
     }),
+  parseConfigForNl: publicProcedure
+    .input(createConfigFormValuesSchema.and(objectWithId))
+    .mutation(async ({ input }) => parseConfigForNl(input)),
 });

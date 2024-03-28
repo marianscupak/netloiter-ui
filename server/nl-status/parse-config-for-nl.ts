@@ -1,6 +1,15 @@
-import { CreateConfigFormValues } from "netloiter-ui-fe/src/components/forms/configs/create-config-form-types";
+import {
+  CreateConfigFormValues,
+  Flow,
+  FlowActionType,
+} from "netloiter-ui-fe/src/components/forms/configs/create-config-form-types";
 import { CreateScenarioFormValues } from "netloiter-ui-fe/src/components/forms/scenarios/create-scenario-form-types";
-import { ActionType, GuardType, ScenarioType } from "../prisma/public";
+import {
+  ActionType,
+  ConfigMode,
+  GuardType,
+  ScenarioType,
+} from "../prisma/public";
 import { SizeGuardOperation } from "netloiter-ui-fe/src/components/forms/guards/create-guard-form-types";
 import {
   SequenceMode,
@@ -8,13 +17,40 @@ import {
   ValueGeneratorType,
 } from "netloiter-ui-fe/src/components/forms/value-generators/types";
 import { CreateRuleFormValues } from "netloiter-ui-fe/src/components/forms/rules/create-rule-form-types";
+import { z } from "zod";
 
-export const parseConfigForNl = ({
-  mode,
-  name: _name,
-  id: _id,
-  ...data
-}: CreateConfigFormValues & { id: number }) => {
+export const parseConfigForNl = (
+  config: CreateConfigFormValues & { id: number },
+) => {
+  const { mode, id: _id, name: _name, ...data } = config;
+  if (
+    (config.mode === ConfigMode.nf_mark ||
+      config.mode === ConfigMode.tc_mark_vlan) &&
+    config.ignoreComm
+  ) {
+    const beFlow: Flow = {
+      action: FlowActionType.Ignore,
+      ip: process.env.LOCAL_IP,
+      port: z.coerce.number().parse(process.env.BE_PORT),
+    };
+    const dbFlow: Flow = {
+      action: FlowActionType.Ignore,
+      ip: process.env.DB_IP,
+      port: z.coerce.number().parse(process.env.DB_PORT),
+    };
+    const feFlow: Flow = {
+      action: FlowActionType.Ignore,
+      ip: process.env.LOCAL_IP,
+      port: z.coerce.number().parse(process.env.FE_PORT),
+    };
+    const nlFLow: Flow = {
+      action: FlowActionType.Ignore,
+      ip: process.env.NL_HOST_IP,
+      port: z.coerce.number().parse(process.env.NL_HOST_PORT),
+    };
+
+    return { mode, flows: [...config.flows, beFlow, dbFlow, feFlow, nlFLow] };
+  }
   return { mode, ...data };
 };
 

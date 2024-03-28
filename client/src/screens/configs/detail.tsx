@@ -5,7 +5,6 @@ import { CreateConfigForm } from "../../components/forms/configs/create-config-f
 import { CreateConfigFormValues } from "../../components/forms/configs/create-config-form-types";
 import { useCallback } from "react";
 import { downloadFile } from "../../utils/download-file";
-import { parseConfigForNl } from "../../../../server/nl-status/parse-config-for-nl";
 import { Button } from "@mui/material";
 
 export const ConfigDetail = () => {
@@ -15,15 +14,18 @@ export const ConfigDetail = () => {
     id: Number.parseInt(z.string().parse(id)),
   });
 
-  const exportConfig = useCallback(() => {
+  const { mutateAsync: parseConfigForNl } =
+    trpc.config.parseConfigForNl.useMutation();
+
+  const exportConfig = useCallback(async () => {
     downloadFile({
       // @ts-expect-error DB enum type mismatch
-      data: data ? parseConfigForNl(data) : {},
+      data: data ? await parseConfigForNl(data) : {},
       fileName: `${
         data?.name.replace(new RegExp(" ", "g"), "_") ?? "config"
       }.json`,
     });
-  }, [data]);
+  }, [data, parseConfigForNl]);
 
   return (
     <div className="p-4 h-full">

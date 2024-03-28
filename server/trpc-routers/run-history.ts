@@ -121,12 +121,54 @@ export const runHistoryRouter = createTRPCRouter({
         order: ["time"],
       })) as unknown as { time: Date; packetsCount: number }[];
 
+      const packetsFinishedCount = await RunMessage.count({
+        where: { runId: id, data: { type: MessageType.FinishAction } },
+      });
+
+      const packetsFinishedByTime = (await RunMessage.findAll({
+        where: { runId: id, data: { type: MessageType.FinishAction } },
+        group: "time",
+        attributes: [
+          "time",
+          [sequelize.fn("COUNT", sequelize.col("id")), "packetsCount"],
+        ],
+        order: ["time"],
+      })) as unknown as { time: Date; packetsCount: number }[];
+
       const packetsDroppedCount = await RunMessage.count({
         where: { runId: id, data: { type: MessageType.DropAction } },
       });
 
       const packetsDroppedByTime = (await RunMessage.findAll({
         where: { runId: id, data: { type: MessageType.DropAction } },
+        group: "time",
+        attributes: [
+          "time",
+          [sequelize.fn("COUNT", sequelize.col("id")), "packetsCount"],
+        ],
+        order: ["time"],
+      })) as unknown as { time: Date; packetsCount: number }[];
+
+      const packetsSkippedCount = await RunMessage.count({
+        where: { runId: id, data: { type: MessageType.SkipAction } },
+      });
+
+      const packetsSkippedByTime = (await RunMessage.findAll({
+        where: { runId: id, data: { type: MessageType.SkipAction } },
+        group: "time",
+        attributes: [
+          "time",
+          [sequelize.fn("COUNT", sequelize.col("id")), "packetsCount"],
+        ],
+        order: ["time"],
+      })) as unknown as { time: Date; packetsCount: number }[];
+
+      const packetsPausedCount = await RunMessage.count({
+        where: { runId: id, data: { type: MessageType.PauseAction } },
+      });
+
+      const packetsPausedByTime = (await RunMessage.findAll({
+        where: { runId: id, data: { type: MessageType.PauseAction } },
         group: "time",
         attributes: [
           "time",
@@ -150,8 +192,14 @@ export const runHistoryRouter = createTRPCRouter({
       return {
         packetsProcessed,
         packetsByTime,
+        packetsFinishedCount,
+        packetsFinishedByTime,
         packetsDroppedCount,
         packetsDroppedByTime,
+        packetsSkippedCount,
+        packetsSkippedByTime,
+        packetsPausedCount,
+        packetsPausedByTime,
         messageCountByType,
       };
     }),

@@ -51,11 +51,40 @@ export const RunStatistics = () => {
           )?.packetsCount || 0;
 
         const droppedPackets =
-          statistics.packetsDroppedByTime.find((d) =>
-            dayjs(d.time).set("milliseconds", 0).isSame(time),
-          )?.packetsCount || 0;
+          statistics.packetsDroppedCount > 0
+            ? statistics.packetsDroppedByTime.find((d) =>
+                dayjs(d.time).set("milliseconds", 0).isSame(time),
+              )?.packetsCount || 0
+            : null;
 
-        return { packets, droppedPackets };
+        const finishedPackets =
+          statistics.packetsFinishedCount > 0
+            ? statistics.packetsFinishedByTime.find((d) =>
+                dayjs(d.time).set("milliseconds", 0).isSame(time),
+              )?.packetsCount || 0
+            : null;
+
+        const pausedPackets =
+          statistics.packetsPausedCount > 0
+            ? statistics.packetsPausedByTime.find((d) =>
+                dayjs(d.time).set("milliseconds", 0).isSame(time),
+              )?.packetsCount || 0
+            : null;
+
+        const skippedPackets =
+          statistics.packetsSkippedCount > 0
+            ? statistics.packetsSkippedByTime.find((d) =>
+                dayjs(d.time).set("milliseconds", 0).isSame(time),
+              )?.packetsCount || 0
+            : null;
+
+        return {
+          packets,
+          droppedPackets,
+          finishedPackets,
+          pausedPackets,
+          skippedPackets,
+        };
       });
 
       return { times, stats };
@@ -90,18 +119,54 @@ export const RunStatistics = () => {
           <div className="text-subsubheader mt-4">
             Packets Processed: {statistics.packetsProcessed}
           </div>
-          <div className="text-subsubheader mt-2">
-            {statistics.packetsDroppedCount > 0
-              ? `Packets Dropped: ${statistics.packetsDroppedCount} (${
-                  Math.round(
-                    (statistics.packetsDroppedCount /
-                      statistics.packetsProcessed) *
-                      10000,
-                  ) / 100
-                }
-                % of total)`
-              : "No packets dropped."}
-          </div>
+          {statistics.packetsFinishedCount > 0 && (
+            <div className="text-subsubheader mt-2">
+              {`Packets Finished: ${statistics.packetsFinishedCount} (${
+                Math.round(
+                  (statistics.packetsFinishedCount /
+                    statistics.packetsProcessed) *
+                    10000,
+                ) / 100
+              }
+                % of total)`}
+            </div>
+          )}
+          {statistics.packetsDroppedCount > 0 && (
+            <div className="text-subsubheader mt-2">
+              {`Packets Dropped: ${statistics.packetsDroppedCount} (${
+                Math.round(
+                  (statistics.packetsDroppedCount /
+                    statistics.packetsProcessed) *
+                    10000,
+                ) / 100
+              }
+                % of total)`}
+            </div>
+          )}
+          {statistics.packetsSkippedCount > 0 && (
+            <div className="text-subsubheader mt-2">
+              {`Packets Skipped: ${statistics.packetsSkippedCount} (${
+                Math.round(
+                  (statistics.packetsSkippedCount /
+                    statistics.packetsProcessed) *
+                    10000,
+                ) / 100
+              }
+                % of total)`}
+            </div>
+          )}
+          {statistics.packetsPausedCount > 0 && (
+            <div className="text-subsubheader mt-2">
+              {`Packets Paused: ${statistics.packetsPausedCount} (${
+                Math.round(
+                  (statistics.packetsPausedCount /
+                    statistics.packetsProcessed) *
+                    10000,
+                ) / 100
+              }
+                % of total)`}
+            </div>
+          )}
           <div className="bg-dark-gray mt-2 border rounded-[4px] p-4">
             <LineChart
               series={[
@@ -110,11 +175,50 @@ export const RunStatistics = () => {
                   color: "#64D22D",
                   label: "Packets processed",
                 },
-                {
-                  data: normalizedStats?.stats.map((x) => x.droppedPackets),
-                  color: "#D41121",
-                  label: "Packets dropped",
-                },
+                ...(statistics.packetsDroppedCount > 0
+                  ? [
+                      {
+                        data: normalizedStats?.stats.map(
+                          (x) => x.droppedPackets,
+                        ),
+                        color: "#D41121",
+                        label: "Packets dropped",
+                      },
+                    ]
+                  : []),
+                ...(statistics.packetsPausedCount > 0
+                  ? [
+                      {
+                        data: normalizedStats?.stats.map(
+                          (x) => x.pausedPackets,
+                        ),
+                        color: "#FFBA1A",
+                        label: "Packets paused",
+                      },
+                    ]
+                  : []),
+                ...(statistics.packetsSkippedCount > 0
+                  ? [
+                      {
+                        data: normalizedStats?.stats.map(
+                          (x) => x.skippedPackets,
+                        ),
+                        color: "#651fff",
+                        label: "Packets skipped",
+                      },
+                    ]
+                  : []),
+                ...(statistics.packetsFinishedCount > 0
+                  ? [
+                      {
+                        data: normalizedStats?.stats.map(
+                          (x) => x.finishedPackets,
+                        ),
+                        color: "#2196f3",
+                        label: "Packets finished",
+                      },
+                    ]
+                  : []),
               ]}
               height={400}
               xAxis={[

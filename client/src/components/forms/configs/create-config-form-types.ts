@@ -22,15 +22,19 @@ const flowSchema = z.object({
   icmpType: z.number().optional(),
 });
 
+export type Flow = z.infer<typeof flowSchema>;
+
 const nfMarkConfigFormValuesSchema = createConfigBaseFormValuesSchema.extend({
   mode: z.literal(ConfigMode.nf_mark),
   flows: z.array(flowSchema),
+  ignoreComm: z.boolean(),
 });
 
 const tcMarkVlanConfigFormValuesSchema =
   createConfigBaseFormValuesSchema.extend({
     mode: z.literal(ConfigMode.tc_mark_vlan),
     flows: z.array(flowSchema),
+    ignoreComm: z.boolean(),
   });
 
 const ipWithPortSchema = z.object({

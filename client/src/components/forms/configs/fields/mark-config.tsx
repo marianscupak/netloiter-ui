@@ -3,6 +3,7 @@ import { Flow } from "./flow";
 import { Button } from "@mui/material";
 import { useCallback } from "react";
 import { FlowActionType } from "../create-config-form-types";
+import { FormCheckbox } from "../../wrapped-inputs/form-checkbox";
 
 const defaultFlow = { action: FlowActionType.Catch };
 
@@ -45,6 +46,13 @@ export const MarkConfigFields = ({ readOnly }: Props) => {
             </Button>
           </div>
         )}
+      </div>
+      <div className="mt-4">
+        <FormCheckbox
+          name="ignoreComm"
+          disabled={readOnly}
+          label="Ignore UI communication"
+        />
       </div>
     </div>
   );

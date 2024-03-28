@@ -20,6 +20,7 @@ const createConfigDefaultValues: CreateConfigFormValues = {
   name: "",
   mode: ConfigMode.nf_mark,
   flows: [{ action: FlowActionType.Catch }],
+  ignoreComm: true,
 };
 
 const configTypeOptions: SelectOption[] = [
