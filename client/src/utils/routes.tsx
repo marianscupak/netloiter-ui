@@ -48,6 +48,10 @@ export const router = createBrowserRouter([
       { path: "/run-history", element: <RunHistory /> },
       { path: "/run-history/:id", element: <RunHistoryDetail /> },
       { path: "/run-history/:id/statistics", element: <RunStatistics /> },
+      {
+        path: "/current-run/:id/statistics",
+        element: <RunStatistics live />,
+      },
     ],
   },
 ]);

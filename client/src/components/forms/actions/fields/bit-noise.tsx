@@ -1,4 +1,3 @@
-import { FormTextField } from "../../wrapped-inputs/form-text-field";
 import { FormSelect } from "../../wrapped-inputs/form-select";
 import { SelectOption } from "../../select";
 import { BitNoiseLayer, BitNoiseStrategy } from "../create-action-form-types";

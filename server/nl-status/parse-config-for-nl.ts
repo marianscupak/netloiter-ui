@@ -22,36 +22,43 @@ import { z } from "zod";
 export const parseConfigForNl = (
   config: CreateConfigFormValues & { id: number },
 ) => {
-  const { mode, id: _id, name: _name, ...data } = config;
   if (
-    (config.mode === ConfigMode.nf_mark ||
-      config.mode === ConfigMode.tc_mark_vlan) &&
-    config.ignoreComm
+    config.mode === ConfigMode.nf_mark ||
+    config.mode === ConfigMode.tc_mark_vlan
   ) {
-    const beFlow: Flow = {
-      action: FlowActionType.Ignore,
-      ip: process.env.LOCAL_IP,
-      port: z.coerce.number().parse(process.env.BE_PORT),
-    };
-    const dbFlow: Flow = {
-      action: FlowActionType.Ignore,
-      ip: process.env.DB_IP,
-      port: z.coerce.number().parse(process.env.DB_PORT),
-    };
-    const feFlow: Flow = {
-      action: FlowActionType.Ignore,
-      ip: process.env.LOCAL_IP,
-      port: z.coerce.number().parse(process.env.FE_PORT),
-    };
-    const nlFLow: Flow = {
-      action: FlowActionType.Ignore,
-      ip: process.env.NL_HOST_IP,
-      port: z.coerce.number().parse(process.env.NL_HOST_PORT),
-    };
+    if (config.ignoreComm) {
+      const beFlow: Flow = {
+        action: FlowActionType.Ignore,
+        ip: process.env.LOCAL_IP,
+        port: z.coerce.number().parse(process.env.BE_PORT),
+      };
+      const dbFlow: Flow = {
+        action: FlowActionType.Ignore,
+        ip: process.env.DB_IP,
+        port: z.coerce.number().parse(process.env.DB_PORT),
+      };
+      const feFlow: Flow = {
+        action: FlowActionType.Ignore,
+        ip: process.env.LOCAL_IP,
+        port: z.coerce.number().parse(process.env.FE_PORT),
+      };
+      const nlFLow: Flow = {
+        action: FlowActionType.Ignore,
+        ip: process.env.NL_HOST_IP,
+        port: z.coerce.number().parse(process.env.NL_HOST_PORT),
+      };
 
-    return { mode, flows: [...config.flows, beFlow, dbFlow, feFlow, nlFLow] };
+      return {
+        mode: config.mode,
+        flows: [...config.flows, beFlow, dbFlow, feFlow, nlFLow],
+      };
+    } else {
+      return { mode: config.mode, flows: config.flows };
+    }
+  } else {
+    const { mode, udpAddresses, tcpAddresses } = config;
+    return { mode, udpAddresses, tcpAddresses };
   }
-  return { mode, ...data };
 };
 
 export type NlConfig = ReturnType<typeof parseConfigForNl>;

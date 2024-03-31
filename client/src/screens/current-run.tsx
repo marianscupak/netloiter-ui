@@ -36,6 +36,7 @@ export const CurrentRun = () => {
           showEditConfigButton={scenario?.type === ScenarioType.SequentialHTTP}
           messagesCount={messagesCount}
           showStopButton
+          liveStats
         />
       )}
     </div>

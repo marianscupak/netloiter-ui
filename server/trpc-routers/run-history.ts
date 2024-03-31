@@ -64,7 +64,7 @@ export const runHistoryRouter = createTRPCRouter({
           offset: (page - 1) * pageSize,
           where: messageTypes
             ? { "data.type": { [Op.in]: messageTypes }, runId: id }
-            : undefined,
+            : { runId: id },
           order: [["time", "DESC"]],
           subQuery: false,
         }),

@@ -17,6 +17,7 @@ interface Props {
   showStopButton?: boolean;
   showEditConfigButton?: boolean;
   messagesCount?: number;
+  liveStats?: boolean;
 }
 
 export const RunDetail = ({
@@ -24,6 +25,7 @@ export const RunDetail = ({
   showStopButton,
   showEditConfigButton,
   messagesCount,
+  liveStats,
 }: Props) => {
   const [status, setStatus] = useAtom(statusAtom);
   const [originalScenario] = useState(status.scenario);
@@ -98,7 +100,13 @@ export const RunDetail = ({
         )}
       </div>
       <div className="flex gap-2">
-        <NavLink to={`/run-history/${id}/statistics`}>
+        <NavLink
+          to={
+            liveStats
+              ? `/current-run/${id}/statistics`
+              : `/run-history/${id}/statistics`
+          }
+        >
           <Button variant="contained" color="warning">
             STATISTICS
           </Button>
