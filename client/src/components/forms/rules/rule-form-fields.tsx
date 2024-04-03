@@ -3,7 +3,7 @@ import { FormSelect } from "../wrapped-inputs/form-select";
 import { GuardFormFields } from "../guards/fields";
 import { ActionFormFields } from "../actions/fields";
 import { useFieldArray, useFormContext } from "react-hook-form";
-import { Select, SelectOption } from "../select";
+import { Select } from "../select";
 import { RuleType } from "../../../../../server/prisma/public";
 import { useCallback, useMemo, useState } from "react";
 import { Button, SelectChangeEvent } from "@mui/material";
@@ -15,6 +15,7 @@ import { TRPCClientErrorLike } from "@trpc/client";
 import { AppRouter } from "../../../../../server/trpc-routers";
 import { createGuardFormDefaultValues } from "../guards/create-guard-form";
 import { createActionFormDefaultValues } from "../actions/create-action-form";
+import { SelectOption } from "../../../utils/select-option";
 
 const ruleTypeOptions: SelectOption[] = [
   { value: RuleType.All, label: RuleType.All },

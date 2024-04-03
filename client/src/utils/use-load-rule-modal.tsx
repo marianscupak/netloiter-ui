@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from "react";
 import { trpc } from "./trpc";
-import { Select, SelectOption } from "../components/forms/select";
+import { Select } from "../components/forms/select";
 import { useSnackbar } from "./snackbar";
 import { TRPCClientErrorLike } from "@trpc/client";
 import { AppRouter } from "../../../server/trpc-routers";
@@ -11,6 +11,7 @@ import { CreateGuardFormValues } from "../components/forms/guards/create-guard-f
 import { UseFieldArrayAppend } from "react-hook-form";
 import { Modal } from "../components/common/modal";
 import { CreateRuleFormValues } from "../components/forms/rules/create-rule-form-types";
+import { SelectOption } from "./select-option";
 
 export const useLoadRuleModal = <
   T extends {

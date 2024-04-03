@@ -29,7 +29,7 @@ export const parseConfigForNl = (
     if (config.ignoreComm) {
       const beFlow: Flow = {
         action: FlowActionType.Ignore,
-        ip: process.env.LOCAL_IP,
+        ip: process.env.HOST_IP,
         port: z.coerce.number().parse(process.env.BE_PORT),
       };
       const dbFlow: Flow = {
@@ -39,7 +39,7 @@ export const parseConfigForNl = (
       };
       const feFlow: Flow = {
         action: FlowActionType.Ignore,
-        ip: process.env.LOCAL_IP,
+        ip: process.env.HOST_IP,
         port: z.coerce.number().parse(process.env.FE_PORT),
       };
       const nlFLow: Flow = {

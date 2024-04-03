@@ -5,7 +5,8 @@ import {
   nonNegativeNumberWithValueGeneratorSchema,
 } from "../value-generators/types";
 import { ipSchema } from "../../../utils/schemas";
-import { SelectOption } from "../select";
+
+import { SelectOption } from "../../../utils/select-option";
 
 const createGuardBaseFormValuesSchema = z.object({
   type: z.nativeEnum(GuardType),

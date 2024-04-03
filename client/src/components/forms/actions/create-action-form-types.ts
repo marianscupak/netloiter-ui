@@ -5,7 +5,8 @@ import {
   positiveNumberWithValueGeneratorSchema,
 } from "../value-generators/types";
 import { ipSchema } from "../../../utils/schemas";
-import { SelectOption } from "../select";
+
+import { SelectOption } from "../../../utils/select-option";
 
 const createActionBaseFormValuesSchema = z.object({
   type: z.nativeEnum(ActionType),

@@ -241,6 +241,7 @@ describe("parse config for NetLoiter module", () => {
       mode: ConfigMode.nf_mark,
       flows: [{ all: true, action: FlowActionType.Catch }],
       id: 0,
+      ignoreComm: false,
     };
 
     const expectedResult: ReturnType<typeof parseConfigForNl> = {

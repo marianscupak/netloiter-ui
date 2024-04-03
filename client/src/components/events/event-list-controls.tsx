@@ -1,8 +1,9 @@
-import { Select, SelectOption } from "../forms/select";
+import { Select } from "../forms/select";
 import { useCallback } from "react";
 import { Button, SelectChangeEvent } from "@mui/material";
 import { MessageTypeFilter } from "./message-type-filter";
 import { MessageType } from "../../../../server/nl-status/message-types";
+import { SelectOption } from "../../utils/select-option";
 
 const eventsShownOptions: SelectOption[] = [
   { value: 1000, label: "1000" },

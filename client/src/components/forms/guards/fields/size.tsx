@@ -1,8 +1,8 @@
 import { FormTextField } from "../../wrapped-inputs/form-text-field";
 import { FormSelect } from "../../wrapped-inputs/form-select";
-import { SelectOption } from "../../select";
 import { SizeGuardOperation } from "../create-guard-form-types";
 import { FieldNamePrefix } from "../../field-name-prefix";
+import { SelectOption } from "../../../../utils/select-option";
 
 const sizeGuardOperationOptions: SelectOption[] = [
   { value: SizeGuardOperation.Eq, label: SizeGuardOperation.Eq },

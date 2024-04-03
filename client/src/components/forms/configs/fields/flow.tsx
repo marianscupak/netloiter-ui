@@ -1,5 +1,4 @@
 import { FormSelect } from "../../wrapped-inputs/form-select";
-import { SelectOption } from "../../select";
 import { FlowActionType } from "../create-config-form-types";
 import { Button } from "@mui/material";
 import { useCallback, useMemo, useState } from "react";
@@ -10,6 +9,7 @@ import { FieldNamePrefix } from "../../field-name-prefix";
 import { FormCheckbox } from "../../wrapped-inputs/form-checkbox";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useFormContext } from "react-hook-form";
+import { SelectOption } from "../../../../utils/select-option";
 
 const flowActionTypeOptions: SelectOption[] = [
   { value: FlowActionType.Catch, label: "Catch" },

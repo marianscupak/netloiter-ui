@@ -1,11 +1,11 @@
 import { FormSelect } from "../../wrapped-inputs/form-select";
-import { SelectOption } from "../../select";
 import { BitNoiseLayer, BitNoiseStrategy } from "../create-action-form-types";
 import { FormNumberWithGenerator } from "../../wrapped-inputs/form-number-with-generator";
 import { FieldNamePrefix } from "../../field-name-prefix";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Checkbox } from "../../checkbox";
 import { useFormContext } from "react-hook-form";
+import { SelectOption } from "../../../../utils/select-option";
 
 const bitNoiseStrategyOptions: SelectOption[] = [
   { label: "Left", value: BitNoiseStrategy.Left },

@@ -35,6 +35,7 @@ describe("config validations module", () => {
       name: "Test config 2",
       mode: ConfigMode.tc_mark_vlan,
       flows: [{ ip: "23", action: FlowActionType.Ignore }],
+      ignoreComm: false,
     };
     expect(
       createConfigFormValuesSchema.safeParse(invalidIpConfig).success,

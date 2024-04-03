@@ -1,8 +1,8 @@
 import { FormSelect } from "../../wrapped-inputs/form-select";
-import { SelectOption } from "../../select";
 import { ReorderStrategy } from "../create-action-form-types";
 import { FormNumberWithGenerator } from "../../wrapped-inputs/form-number-with-generator";
 import { FieldNamePrefix } from "../../field-name-prefix";
+import { SelectOption } from "../../../../utils/select-option";
 
 const reorderStrategyOptions: SelectOption[] = [
   { value: ReorderStrategy.Random, label: "Random" },

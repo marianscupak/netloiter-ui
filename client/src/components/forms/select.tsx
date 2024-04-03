@@ -8,11 +8,7 @@ import {
 import { OutlinedInput } from "./input";
 import { withStyles } from "@mui/styles";
 import { InputLabel } from "./input-label";
-
-export interface SelectOption {
-  label: string;
-  value: number | string;
-}
+import { SelectOption } from "../../utils/select-option";
 
 export interface SelectProps extends OutlinedSelectProps {
   label: string;

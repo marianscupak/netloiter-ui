@@ -1,5 +1,4 @@
 import { Button, CircularProgress } from "@mui/material";
-import { SelectOption } from "../select";
 import { Modal } from "../../common/modal";
 import { NavLink } from "react-router-dom";
 import { useCallback, useMemo } from "react";
@@ -10,6 +9,7 @@ import {
 } from "./start-net-loiter-form-types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormSelect } from "../wrapped-inputs/form-select";
+import { SelectOption } from "../../../utils/select-option";
 
 interface Props {
   open: boolean;

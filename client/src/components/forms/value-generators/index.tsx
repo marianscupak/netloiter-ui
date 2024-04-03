@@ -1,11 +1,11 @@
 import { useFormContext } from "react-hook-form";
 import { FormSelect } from "../wrapped-inputs/form-select";
-import { SelectOption } from "../select";
 import { ValueGeneratorType } from "./types";
 import { NormalDistribution } from "./normal-distribution";
 import { UniformDistribution } from "./uniform-distribution";
 import { Sequence } from "./sequence";
 import { useEffect } from "react";
+import { SelectOption } from "../../../utils/select-option";
 
 interface Props {
   name: string;

@@ -8,13 +8,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ConfigMode } from "../../../../../server/prisma/public";
 import { FormTextField } from "../wrapped-inputs/form-text-field";
 import { FormSelect } from "../wrapped-inputs/form-select";
-import { SelectOption } from "../select";
 import { ConfigSpecificFields } from "./config-specific-fields";
 import { Button } from "@mui/material";
 import { useCallback, useMemo } from "react";
 import { trpc } from "../../../utils/trpc";
 import { useSnackbar } from "../../../utils/snackbar";
 import { useNavigate } from "react-router-dom";
+import { SelectOption } from "../../../utils/select-option";
 
 const createConfigDefaultValues: CreateConfigFormValues = {
   name: "",

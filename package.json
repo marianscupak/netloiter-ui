@@ -15,6 +15,7 @@
     "dev:server": "cd server && bun run dev",
     "start:client": "cd client && bun run start",
     "start:server": "cd server && bun run start",
+    "start": "concurrently \"bun start:client\" \"bun start:server\"",
     "lint": "eslint --cache --ext \".js,.ts,.tsx\" --report-unused-disable-directives client server",
     "type-check": "concurrently \"bun type-check:client\" \"bun type-check:server\"",
     "type-check:client": "cd client && tsc --noEmit",
@@ -32,6 +33,7 @@
     "eslint-plugin-react": "7.33.2",
     "eslint-plugin-react-hooks": "^4.6.0",
     "jest": "^29.7.0",
+    "mime": "^4.0.1",
     "wait-port": "^1.0.1"
   }
 }

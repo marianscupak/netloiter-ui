@@ -11,7 +11,7 @@ import {
 } from "./parse-config-for-nl";
 import { initializeRun } from "../websocket";
 
-const configsPath = z.string().parse(process.env.CONFIGS_PATH);
+const configsPath = z.string().parse(process.env.NL_HOST_CONFIGS_PATH);
 const nlHostIp = z.string().parse(process.env.NL_HOST_IP);
 const nlHostPort = z.coerce.number().parse(process.env.NL_HOST_PORT);
 const nlHostUsername = z.string().parse(process.env.NL_HOST_USERNAME);

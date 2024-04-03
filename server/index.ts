@@ -52,7 +52,7 @@ app.route("*").all(async (req, res) => {
 
 const port = z.coerce.number().parse(process.env.BE_PORT);
 
-export const httpServer = app.listen(port);
+export const httpServer = app.listen(port, "0.0.0.0", () => {
+  console.log(`✅  Server listening at http://0.0.0.0:${port}`);
+});
 wsWrapper(httpServer);
-
-console.log(`✅  Server listening at http://localhost:${port}`);

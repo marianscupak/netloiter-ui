@@ -1,8 +1,8 @@
 import { FormNumberWithGenerator } from "../../wrapped-inputs/form-number-with-generator";
 import { FieldNamePrefix } from "../../field-name-prefix";
 import { FormSelect } from "../../wrapped-inputs/form-select";
-import { SelectOption } from "../../select";
 import { ActionType } from "../../../../../../server/prisma/public";
+import { SelectOption } from "../../../../utils/select-option";
 
 const replicateActionOptions: SelectOption[] = [
   { value: ActionType.Finish, label: ActionType.Finish },

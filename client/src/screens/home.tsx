@@ -7,8 +7,8 @@ import { statusAtom } from "../state/status";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useSnackbar } from "../utils/snackbar";
 import { trpc } from "../utils/trpc";
-import { SelectOption } from "../components/forms/select";
 import { useRunningFor } from "../utils/use-running-for";
+import { SelectOption } from "../utils/select-option";
 
 const NL_START_DURATION = 1000;
 

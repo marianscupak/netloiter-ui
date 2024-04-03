@@ -1,7 +1,7 @@
 import { FormTextField } from "../wrapped-inputs/form-text-field";
 import { FormSelect } from "../wrapped-inputs/form-select";
-import { SelectOption } from "../select";
 import { SequenceMode } from "./types";
+import { SelectOption } from "../../../utils/select-option";
 
 interface Props {
   name: string;

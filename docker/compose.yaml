@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  netloiter-ui-app:
+    container_name: netloiter-ui-app
+    build:
+      dockerfile: ./docker/app/Dockerfile
+      context: ../
+    environment:
+      - BE_PORT=2022
+      - FE_PORT=3000
+      - DATABASE_URL=postgresql://postgres:postgres@netloiter-ui-db:5432/netloiter_ui
+      - NL_HOST_CONFIGS_PATH=~/Documents/NetLoiter
+      - NL_PATH=~/Documents/NetLoiter/netloiter.py
+      - NL_HOST_IP=192.168.64.4
+      - NL_HOST_PORT=22
+      - NL_HOST_USERNAME=marian
+      - NL_HOST_PASSWORD=password
+      - HOST_IP=192.168.64.1
+      - DB_IP=192.168.64.1
+      - DB_PORT=5432
+    ports:
+      - "3000:3000"
+      - "2022:2022"
+    depends_on:
+      netloiter-ui-db:
+        condition: service_healthy
+    networks:
+      netloiter_ui_network:
+        ipv4_address: 10.5.0.3
+
+  netloiter-ui-db:
+    container_name: netloiter-ui-db
+    build:
+      dockerfile: ./docker/db/Dockerfile
+      context: ../
+    healthcheck:
+      test: pg_isready -h localhost -d netloiter_ui
+      interval: 5s
+      retries: 10
+    networks:
+      netloiter_ui_network:
+        ipv4_address: 10.5.0.4
+
+networks:
+  netloiter_ui_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.5.0.0/16
+          gateway: 10.5.0.1

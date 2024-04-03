@@ -8,7 +8,6 @@ import { ActionType, ScenarioType } from "../../../../../server/prisma/public";
 import { FormTextField } from "../wrapped-inputs/form-text-field";
 import { Button } from "@mui/material";
 import { FormSelect } from "../wrapped-inputs/form-select";
-import { SelectOption } from "../select";
 import { useCallback, useMemo } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { RuleFormFields } from "../rules/rule-form-fields";
@@ -19,6 +18,7 @@ import { TRPCClientErrorLike } from "@trpc/client";
 import { AppRouter } from "../../../../../server/trpc-routers";
 import { useNavigate } from "react-router-dom";
 import { useLoadRuleModal } from "../../../utils/use-load-rule-modal";
+import { SelectOption } from "../../../utils/select-option";
 
 const defaultCreateScenarioValues: CreateScenarioFormValues = {
   name: "",
