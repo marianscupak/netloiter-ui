@@ -7,18 +7,18 @@ services:
       dockerfile: ./docker/app/Dockerfile
       context: ../
     environment:
-      - BE_PORT=2022
-      - FE_PORT=3000
-      - DATABASE_URL=postgresql://postgres:postgres@netloiter-ui-db:5432/netloiter_ui
-      - NL_HOST_CONFIGS_PATH=~/Documents/NetLoiter
-      - NL_PATH=~/Documents/NetLoiter/netloiter.py
       - NL_HOST_IP=192.168.64.4
       - NL_HOST_PORT=22
       - NL_HOST_USERNAME=marian
       - NL_HOST_PASSWORD=password
+      - NL_PATH=~/Documents/NetLoiter/netloiter.py
+      - NL_HOST_CONFIGS_PATH=~/Documents/NetLoiter
       - HOST_IP=192.168.64.1
       - DB_IP=192.168.64.1
       - DB_PORT=5432
+      - DATABASE_URL=postgresql://postgres:postgres@netloiter-ui-db:5432/netloiter_ui
+      - FE_PORT=3000
+      - BE_PORT=2022
     ports:
       - "3000:3000"
       - "2022:2022"
