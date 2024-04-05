@@ -119,6 +119,21 @@ export const guardFormValuesSchema = z
         (x.any === "" || x.any === undefined)
       ),
     { message: "Fill out at least one parameter", path: ["any"] },
+  )
+  .refine(
+    (x) =>
+      !(
+        (x.type === GuardType.IP || x.type === GuardType.Port) &&
+        x.any !== "" &&
+        x.any !== undefined &&
+        ((x.src !== undefined && x.src !== "") ||
+          (x.dst !== undefined && x.dst !== ""))
+      ),
+    {
+      message:
+        "If any argument is provided, then source and destination must not be provided!",
+      path: ["any"],
+    },
   );
 
 export type GuardFormValues = z.infer<typeof guardFormValuesSchema>;

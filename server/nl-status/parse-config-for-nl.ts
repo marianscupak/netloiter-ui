@@ -19,6 +19,29 @@ import {
 import { CreateRuleFormValues } from "netloiter-ui-fe/src/components/forms/rules/create-rule-form-types";
 import { z } from "zod";
 
+const beFlow: Flow = {
+  action: FlowActionType.Ignore,
+  ip: process.env.HOST_IP,
+  port: z.coerce.number().parse(process.env.BE_PORT),
+};
+const dbFlow: Flow = {
+  action: FlowActionType.Ignore,
+  ip: process.env.DB_IP,
+  port: z.coerce.number().parse(process.env.DB_PORT),
+};
+const feFlow: Flow = {
+  action: FlowActionType.Ignore,
+  ip: process.env.HOST_IP,
+  port: z.coerce.number().parse(process.env.FE_PORT),
+};
+const nlFlow: Flow = {
+  action: FlowActionType.Ignore,
+  ip: process.env.NL_HOST_IP,
+  port: z.coerce.number().parse(process.env.NL_HOST_PORT),
+};
+
+export const uiFlows: Flow[] = [beFlow, dbFlow, feFlow, nlFlow];
+
 export const parseConfigForNl = (
   config: CreateConfigFormValues & { id: number },
 ) => {
@@ -27,30 +50,9 @@ export const parseConfigForNl = (
     config.mode === ConfigMode.tc_mark_vlan
   ) {
     if (config.ignoreComm) {
-      const beFlow: Flow = {
-        action: FlowActionType.Ignore,
-        ip: process.env.HOST_IP,
-        port: z.coerce.number().parse(process.env.BE_PORT),
-      };
-      const dbFlow: Flow = {
-        action: FlowActionType.Ignore,
-        ip: process.env.DB_IP,
-        port: z.coerce.number().parse(process.env.DB_PORT),
-      };
-      const feFlow: Flow = {
-        action: FlowActionType.Ignore,
-        ip: process.env.HOST_IP,
-        port: z.coerce.number().parse(process.env.FE_PORT),
-      };
-      const nlFLow: Flow = {
-        action: FlowActionType.Ignore,
-        ip: process.env.NL_HOST_IP,
-        port: z.coerce.number().parse(process.env.NL_HOST_PORT),
-      };
-
       return {
         mode: config.mode,
-        flows: [...config.flows, beFlow, dbFlow, feFlow, nlFLow],
+        flows: [...config.flows, ...uiFlows],
       };
     } else {
       return { mode: config.mode, flows: config.flows };

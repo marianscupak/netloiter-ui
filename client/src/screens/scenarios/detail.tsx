@@ -6,35 +6,38 @@ import { CreateScenarioFormValues } from "../../components/forms/scenarios/creat
 import { Button } from "@mui/material";
 import { useCallback } from "react";
 import { downloadFile } from "../../utils/download-file";
-import { parseScenarioForNl } from "../../../../server/nl-status/parse-config-for-nl";
 
 export const ScenarioDetail = () => {
   const { id } = useParams();
 
-  const { data } = trpc.scenario.getScenarioDetailQuery.useQuery({
-    id: Number.parseInt(z.string().parse(id)),
-  });
+  const { data: scenarioDetail } =
+    trpc.scenario.getScenarioDetailQuery.useQuery({
+      id: Number.parseInt(z.string().parse(id)),
+    });
 
-  const exportScenario = useCallback(() => {
+  const { mutateAsync: parseScenarioForNl } =
+    trpc.scenario.parseScenarioForNl.useMutation();
+
+  const exportScenario = useCallback(async () => {
     downloadFile({
       // @ts-expect-error DB enum type mismatch
-      data: data ? parseScenarioForNl(data) : {},
+      data: scenarioDetail ? await parseScenarioForNl(scenarioDetail) : {},
       fileName: `${
-        data?.name.replace(new RegExp(" ", "g"), "_") ?? "scenario"
+        scenarioDetail?.name.replace(new RegExp(" ", "g"), "_") ?? "scenario"
       }.json`,
     });
-  }, [data]);
+  }, [scenarioDetail, parseScenarioForNl]);
 
   return (
     <div className="p-4 h-full">
-      <div className="text-header">{`Scenario ${data?.name}`}</div>
+      <div className="text-header">{`Scenario ${scenarioDetail?.name}`}</div>
       <Button variant="contained" color="warning" onClick={exportScenario}>
         EXPORT
       </Button>
       <div className="min-h-[calc(100vh-100px)] flex justify-center items-center my-4">
-        {data && (
+        {scenarioDetail && (
           <CreateScenarioForm
-            defaultValues={data as CreateScenarioFormValues}
+            defaultValues={scenarioDetail as CreateScenarioFormValues}
             readOnly
           />
         )}

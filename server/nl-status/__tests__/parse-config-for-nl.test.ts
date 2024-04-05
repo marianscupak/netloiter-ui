@@ -6,6 +6,7 @@ import {
   parseRuleForNl,
   parseScenarioForNl,
   parseValueGenerator,
+  uiFlows,
 } from "../parse-config-for-nl";
 import { CreateScenarioFormValues } from "netloiter-ui-fe/src/components/forms/scenarios/create-scenario-form-types";
 import {
@@ -230,8 +231,6 @@ describe("parse config for NetLoiter module", () => {
       default_action: "finish",
       server_address: ["0.0.0.0", NL_REST_PORT],
     };
-    console.log(parseScenarioForNl(httpScenario).rules[0].guards);
-    console.log(expectedResult.rules[0].guards);
 
     expect(parseScenarioForNl(httpScenario)).toEqual(expectedResult);
   });
@@ -251,6 +250,28 @@ describe("parse config for NetLoiter module", () => {
           all: true,
           action: FlowActionType.Catch,
         },
+      ],
+    };
+
+    expect(parseConfigForNl(config)).toEqual(expectedResult);
+  });
+  test("parses config with ignoring UI communication", () => {
+    const config: CreateConfigFormValues & { id: number } = {
+      name: "test",
+      mode: ConfigMode.nf_mark,
+      flows: [{ all: true, action: FlowActionType.Catch }],
+      id: 0,
+      ignoreComm: true,
+    };
+
+    const expectedResult: ReturnType<typeof parseConfigForNl> = {
+      mode: ConfigMode.nf_mark,
+      flows: [
+        {
+          all: true,
+          action: FlowActionType.Catch,
+        },
+        ...uiFlows,
       ],
     };
 

@@ -4,6 +4,7 @@ import { TRPCError } from "@trpc/server";
 import { createRule } from "./utils/rule";
 import { getScenarioDetail } from "./utils/scenario";
 import { objectWithId } from "./utils/object-with-id";
+import { parseScenarioForNl } from "../nl-status/parse-config-for-nl";
 
 export const scenarioRouter = createTRPCRouter({
   getAll: publicProcedure.query(
@@ -68,4 +69,7 @@ export const scenarioRouter = createTRPCRouter({
   getScenarioDetailQuery: publicProcedure
     .input(objectWithId)
     .query(async ({ ctx, input }) => await getScenarioDetail(ctx, input.id)),
+  parseScenarioForNl: publicProcedure
+    .input(createScenarioFormValuesSchema)
+    .mutation(async ({ input }) => parseScenarioForNl(input)),
 });

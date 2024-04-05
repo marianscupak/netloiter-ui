@@ -95,7 +95,7 @@ export const CreateScenarioForm = ({ defaultValues, readOnly }: Props) => {
   );
 
   const onSubmit = useMemo(
-    () => form.handleSubmit(handleSubmit, (e) => console.log(e)),
+    () => form.handleSubmit(handleSubmit),
     [form, handleSubmit],
   );
 

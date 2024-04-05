@@ -75,7 +75,7 @@ export const valueGeneratorSchema = z
   );
 
 export const nonNegativeNumberWithValueGeneratorSchema = z.union([
-  z.number().positive(),
+  z.number().nonnegative(),
   valueGeneratorSchema.refine((x) => x.min !== undefined && x.min >= 0, {
     message: "Value should be non negative",
     path: ["min"],
