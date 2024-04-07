@@ -24,7 +24,7 @@ describe("guards module", () => {
     goToPath("/guards/create");
 
     for (const option of guardTypeOptions) {
-      useSelect("type", option.value);
+      useSelect("type", option.value as string);
       cy.get('input[name="name"]')
         .parent()
         .parent()

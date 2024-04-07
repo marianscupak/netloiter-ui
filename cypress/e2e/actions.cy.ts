@@ -24,7 +24,7 @@ describe("actions module", () => {
     goToPath("/actions/create");
 
     for (const option of actionTypeOptions) {
-      useSelect("type", option.value);
+      useSelect("type", option.value as string);
       cy.get('input[name="name"]')
         .parent()
         .parent()

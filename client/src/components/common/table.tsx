@@ -3,12 +3,13 @@ import {
   Table as MuiTable,
   TableCell as MuiTableCell,
 } from "@mui/material";
+import { colors } from "../../utils/mui";
 
 export const Table = styled(MuiTable)({
-  backgroundColor: "#414C58",
-  color: "#F2F2F3",
+  backgroundColor: colors.darkGray,
+  color: colors.white,
 });
 
 export const TableCell = styled(MuiTableCell)({
-  color: "#F2F2F3",
+  color: colors.white,
 });

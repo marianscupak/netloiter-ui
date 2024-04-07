@@ -33,3 +33,9 @@ export const groupMessagesByPacketId = (
 
     return { ...acc, [item.packetId]: newProp };
   }, {});
+
+export interface NetworkFlow {
+  sourceIp: string;
+  destIp: string;
+  messagesCount: number;
+}

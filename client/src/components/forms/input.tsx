@@ -1,13 +1,18 @@
 import { styled, OutlinedInput as MuiOutlinedInput } from "@mui/material";
+import { colors } from "../../utils/mui";
 
 export const OutlinedInput = styled(MuiOutlinedInput)(
   ({ error, disabled }) => ({
     "&.MuiOutlinedInput-root": {
       "& fieldset": {
-        borderColor: "#F2F2F3",
+        borderColor: colors.white,
       },
       "&:hover fieldset": {
-        borderColor: disabled ? undefined : error ? "#D41121" : "#64D22D",
+        borderColor: disabled
+          ? undefined
+          : error
+          ? colors.error
+          : colors.primary,
       },
     },
   }),

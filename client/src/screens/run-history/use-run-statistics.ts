@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { z } from "zod";
 import { trpc } from "../../utils/trpc";
 import dayjs from "dayjs";
+import { colors } from "../../utils/mui";
 
 export const useRunStatistics = ({ live }: { live?: boolean }) => {
   const [windowFrom, setWindowFrom] = useState(0);
@@ -20,6 +21,11 @@ export const useRunStatistics = ({ live }: { live?: boolean }) => {
       id,
     },
     { refetchInterval: live ? 5000 : undefined },
+  );
+
+  const { data: flows } = trpc.runHistory.getRunFlows.useQuery(
+    { id },
+    { refetchInterval: live ? 1000 : undefined },
   );
 
   const normalizedTimes = useMemo(() => {
@@ -144,7 +150,7 @@ export const useRunStatistics = ({ live }: { live?: boolean }) => {
               data: normalizedStats?.stats
                 .map((x) => x.packets)
                 .slice(windowFrom, windowFrom + windowSize),
-              color: "#64D22D",
+              color: colors.primary,
               label: "Packets processed",
             },
             ...(statistics.packetsDroppedCount > 0
@@ -153,7 +159,7 @@ export const useRunStatistics = ({ live }: { live?: boolean }) => {
                     data: normalizedStats?.stats
                       .map((x) => x.droppedPackets)
                       .slice(windowFrom, windowFrom + windowSize),
-                    color: "#D41121",
+                    color: colors.error,
                     label: "Packets dropped",
                   },
                 ]
@@ -164,7 +170,7 @@ export const useRunStatistics = ({ live }: { live?: boolean }) => {
                     data: normalizedStats?.stats
                       .map((x) => x.pausedPackets)
                       .slice(windowFrom, windowFrom + windowSize),
-                    color: "#FFBA1A",
+                    color: colors.warning,
                     label: "Packets paused",
                   },
                 ]
@@ -175,7 +181,7 @@ export const useRunStatistics = ({ live }: { live?: boolean }) => {
                     data: normalizedStats?.stats
                       .map((x) => x.skippedPackets)
                       .slice(windowFrom, windowFrom + windowSize),
-                    color: "#651fff",
+                    color: colors.purple,
                     label: "Packets skipped",
                   },
                 ]
@@ -186,7 +192,7 @@ export const useRunStatistics = ({ live }: { live?: boolean }) => {
                     data: normalizedStats?.stats
                       .map((x) => x.finishedPackets)
                       .slice(windowFrom, windowFrom + windowSize),
-                    color: "#2196f3",
+                    color: colors.blue,
                     label: "Packets finished",
                   },
                 ]
@@ -207,5 +213,6 @@ export const useRunStatistics = ({ live }: { live?: boolean }) => {
     onWindowSizeChange,
     graphSeries,
     formattedTimes,
+    flows,
   };
 };

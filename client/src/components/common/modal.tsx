@@ -1,5 +1,6 @@
 import { Box, Modal as MuiModal } from "@mui/material";
 import { PropsWithChildren } from "react";
+import { colors } from "../../utils/mui";
 
 const style = {
   position: "absolute" as const,
@@ -7,7 +8,7 @@ const style = {
   left: "50%",
   transform: "translate(-50%, -50%)",
   width: 800,
-  backgroundColor: "#1F262E",
+  backgroundColor: colors.black,
   padding: 40,
   borderRadius: 4,
 };

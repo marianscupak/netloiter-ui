@@ -1,4 +1,5 @@
 import { LineChart } from "@mui/x-charts";
+import { colors } from "../../utils/mui";
 
 interface GraphSeries {
   data: (number | null)[] | undefined;
@@ -15,19 +16,19 @@ interface Props {
 
 const chartStyles = {
   "& .MuiChartsAxis-left .MuiChartsAxis-tickLabel": {
-    fill: "#F2F2F3",
+    fill: colors.white,
   },
   "& .MuiChartsAxis-bottom .MuiChartsAxis-tickLabel": {
-    fill: "#F2F2F3",
+    fill: colors.white,
   },
   "& .MuiChartsAxis-bottom .MuiChartsAxis-line": {
-    stroke: "#F2F2F3",
+    stroke: colors.white,
   },
   "& .MuiChartsAxis-left .MuiChartsAxis-line": {
-    stroke: "#F2F2F3",
+    stroke: colors.white,
   },
   "& .MuiChartsAxis-tick": {
-    stroke: "#F2F2F3",
+    stroke: colors.white,
   },
 };
 
@@ -47,7 +48,7 @@ export const LineGraph = ({
           data: formattedTimes?.slice(windowFrom, windowFrom + windowSize),
           scaleType: "band",
           label: "Time (s)",
-          labelStyle: { fill: "#F2F2F3" },
+          labelStyle: { fill: colors.white },
         },
       ]}
       sx={chartStyles}

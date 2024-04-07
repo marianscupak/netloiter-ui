@@ -1,6 +1,7 @@
 import { Accordion as MuiAccordion, styled } from "@mui/material";
+import { colors } from "../../utils/mui";
 
 export const Accordion = styled(MuiAccordion)({
-  backgroundColor: "#414C58",
-  color: "#F2F2F3",
+  backgroundColor: colors.darkGray,
+  color: colors.white,
 });

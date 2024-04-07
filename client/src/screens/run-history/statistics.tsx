@@ -5,6 +5,7 @@ import { TextField } from "../../components/forms/text-field";
 import { LineGraph } from "../../components/graphs/line-graph";
 import { PieGraph } from "../../components/graphs/pie-graph";
 import { useRunStatistics } from "./use-run-statistics";
+import { NetworkGraph } from "../../components/graphs/network-graph";
 
 interface Props {
   live?: boolean;
@@ -22,6 +23,7 @@ export const RunStatistics = ({ live }: Props) => {
     normalizedTimes,
     formattedTimes,
     graphSeries,
+    flows,
   } = useRunStatistics({ live });
 
   return (
@@ -122,16 +124,26 @@ export const RunStatistics = ({ live }: Props) => {
               />
             )}
           </div>
-          <div className="mt-4">
-            <div className="text-subheader mb-4">Message Types</div>
-            <PieGraph messageCountByType={statistics.messageCountByType} />
-          </div>
         </div>
       ) : (
         <div className="w-full h-[calc(100vh-100px)] flex justify-center items-center">
           <CircularProgress size={100} />
         </div>
       )}
+      {flows ? (
+        <div>
+          <div className="text-subheader mt-4">Network Flows</div>
+          <NetworkGraph flows={flows} />
+        </div>
+      ) : (
+        <CircularProgress />
+      )}
+      {statistics ? (
+        <div className="mt-4">
+          <div className="text-subheader mb-4">Message Types</div>
+          <PieGraph messageCountByType={statistics.messageCountByType} />
+        </div>
+      ) : null}
     </div>
   );
 };

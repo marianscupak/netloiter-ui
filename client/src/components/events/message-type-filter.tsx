@@ -2,7 +2,7 @@ import { Select } from "../forms/select";
 import {
   MessageType,
   messageTypeOptions,
-} from "../../../../server/nl-status/message-types";
+} from "netloiter-ui-be/nl-status/message-types";
 import { useCallback, useState } from "react";
 import { Button, SelectChangeEvent } from "@mui/material";
 import { messageTypesInitialValue } from "../../screens/run-history/detail";
@@ -34,8 +34,8 @@ export const MessageTypeFilter = ({ value, onChange }: Props) => {
         <Select
           label="Message types"
           options={messageTypeOptions}
-          // @ts-expect-error MUI multiple select type not working
           multiple
+          // @ts-expect-error MUI multiple select type not working
           value={innerValue}
           onChange={onSelect}
           renderValue={(selected: MessageType[]) =>

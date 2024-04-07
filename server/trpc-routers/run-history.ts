@@ -11,6 +11,7 @@ import { editRunConfigFormValuesSchema } from "netloiter-ui-fe/src/components/fo
 import axios from "axios";
 import { NL_REST_PORT, parseRuleForNl } from "../nl-status/parse-config-for-nl";
 import { sequelize } from "../sequelize";
+import { NetworkFlow } from "netloiter-ui-fe/src/utils/common";
 
 export const runHistoryRouter = createTRPCRouter({
   getAll: publicProcedure.query(
@@ -202,5 +203,17 @@ export const runHistoryRouter = createTRPCRouter({
         packetsPausedByTime,
         messageCountByType,
       };
+    }),
+  getRunFlows: publicProcedure
+    .input(objectWithId)
+    .query(async ({ input: { id } }) => {
+      const [result] = await sequelize.query(
+        `SELECT data->>'sourceIp' as "sourceIp", data->>'destIp' as "destIp", COUNT(*) as "messagesCount" 
+        FROM "public"."RunMessage"
+        WHERE "runId" = ${id} AND data->>'type' = '${MessageType.StartingPacketProcessing}'
+        GROUP BY data->>'sourceIp', data->>'destIp'`,
+      );
+
+      return result as NetworkFlow[];
     }),
 });

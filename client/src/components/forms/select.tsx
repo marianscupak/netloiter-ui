@@ -9,16 +9,18 @@ import { OutlinedInput } from "./input";
 import { withStyles } from "@mui/styles";
 import { InputLabel } from "./input-label";
 import { SelectOption } from "../../utils/select-option";
+import { colors } from "../../utils/mui";
 
 export interface SelectProps extends OutlinedSelectProps {
   label: string;
   options: SelectOption[];
+  value?: string;
   onChange?(event: SelectChangeEvent<unknown>): void;
 }
 
 const CustomSelect = withStyles(() => ({
   icon: {
-    fill: "#F2F2F3",
+    fill: colors.white,
   },
 }))(MuiSelect);
 
@@ -35,7 +37,7 @@ export const Select = ({
     <CustomSelect
       labelId={`${label}-label`}
       input={<OutlinedInput label={label} error={props.error} />}
-      sx={{ color: "#F2F2F3" }}
+      sx={{ color: colors.white }}
       defaultValue={props.defaultValue ?? ""}
       {...props}
     >

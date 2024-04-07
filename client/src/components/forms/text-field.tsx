@@ -3,23 +3,24 @@ import {
   TextField as MuiTextField,
   TextFieldProps,
 } from "@mui/material";
+import { colors } from "../../utils/mui";
 
 const CustomTextField = styled(MuiTextField)(({ error, disabled }) => ({
   "& .MuiInputBase-root": {
-    color: "#F2F2F3",
+    color: colors.white,
   },
   "& .MuiInputLabel-root": {
-    color: error ? "#D41121" : "#F2F2F3",
+    color: error ? colors.error : colors.white,
   },
   "& .MuiOutlinedInput-root": {
     "& fieldset": {
-      borderColor: error ? "#D41121" : "#F2F2F3",
+      borderColor: error ? colors.error : colors.white,
     },
     "&:hover fieldset": {
-      borderColor: disabled ? undefined : error ? "#D41121" : "#64D22D",
+      borderColor: disabled ? undefined : error ? colors.error : colors.primary,
     },
     "&.Mui-focused fieldset": {
-      borderColor: error ? "#D41121" : "#64D22D",
+      borderColor: error ? colors.error : colors.primary,
     },
   },
 }));

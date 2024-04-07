@@ -107,17 +107,18 @@ export const createConfig = (configName: string) => {
 
   cy.get("button").contains("ADD FLOW").click();
   cy.get("button").contains("EDIT PARAMETERS").click();
-  cy.get('input[type="checkbox"]').first().click();
+  cy.get('input[type="checkbox"]').eq(1).click();
   cy.get("body").trigger("keydown", { keyCode: 27 });
 
   cy.get('input[name="flows.0.all"]').click();
 
   cy.get("button").contains("ADD FLOW").click();
   cy.get("button").eq(1).click();
-  cy.get('input[type="checkbox"]').eq(2).click();
+  cy.get('input[type="checkbox"]').eq(3).click();
   cy.get("body").trigger("keydown", { keyCode: 27 });
   typeInInput("flows.1.ip", "127.0.0.1");
   useSelect("flows.1.action", "ignore");
+  cy.get('input[type="checkbox"]').eq(1).click();
 
   cy.get("button").contains("SAVE").click();
 };
