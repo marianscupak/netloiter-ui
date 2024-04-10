@@ -1,4 +1,4 @@
-import { LayoutOptions, Stylesheet } from "cytoscape";
+import { Core, LayoutOptions, NodeCollection, Stylesheet } from "cytoscape";
 import { colors } from "../../../utils/mui";
 import { SelectOption } from "../../../utils/select-option";
 
@@ -38,6 +38,27 @@ export const styleSheets: Stylesheet[] = [
       "line-color": colors.white,
     },
   },
+  {
+    selector: "node.highlight",
+    style: {
+      "border-color": colors.white,
+      "border-width": "2px",
+    },
+  },
+  {
+    selector: "node.semitransparent",
+    // @ts-expect-error Incorrect style types in Cytoscape
+    style: { opacity: "0.5" },
+  },
+  {
+    selector: "edge.highlight",
+    style: { "mid-target-arrow-color": colors.white },
+  },
+  {
+    selector: "edge.semitransparent",
+    // @ts-expect-error Incorrect style types in Cytoscape
+    style: { opacity: "0.2" },
+  },
 ];
 
 export enum Layout {
@@ -58,30 +79,26 @@ export const layoutOptions: SelectOption[] = [
   { label: "Breadth First", value: Layout.BreadthFirst },
 ];
 
+const baseLayout: Omit<LayoutOptions, "name"> = {
+  animate: true,
+  animationDuration: 1000,
+  animationEasing: "ease",
+  nodeDimensionsIncludeLabels: true,
+  avoidOverlap: true,
+};
+
 export const layouts: Record<Layout, LayoutOptions> = {
   [Layout.Concentric]: {
     name: "concentric",
-    animate: true,
-    animationDuration: 1000,
-    animationEasing: "ease",
-    nodeDimensionsIncludeLabels: true,
-    avoidOverlap: true,
+    ...baseLayout,
   },
   [Layout.CoSE]: {
     name: "cose",
-    animate: true,
-    animationDuration: 1000,
-    animationEasing: "ease",
-    nodeDimensionsIncludeLabels: true,
-    avoidOverlap: true,
+    ...baseLayout,
   },
   [Layout.Circle]: {
     name: "circle",
-    animate: true,
-    animationDuration: 1000,
-    animationEasing: "ease",
-    nodeDimensionsIncludeLabels: true,
-    avoidOverlap: true,
+    ...baseLayout,
   },
   [Layout.Random]: {
     name: "random",
@@ -91,18 +108,34 @@ export const layouts: Record<Layout, LayoutOptions> = {
   },
   [Layout.Grid]: {
     name: "grid",
-    animate: true,
-    animationDuration: 1000,
-    animationEasing: "ease",
-    nodeDimensionsIncludeLabels: true,
-    avoidOverlap: true,
+    ...baseLayout,
   },
   [Layout.BreadthFirst]: {
     name: "breadthfirst",
-    animate: true,
-    animationDuration: 1000,
-    animationEasing: "ease",
-    nodeDimensionsIncludeLabels: true,
-    avoidOverlap: true,
+    ...baseLayout,
   },
+};
+
+export const highlightNeighbours = (cy: Core) => {
+  cy.on("mouseover", "node", (e) => {
+    const sel = e.target as NodeCollection;
+    cy.elements()
+      .difference(sel.outgoers().or(sel.incomers()))
+      .not(sel)
+      .addClass("semitransparent");
+    sel
+      .addClass("highlight")
+      .outgoers()
+      .or(sel.incomers())
+      .addClass("highlight");
+  });
+  cy.on("mouseout", "node", (e) => {
+    const sel = e.target as NodeCollection;
+    cy.elements().removeClass("semitransparent");
+    sel
+      .removeClass("highlight")
+      .outgoers()
+      .or(sel.incomers())
+      .removeClass("highlight");
+  });
 };

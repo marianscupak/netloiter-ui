@@ -4,7 +4,13 @@ import { NetworkFlow } from "../../../utils/common";
 import { parseFlows } from "./parse-flows";
 import { Select } from "../../forms/select";
 import { SelectChangeEvent } from "@mui/material";
-import { Layout, layoutOptions, layouts, styleSheets } from "./config";
+import {
+  highlightNeighbours,
+  Layout,
+  layoutOptions,
+  layouts,
+  styleSheets,
+} from "./config";
 
 interface Props {
   flows: NetworkFlow[];
@@ -44,6 +50,7 @@ export const NetworkGraph = ({ flows }: Props) => {
         stylesheet={styleSheets}
         maxZoom={1.5}
         minZoom={0.25}
+        cy={highlightNeighbours}
       />
     </div>
   );
