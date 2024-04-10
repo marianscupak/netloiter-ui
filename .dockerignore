@@ -15,3 +15,5 @@ helm-charts
 dist
 docker
 !docker/db/entrypoint.sh
+lib
+docker/setup.sh

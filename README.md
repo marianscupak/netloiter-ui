@@ -6,14 +6,20 @@ designed to inject faults into network communication.
 - **Intuitive Interface** 🚀 - The UI provides a user-friendly experience for configuring and managing fault injection parameters.
 - **Fault Injection Control** 💉 - Easily specify the types of faults to inject, such as latency, packet loss, or corruption, and control their severity and duration.
 - **Real-time Monitoring** 📈 - Monitor network performance metrics and observe the effects of fault injection in real-time through visual representations.
-- **Saved Configurations** 📋 - Save and load configurations for quick and easy fault injection setup, enabling seamless experimentation and testing.
+- **Configuration Library** 📚 - Save and load configurations for quick and easy fault injection setup, enabling seamless experimentation and testing.
 
 [//]: # (Docker v24.0.5, Docker Compose v2.20.3)
 
 ## Getting Started
+### Linux
+You can use the provided `docker/setup.sh` script to install Docker and download NetLoiter. After that you can refer to
+the [Docker](#Docker) section.
+
+### Docker
 1. **Clone the repository**: Clone this repository to your local machine using `git clone`.
 2. **Configure environment variables**: Before building the Docker images, be sure to configure the necessary environment
-   variables in `docker/compose.yaml` according to your environment. Variables not specified in the following list should not be modified.
+   variables in `docker/compose.yaml` according to your environment. Variables not specified in the following list should 
+   not be modified unless you know what you are doing.
    1. **NL_HOST_IP** - Specifies the IP address of the host machine where NetLoiter is deployed. 
    2. **NL_HOST_PORT** - Specifies the port number used for SSH communication on the NetLoiter host machine.
    3. **NL_HOST_USERNAME** - Set to the username of a user with root permissions on the NetLoiter host machine.

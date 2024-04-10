@@ -19,7 +19,7 @@ const nlHostPassword = z.string().parse(process.env.NL_HOST_PASSWORD);
 const nlPath = z.string().parse(process.env.NL_PATH);
 
 const getNlStartCommand = (scenarioFileName: string, configFileName: string) =>
-  `sudo python3 ${nlPath} -v 3 --log-mode csv run -s ${configsPath}/upload/scenarios/${scenarioFileName}.json -c ${configsPath}/upload/configs/${configFileName}.json`;
+  `sudo python3 ${nlPath} -v 3 --log-mode csv run -s ${configsPath}/out/scenarios/${scenarioFileName}.json -c ${configsPath}/out/configs/${configFileName}.json`;
 
 const getInitConfigsCommands = (
   scenarioFileName: string,
@@ -27,16 +27,16 @@ const getInitConfigsCommands = (
   scenario: NlScenario,
   config: NlConfig,
 ) => [
-  `mkdir -p ${configsPath}/upload/scenarios`,
-  `mkdir -p ${configsPath}/upload/configs`,
-  `touch ${configsPath}/upload/scenarios/${scenarioFileName}.json`,
-  `touch ${configsPath}/upload/configs/${configFileName}.json`,
+  `mkdir -p ${configsPath}/out/scenarios`,
+  `mkdir -p ${configsPath}/out/configs`,
+  `touch ${configsPath}/out/scenarios/${scenarioFileName}.json`,
+  `touch ${configsPath}/out/configs/${configFileName}.json`,
   `echo '${JSON.stringify(
     scenario,
-  )}' > ${configsPath}/upload/scenarios/${scenarioFileName}.json`,
+  )}' > ${configsPath}/out/scenarios/${scenarioFileName}.json`,
   `echo '${JSON.stringify(
     config,
-  )}' > ${configsPath}/upload/configs/${configFileName}.json`,
+  )}' > ${configsPath}/out/configs/${configFileName}.json`,
 ];
 
 const sshConfig = {
