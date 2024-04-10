@@ -5,6 +5,8 @@ import { trpc } from "../../utils/trpc";
 import dayjs from "dayjs";
 import { colors } from "../../utils/mui";
 
+const STATS_REFETCH_PERIOD = 5000;
+
 export const useRunStatistics = ({ live }: { live?: boolean }) => {
   const [windowFrom, setWindowFrom] = useState(0);
   const [windowSize, setWindowSize] = useState<number | string>(20);
@@ -20,16 +22,16 @@ export const useRunStatistics = ({ live }: { live?: boolean }) => {
     {
       id,
     },
-    { refetchInterval: live ? 5000 : undefined },
+    { refetchInterval: live ? STATS_REFETCH_PERIOD : undefined },
   );
 
   const { data: flows } = trpc.runHistory.getRunFlows.useQuery(
     { id },
-    { refetchInterval: live ? 1000 : undefined },
+    { refetchInterval: live ? STATS_REFETCH_PERIOD : undefined },
   );
 
   const normalizedTimes = useMemo(() => {
-    if (statistics) {
+    if (statistics && statistics.packetsByTime.length > 0) {
       const startTime = dayjs(
         statistics.packetsByTime.reduce((previous, current) =>
           previous.time < current.time ? previous : current,

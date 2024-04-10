@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "concurrently \"bunx --bun vite --host 0.0.0.0\" \"bun run watch-tailwind\"",
-    "build": "tsc && vite build",
+    "build": "tsc && vite build && bun run tailwindcss build -i ./src/main.css -o ./dist/output.css",
     "start": "vite preview",
     "watch-tailwind": "bun run tailwindcss build -i ./src/main.css -o ./dist/output.css --watch"
   },

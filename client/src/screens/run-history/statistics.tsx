@@ -115,14 +115,15 @@ export const RunStatistics = ({ live }: Props) => {
                 onChange={onWindowSizeChange}
               />
             </div>
-            {typeof windowSize === "number" && (
-              <LineGraph
-                windowFrom={windowFrom}
-                windowSize={windowSize}
-                graphSeries={graphSeries}
-                formattedTimes={formattedTimes}
-              />
-            )}
+            {typeof windowSize === "number" &&
+              (graphSeries[0].data?.length ?? 0) > 0 && (
+                <LineGraph
+                  windowFrom={windowFrom}
+                  windowSize={windowSize}
+                  graphSeries={graphSeries}
+                  formattedTimes={formattedTimes}
+                />
+              )}
           </div>
         </div>
       ) : (
