@@ -12,13 +12,13 @@ designed to inject faults into network communication.
 
 ## Getting Started
 ### Linux
-You can use the provided `docker/setup.sh` script to install Docker and download NetLoiter. After that you can refer to
+You can use the provided [`docker/setup.sh`](docker/setup.sh) script to install Docker and download NetLoiter. After that you can refer to
 the [Docker](#Docker) section.
 
 ### Docker
 1. **Clone the repository**: Clone this repository to your local machine using `git clone`.
 2. **Configure environment variables**: Before building the Docker images, be sure to configure the necessary environment
-   variables in `docker/compose.yaml` according to your environment. Variables not specified in the following list should 
+   variables in [`docker/compose.yaml`](docker/compose.yaml) according to your environment. Variables not specified in the following list should 
    not be modified unless you know what you are doing.
    1. **NL_HOST_IP** - Specifies the IP address of the host machine where NetLoiter is deployed. 
    2. **NL_HOST_PORT** - Specifies the port number used for SSH communication on the NetLoiter host machine.
