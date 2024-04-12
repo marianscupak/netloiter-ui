@@ -3,6 +3,7 @@ import { trpc } from "../../utils/trpc";
 import { z } from "zod";
 import { CreateGuardFormValues } from "../../components/forms/guards/create-guard-form-types";
 import { CreateGuardForm } from "../../components/forms/guards/create-guard-form";
+import { BackButton } from "../../components/common/back-button";
 
 export const GuardDetail = () => {
   const { id } = useParams();
@@ -13,7 +14,10 @@ export const GuardDetail = () => {
 
   return (
     <div className="p-4 h-full">
-      <div className="text-header">{`Guard ${data?.name}`}</div>
+      <div className="flex justify-between items-center">
+        <div className="text-header">{`Guard ${data?.name}`}</div>
+        <BackButton />
+      </div>
       <div className="min-h-[calc(100vh-100px)] flex justify-center items-center my-4">
         {data && (
           <CreateGuardForm

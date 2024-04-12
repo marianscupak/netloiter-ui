@@ -6,6 +6,7 @@ import { LineGraph } from "../../components/graphs/line-graph";
 import { PieGraph } from "../../components/graphs/pie-graph";
 import { useRunStatistics } from "./use-run-statistics";
 import { NetworkGraph } from "../../components/graphs/network-graph";
+import { BackButton } from "../../components/common/back-button";
 
 interface Props {
   live?: boolean;
@@ -28,12 +29,15 @@ export const RunStatistics = ({ live }: Props) => {
 
   return (
     <div className="p-4">
-      <div className="text-header">
-        Run{" "}
-        {runHistory
-          ? dayjs(runHistory.dateTime).format("DD. MM. YYYY HH:mm:ss")
-          : "History"}{" "}
-        Statistics
+      <div className="flex justify-between items-center">
+        <div className="text-header">
+          Run{" "}
+          {runHistory
+            ? dayjs(runHistory.dateTime).format("DD. MM. YYYY HH:mm:ss")
+            : "History"}{" "}
+          Statistics
+        </div>
+        <BackButton />
       </div>
       {statistics ? (
         <div>

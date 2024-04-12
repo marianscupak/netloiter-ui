@@ -6,6 +6,7 @@ import { CreateScenarioFormValues } from "../../components/forms/scenarios/creat
 import { Button } from "@mui/material";
 import { useCallback } from "react";
 import { downloadFile } from "../../utils/download-file";
+import { BackButton } from "../../components/common/back-button";
 
 export const ScenarioDetail = () => {
   const { id } = useParams();
@@ -30,7 +31,10 @@ export const ScenarioDetail = () => {
 
   return (
     <div className="p-4 h-full">
-      <div className="text-header">{`Scenario ${scenarioDetail?.name}`}</div>
+      <div className="flex justify-between items-center">
+        <div className="text-header">{`Scenario ${scenarioDetail?.name}`}</div>
+        <BackButton />
+      </div>
       <Button variant="contained" color="warning" onClick={exportScenario}>
         EXPORT
       </Button>

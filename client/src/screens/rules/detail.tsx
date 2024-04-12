@@ -3,6 +3,7 @@ import { trpc } from "../../utils/trpc";
 import { z } from "zod";
 import { CreateRuleForm } from "../../components/forms/rules/create-rule-form";
 import { CreateRuleFormValues } from "../../components/forms/rules/create-rule-form-types";
+import { BackButton } from "../../components/common/back-button";
 
 export const RuleDetail = () => {
   const { id } = useParams();
@@ -13,7 +14,10 @@ export const RuleDetail = () => {
 
   return (
     <div className="p-4 h-full">
-      <div className="text-header">{`Rule ${data?.name}`}</div>
+      <div className="flex justify-between items-center">
+        <div className="text-header">{`Rule ${data?.name}`}</div>
+        <BackButton />
+      </div>
       <div className="min-h-[calc(100vh-100px)] flex justify-center items-center my-4">
         {data && (
           <CreateRuleForm

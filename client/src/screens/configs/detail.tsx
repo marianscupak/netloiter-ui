@@ -6,6 +6,7 @@ import { CreateConfigFormValues } from "../../components/forms/configs/create-co
 import { useCallback } from "react";
 import { downloadFile } from "../../utils/download-file";
 import { Button } from "@mui/material";
+import { BackButton } from "../../components/common/back-button";
 
 export const ConfigDetail = () => {
   const { id } = useParams();
@@ -29,7 +30,10 @@ export const ConfigDetail = () => {
 
   return (
     <div className="p-4 h-full">
-      <div className="text-header">{`Config ${data?.name}`}</div>
+      <div className="flex justify-between items-center">
+        <div className="text-header">{`Config ${data?.name}`}</div>
+        <BackButton />
+      </div>
       <Button variant="contained" color="warning" onClick={exportConfig}>
         EXPORT
       </Button>

@@ -8,6 +8,7 @@ import { useMemo } from "react";
 import { RunDetail } from "../../components/run-detail";
 import dayjs from "dayjs";
 import { trpc } from "../../utils/trpc";
+import { BackButton } from "../../components/common/back-button";
 
 export const messageTypesInitialValue: MessageType[] = messageTypeOptions.map(
   (option) => option.value as MessageType,
@@ -24,11 +25,14 @@ export const RunHistoryDetail = () => {
 
   return (
     <div className="p-4">
-      <div className="text-header">
-        Run{" "}
-        {runHistory
-          ? dayjs(runHistory.dateTime).format("DD. MM. YYYY HH:mm")
-          : "History"}
+      <div className="flex justify-between items-center">
+        <div className="text-header">
+          Run{" "}
+          {runHistory
+            ? dayjs(runHistory.dateTime).format("DD. MM. YYYY HH:mm")
+            : "History"}
+        </div>
+        <BackButton />
       </div>
       <RunDetail id={id} />
     </div>

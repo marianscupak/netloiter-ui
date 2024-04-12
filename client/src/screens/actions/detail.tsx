@@ -3,6 +3,7 @@ import { trpc } from "../../utils/trpc";
 import { z } from "zod";
 import { CreateActionForm } from "../../components/forms/actions/create-action-form";
 import { CreateActionFormValues } from "../../components/forms/actions/create-action-form-types";
+import { BackButton } from "../../components/common/back-button";
 
 export const ActionDetail = () => {
   const { id } = useParams();
@@ -13,7 +14,10 @@ export const ActionDetail = () => {
 
   return (
     <div className="p-4 h-full">
-      <div className="text-header">{`Action ${data?.name}`}</div>
+      <div className="flex justify-between items-center">
+        <div className="text-header">{`Action ${data?.name}`}</div>
+        <BackButton />
+      </div>
       <div className="min-h-[calc(100vh-100px)] flex justify-center items-center my-4">
         {data && (
           <CreateActionForm
