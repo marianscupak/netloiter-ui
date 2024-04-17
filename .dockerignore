@@ -16,4 +16,5 @@ dist
 docker
 !docker/db/entrypoint.sh
 lib
-docker/setup.sh
+init.sh
+run.sh

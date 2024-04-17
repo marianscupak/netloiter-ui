@@ -7,21 +7,14 @@ services:
       dockerfile: ./docker/app/Dockerfile
       context: ../
     environment:
-      # Specifies the IP address of the host machine where NetLoiter is deployed.
-      - NL_HOST_IP=192.168.64.4
-      # Specifies the port number used for SSH communication on the NetLoiter host machine.
-      - NL_HOST_PORT=22
-      # Set to the username of a user with root permissions on the NetLoiter host machine.
-      - NL_HOST_USERNAME=user
-      # Set to the password associated with the specified username.
-      - NL_HOST_PASSWORD=password
-      # Set this environment variable to the path of the `netloiter.py` script on the NetLoiter host machine.
-      - NL_PATH=~/Documents/NetLoiter/netloiter.py
-      # Should be set to the directory path on the NetLoiter host machine where the configuration files will be uploaded.
-      - NL_HOST_CONFIGS_PATH=~/Documents/NetLoiter
-      # HOST_IP & DB_IP - Should both be set to the same IP of the machine on which the docker containers will be running.
-      - HOST_IP=192.168.64.1
-      - DB_IP=192.168.64.1
+      - NL_HOST_IP=${NL_HOST_IP:?Required environment variable}
+      - NL_HOST_PORT=${NL_HOST_PORT:-22}
+      - NL_HOST_USERNAME=${NL_HOST_USERNAME:?Required environment variable}
+      - NL_HOST_PASSWORD=${NL_HOST_PASSWORD:?Required environment variable}
+      - NL_PATH=${NL_PATH:?Required environment variable}
+      - NL_HOST_CONFIGS_PATH=${NL_HOST_CONFIGS_PATH:?Required environment variable}
+      - HOST_IP=${HOST_IP:-10.5.0.3}
+      - DB_IP=${DB_IP:-10.5.0.4}
       - DB_PORT=5432
       - DATABASE_URL=postgresql://postgres:postgres@netloiter-ui-db:5432/netloiter_ui
       - FE_PORT=3000

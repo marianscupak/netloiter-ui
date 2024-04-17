@@ -8,18 +8,17 @@ designed to inject faults into network communication.
 - **Real-time Monitoring** 📈 - Monitor network performance metrics and observe the effects of fault injection in real-time through visual representations.
 - **Configuration Library** 📚 - Save and load configurations for quick and easy fault injection setup, enabling seamless experimentation and testing.
 
-[//]: # (Docker v24.0.5, Docker Compose v2.20.3)
-
 ## Getting Started
 ### Linux
-You can use the provided [`docker/setup.sh`](docker/setup.sh) script to install Docker and download NetLoiter. After that you can refer to
-the [Docker](#Docker) section.
+You can use the provided [`init.sh`](init.sh) script to install Docker and download NetLoiter. After that, refer to point 2
+in the [Docker](#Docker) section to configure the required environment variables. Once configured, you can execute the
+[`run.sh`](run.sh) script to run the project in Docker.
 
 ### Docker
 1. **Clone the repository**: Clone this repository to your local machine using `git clone`.
-2. **Configure environment variables**: Before building the Docker images, be sure to configure the necessary environment
-   variables in [`docker/compose.yaml`](docker/compose.yaml) according to your environment. Variables not specified in the following list should 
-   not be modified unless you know what you are doing.
+2. **Configure environment variables**: Before building the Docker images, be sure to create a `.env` file containing variables
+   reflecting your environment in the [`docker`](docker) directory. You can use the provided [`.env.example`](docker/.env.example)
+   file for reference.
    1. **NL_HOST_IP** - Specifies the IP address of the host machine where NetLoiter is deployed. 
    2. **NL_HOST_PORT** - Specifies the port number used for SSH communication on the NetLoiter host machine.
    3. **NL_HOST_USERNAME** - Set to the username of a user with root permissions on the NetLoiter host machine.
@@ -36,7 +35,8 @@ the [Docker](#Docker) section.
    will be listening on `http://localhost:2022` for API requests from the UI.
 6. **Begin Fault Injection**: Start experimenting with fault injection by configuring the desired parameters within the UI and launching NetLoiter.
 7. **Monitor Results**: Observe the effects of fault injection on network communication in real-time through the monitoring features provided by the UI.
-8. **Stop Containers**: Once you're done, stop the Docker containers by pressing `Ctrl + C` in the terminal where `docker compose up` is running, or by running `docker compose down`.
+8. **Stop Containers**: Once you're done, stop the Docker containers by pressing `Ctrl + C` in the terminal where
+  `docker compose up` is running, or by running `docker compose down`.
 
 ## Used Technologies
 - Project wide
