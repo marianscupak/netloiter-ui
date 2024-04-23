@@ -1,8 +1,8 @@
 #!/bin/bash
 
-# Check if Docker is already installed
-if ! command -v docker &>/dev/null; then
-    echo "Docker is not installed, installing..."
+# Check if Docker and Docker Compose is already installed
+if ! (command -v docker &>/dev/null || command docker compose version &>/dev/null); then
+    echo "Docker or Docker Compose is not installed, installing..."
 
     # Add Docker's official GPG key:
     sudo apt-get update
@@ -20,10 +20,11 @@ if ! command -v docker &>/dev/null; then
 
     # Install Docker
     sudo apt-get -y install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+fi
 
-    echo "Docker installed successfully."
-else
-    echo "Docker is already installed."
+if ! (command -v docker &>/dev/null || ! command docker compose version &>/dev/null); then
+    echo "Docker or Docker Compose were not installed successfully."
+    exit 1
 fi
 
 # Display Docker versions
@@ -32,6 +33,17 @@ docker_compose_version=$(docker compose version)
 
 echo "Docker version: $docker_version"
 echo "Docker Compose version: $docker_compose_version"
+
+echo ""
+# Check if Git is installed
+if ! command -v git &>/dev/null; then
+    echo "Git is not installed, installing..."
+    sudo apt-get update
+    sudo apt-get -y install git
+    echo "Git installed successfully."
+else
+    echo "Git is already installed."
+fi
 
 echo ""
 root_path=$( cd "$(dirname "${BASH_SOURCE[0]}")" || exit ; pwd -P )
@@ -48,7 +60,7 @@ fi
 echo ""
 # Create a .env file from the template if it doesn't exist yet
 if [ -e "$root_path/docker/.env" ]; then
-    echo "The .env file already exists in $root_path/docker."
+    echo "The .env file already exists in $root_path/docker. Make sure it is populated with the required variables based on your environment. Refer to the README.md for guidance."
 else
     cp "$root_path/docker/.env.example" "$root_path/docker/.env"
     echo "Successfully created a .env file in $root_path/docker. Please populate the file with the required variables based on your environment. Refer to the README.md for guidance."

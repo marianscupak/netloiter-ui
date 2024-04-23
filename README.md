@@ -16,9 +16,9 @@ in the [Docker](#Docker) section to configure the required environment variables
 
 ### Docker
 1. **Clone the repository**: Clone this repository to your local machine using `git clone`.
-2. **Configure environment variables**: Before building the Docker images, be sure to create a `.env` file containing variables
-   reflecting your environment in the [`docker`](docker) directory. You can use the provided [`.env.example`](docker/.env.example)
-   file for reference.
+2. **Configure environment variables**: Before building the Docker images, be sure to create a `.env` file in the [`docker`](docker)
+   directory if it wasn't created by the [`init.sh`](init.sh) script. Populate the file with variables reflecting your environment. 
+   You can use the provided [`.env.example`](docker/.env.example) file for reference.
    1. **NL_HOST_IP** - Specifies the IP address of the host machine where NetLoiter is deployed. 
    2. **NL_HOST_PORT** - Specifies the port number used for SSH communication on the NetLoiter host machine.
    3. **NL_HOST_USERNAME** - Set to the username of a user with root permissions on the NetLoiter host machine.
