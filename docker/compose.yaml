@@ -7,14 +7,14 @@ services:
       dockerfile: ./docker/app/Dockerfile
       context: ../
     environment:
-      - NL_HOST_IP=${NL_HOST_IP:?Required environment variable}
+      - NL_HOST_IP=${NL_HOST_IP:-${HOST_IP:-127.0.0.1}}
       - NL_HOST_PORT=${NL_HOST_PORT:-22}
       - NL_HOST_USERNAME=${NL_HOST_USERNAME:?Required environment variable}
       - NL_HOST_PASSWORD=${NL_HOST_PASSWORD:?Required environment variable}
       - NL_PATH=${NL_PATH:?Required environment variable}
       - NL_HOST_CONFIGS_PATH=${NL_HOST_CONFIGS_PATH:?Required environment variable}
       - HOST_IP=${HOST_IP:-10.5.0.3}
-      - DB_IP=${DB_IP:-10.5.0.4}
+      - DB_IP=${HOST_IP:-10.5.0.4}
       - DB_PORT=5432
       - DATABASE_URL=postgresql://postgres:postgres@netloiter-ui-db:5432/netloiter_ui
       - FE_PORT=3000

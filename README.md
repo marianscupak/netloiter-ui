@@ -19,14 +19,14 @@ in the [Docker](#Docker) section to configure the required environment variables
 2. **Configure environment variables**: Before building the Docker images, be sure to create a `.env` file in the [`docker`](docker)
    directory if it wasn't created by the [`init.sh`](init.sh) script. Populate the file with variables reflecting your environment. 
    You can use the provided [`.env.example`](docker/.env.example) file for reference.
-   1. **NL_HOST_IP** - Specifies the IP address of the host machine where NetLoiter is deployed. 
-   2. **NL_HOST_PORT** - Specifies the port number used for SSH communication on the NetLoiter host machine.
+   1. **NL_HOST_IP** - Specifies the IP address of the host machine where NetLoiter is deployed. Uncomment if NetLoiter will not be running on the same machine as the UI.
+   2. **NL_HOST_PORT** - Specifies the port number used for SSH communication on the NetLoiter host machine. Uncomment if the NetLoiter host machine uses a different port for SSH communication than 22.
    3. **NL_HOST_USERNAME** - Set to the username of a user with root permissions on the NetLoiter host machine.
    4. **NL_HOST_PASSWORD** - Set to the password associated with the specified username.
    5. **NL_PATH** - Set this environment variable to the path of the `netloiter.py` script on the NetLoiter host machine.
    6. **NL_HOST_CONFIGS_PATH** - Should be set to the directory path on the NetLoiter host machine where the configuration files will be uploaded.
-   7. **HOST_IP & DB_IP** - Should both be set to the same IP of the machine on which the docker containers will be running.
-   These variables are used during the generation of configuration files to ignore the communication between components of the user interface.
+   7. **HOST_IP** - Should be set to the IP address of the machine on which the docker containers will be running.
+   This variable is used during the generation of configuration files to ignore the communication between components of the user interface.
 
 3. **Build Docker images**: Navigate to the `docker` directory and build the Docker images for the app and the database using
 `docker compose build`.

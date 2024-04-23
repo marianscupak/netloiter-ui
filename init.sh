@@ -19,7 +19,7 @@ if ! (command -v docker &>/dev/null || command docker compose version &>/dev/nul
     sudo apt-get update
 
     # Install Docker
-    sudo apt-get -y install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+    sudo apt-get -y install docker-ce docker-ce-cli containerd containerd.io docker-buildx-plugin docker-compose-plugin
 fi
 
 if ! (command -v docker &>/dev/null || ! command docker compose version &>/dev/null); then
@@ -54,7 +54,8 @@ if [ -d "$netloiter_dir" ]; then
 else
     # Clone the repository
     git clone https://pajda.fit.vutbr.cz/testos/netloiter.git "$root_path/$netloiter_dir"
-    echo "NetLoiter cloned successfully."
+    echo "NetLoiter cloned successfully. Installing NetLoiter dependencies..."
+    sudo "$root_path/$netloiter_dir/install/install.sh"
 fi
 
 echo ""
@@ -63,5 +64,7 @@ if [ -e "$root_path/docker/.env" ]; then
     echo "The .env file already exists in $root_path/docker. Make sure it is populated with the required variables based on your environment. Refer to the README.md for guidance."
 else
     cp "$root_path/docker/.env.example" "$root_path/docker/.env"
+    sed -i "s|NL_PATH=.*|NL_PATH=$root_path/$netloiter_dir/netloiter.py|" "$root_path/docker/.env"
+    sed -i "s|NL_HOST_CONFIGS_PATH=.*|NL_HOST_CONFIGS_PATH=$root_path/$netloiter_dir|" "$root_path/docker/.env"
     echo "Successfully created a .env file in $root_path/docker. Please populate the file with the required variables based on your environment. Refer to the README.md for guidance."
 fi
