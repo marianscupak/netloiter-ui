@@ -64,7 +64,11 @@ if [ -e "$root_path/docker/.env" ]; then
     echo "The .env file already exists in $root_path/docker. Make sure it is populated with the required variables based on your environment. Refer to the README.md for guidance."
 else
     cp "$root_path/docker/.env.example" "$root_path/docker/.env"
+    host_ip=$(hostname -I | awk '{print $1}')
+    sed -i "s|HOST_IP=.*|HOST_IP=$host_ip|" "$root_path/docker/.env"
+    username=$(whoami)
+    sed -i "s|NL_HOST_USERNAME=.*|NL_HOST_USERNAME=$username|" "$root_path/docker/.env"
     sed -i "s|NL_PATH=.*|NL_PATH=$root_path/$netloiter_dir/netloiter.py|" "$root_path/docker/.env"
     sed -i "s|NL_HOST_CONFIGS_PATH=.*|NL_HOST_CONFIGS_PATH=$root_path/$netloiter_dir|" "$root_path/docker/.env"
-    echo "Successfully created a .env file in $root_path/docker. Please populate the file with the required variables based on your environment. Refer to the README.md for guidance."
+    echo "Successfully created a .env file in $root_path/docker. Please fill the NL_HOST_PASSWORD variable and validate the rest of the prefilled values in the file. Refer to the README.md for guidance."
 fi
