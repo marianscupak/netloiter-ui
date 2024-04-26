@@ -5,6 +5,7 @@ import { parseMessage } from "./nl-status/parse-message";
 import { Message } from "./nl-status/message-types";
 import { Run } from "./sequelize/models/run";
 import { RunMessage } from "./sequelize/models/run-message";
+import { BaseAction } from "netloiter-ui-fe/src/components/forms/actions/create-action-form-types";
 
 const broadcast = (clients: Set<WebSocket>, message: string) => {
   clients.forEach((client) => {
@@ -22,8 +23,14 @@ export const initializeRun = async (
   runningFrom: Date,
   scenarioId: number | undefined,
   configId: number | undefined,
+  defaultAction: BaseAction | undefined,
 ) => {
-  DbRun = await Run.create({ dateTime: runningFrom, scenarioId, configId });
+  DbRun = await Run.create({
+    dateTime: runningFrom,
+    scenarioId,
+    configId,
+    defaultAction,
+  });
 };
 
 export const wsWrapper = (expressServer: Server) => {

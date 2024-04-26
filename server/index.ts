@@ -10,6 +10,7 @@ import { createScenarioFormValuesSchema } from "netloiter-ui-fe/src/components/f
 import { createConfigFormValuesSchema } from "netloiter-ui-fe/src/components/forms/configs/create-config-form-types";
 import { initHyperTable, sequelize } from "./sequelize";
 import { objectWithId } from "./trpc-routers/utils/object-with-id";
+import { baseActionSchema } from "netloiter-ui-fe/src/components/forms/actions/create-action-form-types";
 
 const trpcHandler = createHTTPHandler({
   middleware: cors(),
@@ -21,16 +22,36 @@ const app = express().use(cors(), express.json());
 
 sequelize.sync().then(initHyperTable);
 
-const startBodySchema = z.object({
-  scenario: createScenarioFormValuesSchema.merge(objectWithId),
+const objectWithConfigSchema = z.object({
   config: z.intersection(createConfigFormValuesSchema, objectWithId),
 });
+
+const startBodySchema = z
+  .object({
+    scenario: createScenarioFormValuesSchema.merge(objectWithId),
+  })
+  .merge(objectWithConfigSchema)
+  .or(
+    z.object({ defaultAction: baseActionSchema }).merge(objectWithConfigSchema),
+  );
 
 app.post("/start", (req, res) => {
   const parsedBody = startBodySchema.safeParse(req.body);
 
   if (parsedBody.success) {
-    startNetLoiter(parsedBody.data.scenario, parsedBody.data.config);
+    if ("scenario" in parsedBody.data) {
+      startNetLoiter({
+        scenario: parsedBody.data.scenario,
+        config: parsedBody.data.config,
+      });
+    } else if ("defaultAction" in parsedBody.data) {
+      startNetLoiter({
+        defaultAction: parsedBody.data.defaultAction,
+        config: parsedBody.data.config,
+      });
+    } else {
+      res.status(400);
+    }
   } else {
     res.status(400);
   }

@@ -11,11 +11,14 @@ import { HasManyGetAssociationsMixin } from "@sequelize/core";
 import type { NonAttribute } from "@sequelize/core";
 import { RunMessage } from "./run-message";
 import { Optional } from "@prisma/client/runtime/library";
+import { ActionType } from "@prisma/client";
+import { defaultActionOptions } from "netloiter-ui-fe/src/components/forms/actions/create-action-form-types";
 
 interface RunAttributes {
   id: number;
   dateTime: Date;
   scenarioId?: number;
+  defaultAction?: ActionType;
   configId?: number;
 }
 
@@ -33,6 +36,13 @@ export class Run extends Model<RunAttributes, RunCreationAttributes> {
 
   @Column(DataType.INTEGER)
   declare scenarioId: number;
+
+  @Column(
+    DataType.ENUM(
+      ...defaultActionOptions.map((option) => option.value as string),
+    ),
+  )
+  declare defaultAction: ActionType;
 
   @Column(DataType.INTEGER)
   declare configId: number;

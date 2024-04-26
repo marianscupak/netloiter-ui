@@ -33,18 +33,23 @@ export const runHistoryRouter = createTRPCRouter({
       const run = await Run.findByPk(id);
 
       if (run) {
-        const scenario = await getScenarioDetail(ctx, run.scenarioId);
         const messagesCount = await RunMessage.count({
           where: messageTypes
             ? { "data.type": { [Op.in]: messageTypes }, runId: id }
             : { runId: id },
         });
 
-        return {
-          ...run.dataValues,
-          scenario,
-          messagesCount,
-        };
+        if (run.scenarioId !== null) {
+          const scenario = await getScenarioDetail(ctx, run.scenarioId);
+
+          return {
+            ...run.dataValues,
+            scenario,
+            messagesCount,
+          };
+        }
+
+        return { ...run.dataValues, messagesCount };
       }
       throw new TRPCError({ code: "NOT_FOUND" });
     }),

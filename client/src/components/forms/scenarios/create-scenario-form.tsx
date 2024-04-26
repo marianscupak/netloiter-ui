@@ -19,6 +19,7 @@ import { AppRouter } from "../../../../../server/trpc-routers";
 import { useNavigate } from "react-router-dom";
 import { useLoadRuleModal } from "../../../utils/use-load-rule-modal";
 import { SelectOption } from "../../../utils/select-option";
+import { defaultActionOptions } from "../actions/create-action-form-types";
 
 const defaultCreateScenarioValues: CreateScenarioFormValues = {
   name: "",
@@ -30,13 +31,6 @@ const defaultCreateScenarioValues: CreateScenarioFormValues = {
 const scenarioTypeOptions: SelectOption[] = [
   { value: ScenarioType.Sequential, label: ScenarioType.Sequential },
   { value: ScenarioType.SequentialHTTP, label: "Sequential HTTP" },
-];
-
-const defaultActionOptions: SelectOption[] = [
-  { value: ActionType.Finish, label: ActionType.Finish },
-  { value: ActionType.Drop, label: ActionType.Drop },
-  { value: ActionType.Pause, label: ActionType.Pause },
-  { value: ActionType.Skip, label: ActionType.Skip },
 ];
 
 interface Props {

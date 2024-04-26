@@ -5,7 +5,7 @@ import { Message, MessageType } from "../../../server/nl-status/message-types";
 import { trpc } from "../utils/trpc";
 import { CreateScenarioFormValues } from "./forms/scenarios/create-scenario-form-types";
 import { NavLink } from "react-router-dom";
-import { Button, CircularProgress } from "@mui/material";
+import { Button, Chip, CircularProgress } from "@mui/material";
 import { EventListControls } from "./events/event-list-controls";
 import { Pagination } from "./common/pagination";
 import { PacketEventList } from "./events/packet-event-list";
@@ -59,10 +59,12 @@ export const RunDetail = ({
 
   useEffect(() => {
     if (runHistory && !status.scenario) {
-      setStatus((oldStatus) => ({
-        ...oldStatus,
-        scenario: runHistory.scenario as CreateScenarioFormValues,
-      }));
+      if ("scenario" in runHistory) {
+        setStatus((oldStatus) => ({
+          ...oldStatus,
+          scenario: runHistory.scenario as CreateScenarioFormValues,
+        }));
+      }
     }
 
     return () => {
@@ -87,7 +89,7 @@ export const RunDetail = ({
 
   return (
     <div>
-      <div className="flex gap-2 mb-2">
+      <div className="flex gap-2 mb-2 items-center">
         {runHistory?.scenarioId && (
           <NavLink to={`/scenarios/${runHistory.scenarioId}`}>
             <Button variant="contained">SCENARIO</Button>
@@ -97,6 +99,13 @@ export const RunDetail = ({
           <NavLink to={`/configs/${runHistory.configId}`}>
             <Button variant="contained">CONFIG</Button>
           </NavLink>
+        )}
+        {runHistory?.defaultAction && (
+          <Chip
+            label={`Default Action: ${runHistory.defaultAction}`}
+            color="primary"
+            style={{ fontSize: 14, fontWeight: 500 }}
+          />
         )}
       </div>
       <div className="flex gap-2">

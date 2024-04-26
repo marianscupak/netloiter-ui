@@ -82,6 +82,13 @@ export const baseActionSchema = z.union([
 
 export type BaseAction = z.infer<typeof baseActionSchema>;
 
+export const defaultActionOptions: SelectOption[] = [
+  { value: ActionType.Finish, label: ActionType.Finish },
+  { value: ActionType.Drop, label: ActionType.Drop },
+  { value: ActionType.Pause, label: ActionType.Pause },
+  { value: ActionType.Skip, label: ActionType.Skip },
+];
+
 const replicateActionValuesSchema = createActionBaseFormValuesSchema.extend({
   type: z.literal(ActionType.Replicate),
   count: positiveNumberWithValueGeneratorSchema,

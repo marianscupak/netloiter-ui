@@ -1,7 +1,10 @@
 import { Button } from "@mui/material";
 import { StartNetLoiterModal } from "../components/forms/start-net-loiter/start-net-loiter-modal";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useNlStatusEndpoints } from "../utils/use-nl-status-endpoints";
+import {
+  StartNetLoiterParams,
+  useNlStatusEndpoints,
+} from "../utils/use-nl-status-endpoints";
 import { useAtom } from "jotai";
 import { statusAtom } from "../state/status";
 import { NavLink, useNavigate } from "react-router-dom";
@@ -72,9 +75,9 @@ export const Home = () => {
   );
 
   const onStartNetLoiter = useCallback(
-    async (scenarioId: number, configId: number) => {
+    async (params: StartNetLoiterParams) => {
       setStatusLoading(true);
-      await startNetLoiter(scenarioId, configId);
+      await startNetLoiter(params);
       setTimeout(async () => await getIsNlRunning(true), NL_START_DURATION);
     },
     [getIsNlRunning, startNetLoiter],
