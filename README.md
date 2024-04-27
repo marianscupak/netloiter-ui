@@ -27,6 +27,7 @@ Once configured, you can execute the [`run.sh`](run.sh) script to run the projec
    6. **NL_HOST_IP** - Specifies the IP address of the host machine where NetLoiter is deployed. Uncomment if NetLoiter will not be running on the same machine as the UI.
    7. **NL_HOST_PORT** - Specifies the port number used for SSH communication on the NetLoiter host machine. Uncomment if the NetLoiter host machine uses a different port for SSH communication than 22.
    This variable is used during the generation of configuration files to ignore the communication between components of the user interface.
+   8. **REFETCH_PERIOD** - Specifies the interval, in milliseconds, for updating real-time messages and statistics. Defaults to 5000.
 
 3. **Build Docker images**: Navigate to the `docker` directory and build the Docker images for the app and the database using
 `docker compose build`.

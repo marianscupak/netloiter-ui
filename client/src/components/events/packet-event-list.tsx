@@ -56,7 +56,7 @@ export const PacketEventList = ({ messages }: Props) => {
               <AccordionSummary>
                 Source: {groupedEvents[key].sourceIp}
                 {groupedEvents[key].sourcePort !== -1
-                  ? `:${groupedEvents[key].destPort}`
+                  ? `:${groupedEvents[key].sourcePort}`
                   : ""}{" "}
                 {"->"} Destination: {groupedEvents[key].destIp}
                 {groupedEvents[key].destPort !== -1

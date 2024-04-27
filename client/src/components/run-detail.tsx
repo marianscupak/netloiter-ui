@@ -1,6 +1,6 @@
 import { useAtom } from "jotai";
 import { statusAtom } from "../state/status";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Message, MessageType } from "../../../server/nl-status/message-types";
 import { trpc } from "../utils/trpc";
 import { CreateScenarioFormValues } from "./forms/scenarios/create-scenario-form-types";
@@ -11,6 +11,12 @@ import { Pagination } from "./common/pagination";
 import { PacketEventList } from "./events/packet-event-list";
 import { messageTypesInitialValue } from "../screens/run-history/detail";
 import { useNlStatusEndpoints } from "../utils/use-nl-status-endpoints";
+import { z } from "zod";
+
+const REFETCH_PERIOD = z.coerce
+  .number()
+  .optional()
+  .parse(import.meta.env.VITE_REFETCH_PERIOD);
 
 interface Props {
   id: number;
@@ -47,15 +53,22 @@ export const RunDetail = ({
         : messageTypeFilter,
   });
 
-  const { data: messages } = trpc.runHistory.getRunMessages.useQuery({
-    id,
-    page,
-    pageSize: eventsShown,
-    messageTypes:
-      messageTypeFilter.length === messageTypesInitialValue.length
-        ? undefined
-        : messageTypeFilter,
-  });
+  const { data: messages } = trpc.runHistory.getRunMessages.useQuery(
+    {
+      id,
+      page,
+      pageSize: eventsShown,
+      messageTypes:
+        messageTypeFilter.length === messageTypesInitialValue.length
+          ? undefined
+          : messageTypeFilter,
+    },
+    {
+      cacheTime: liveStats ? 0 : undefined,
+      refetchInterval: liveStats ? REFETCH_PERIOD : undefined,
+      refetchIntervalInBackground: true,
+    },
+  );
 
   useEffect(() => {
     if (runHistory && !status.scenario) {
@@ -86,6 +99,14 @@ export const RunDetail = ({
     await stopNetLoiter();
     setStatus((prev) => ({ ...prev, runningFrom: false }));
   }, [setStatus, stopNetLoiter]);
+
+  const messagesData = useMemo(
+    () =>
+      messages?.map((message) =>
+        "data" in message ? message.data : message,
+      ) as Message[],
+    [messages],
+  );
 
   return (
     <div>
@@ -158,15 +179,9 @@ export const RunDetail = ({
             onChange={onPageChange}
           />
         </div>
-        {messages ? (
+        {messagesData ? (
           <div>
-            <PacketEventList
-              messages={
-                messages.map((message) =>
-                  "data" in message ? message.data : message,
-                ) as Message[]
-              }
-            />
+            <PacketEventList messages={messagesData} />
           </div>
         ) : (
           <div className="flex justify-center">

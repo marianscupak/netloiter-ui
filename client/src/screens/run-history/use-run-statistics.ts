@@ -5,7 +5,10 @@ import { trpc } from "../../utils/trpc";
 import dayjs from "dayjs";
 import { colors } from "../../utils/mui";
 
-const STATS_REFETCH_PERIOD = 5000;
+const STATS_REFETCH_PERIOD = z.coerce
+  .number()
+  .optional()
+  .parse(import.meta.env.VITE_REFETCH_PERIOD);
 
 export const useRunStatistics = ({ live }: { live?: boolean }) => {
   const [windowFrom, setWindowFrom] = useState(0);

@@ -19,6 +19,7 @@ services:
       - DATABASE_URL=postgresql://postgres:postgres@netloiter-ui-db:5432/netloiter_ui
       - FE_PORT=3000
       - BE_PORT=2022
+      - VITE_REFETCH_PERIOD=${REFETCH_PERIOD:-5000}
     ports:
       - "3000:3000"
       - "2022:2022"
