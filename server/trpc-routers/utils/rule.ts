@@ -10,13 +10,6 @@ export const createRule = async (
   ctx: Context,
   { name, actions, guards, type }: CreateRuleFormValues,
 ) => {
-  if (actions.length === 0 || guards.length === 0) {
-    throw new TRPCError({
-      code: "BAD_REQUEST",
-      message: "Provide at least one guard and action",
-    });
-  }
-
   const actionsWithIds = actions.filter(
     (action) => action.loadedId !== undefined,
   );

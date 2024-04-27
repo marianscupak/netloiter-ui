@@ -16,13 +16,6 @@ export const scenarioRouter = createTRPCRouter({
   createScenario: publicProcedure
     .input(createScenarioFormValuesSchema)
     .mutation(async ({ ctx, input: { rules, type, name, defaultAction } }) => {
-      if (rules.length === 0) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "Provide at least one rule",
-        });
-      }
-
       const newScenario = await ctx.prisma.scenario.create({
         data: { name, type, defaultAction },
       });
