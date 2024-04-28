@@ -35,16 +35,21 @@ export const useRunStatistics = ({ live }: { live?: boolean }) => {
 
   const normalizedTimes = useMemo(() => {
     if (statistics && statistics.packetsByTime.length > 0) {
-      const startTime = dayjs(
-        statistics.packetsByTime.reduce((previous, current) =>
-          previous.time < current.time ? previous : current,
-        ).time,
-      ).set("milliseconds", 0);
-      const endTime = dayjs(
-        statistics.packetsByTime.reduce((previous, current) =>
-          previous.time > current.time ? previous : current,
-        ).time,
-      ).set("milliseconds", 0);
+      let startTime = dayjs(statistics.packetsByTime[0].time);
+      let endTime = dayjs(statistics.packetsByTime[0].time);
+
+      statistics.packetsByTime.forEach((packet) => {
+        const packetTime = dayjs(packet.time);
+        if (packetTime.isBefore(startTime)) {
+          startTime = packetTime;
+        }
+        if (packetTime.isAfter(endTime)) {
+          endTime = packetTime;
+        }
+      });
+
+      startTime = startTime.set("milliseconds", 0);
+      endTime = endTime.set("milliseconds", 0);
 
       const times = [];
       let currentTime = startTime;
@@ -61,46 +66,55 @@ export const useRunStatistics = ({ live }: { live?: boolean }) => {
 
   const normalizedStats = useMemo(() => {
     if (statistics && normalizedTimes) {
+      const packetsByTimeMap = new Map(
+        statistics.packetsByTime.map((packet) => [
+          dayjs(packet.time).set("millisecond", 0).valueOf(),
+          packet.packetsCount,
+        ]),
+      );
+      const droppedByTimeMap = new Map(
+        statistics.packetsDroppedByTime.map((packet) => [
+          dayjs(packet.time).set("millisecond", 0).valueOf(),
+          packet.packetsCount,
+        ]),
+      );
+      const finishedByTimeMap = new Map(
+        statistics.packetsFinishedByTime.map((packet) => [
+          dayjs(packet.time).set("millisecond", 0).valueOf(),
+          packet.packetsCount,
+        ]),
+      );
+      const pausedByTimeMap = new Map(
+        statistics.packetsPausedByTime.map((packet) => [
+          dayjs(packet.time).set("millisecond", 0).valueOf(),
+          packet.packetsCount,
+        ]),
+      );
+      const skippedByTimeMap = new Map(
+        statistics.packetsSkippedByTime.map((packet) => [
+          dayjs(packet.time).set("millisecond", 0).valueOf(),
+          packet.packetsCount,
+        ]),
+      );
+
       const stats = normalizedTimes.map((time) => {
-        const packets =
-          statistics.packetsByTime.find((p) =>
-            dayjs(p.time).set("milliseconds", 0).isSame(time),
-          )?.packetsCount || 0;
-
-        const droppedPackets =
-          statistics.packetsDroppedCount > 0
-            ? statistics.packetsDroppedByTime.find((d) =>
-                dayjs(d.time).set("milliseconds", 0).isSame(time),
-              )?.packetsCount || 0
-            : null;
-
-        const finishedPackets =
-          statistics.packetsFinishedCount > 0
-            ? statistics.packetsFinishedByTime.find((d) =>
-                dayjs(d.time).set("milliseconds", 0).isSame(time),
-              )?.packetsCount || 0
-            : null;
-
-        const pausedPackets =
-          statistics.packetsPausedCount > 0
-            ? statistics.packetsPausedByTime.find((d) =>
-                dayjs(d.time).set("milliseconds", 0).isSame(time),
-              )?.packetsCount || 0
-            : null;
-
-        const skippedPackets =
-          statistics.packetsSkippedCount > 0
-            ? statistics.packetsSkippedByTime.find((d) =>
-                dayjs(d.time).set("milliseconds", 0).isSame(time),
-              )?.packetsCount || 0
-            : null;
+        const timeValue = time.valueOf();
+        const packets = packetsByTimeMap.get(timeValue) || 0;
+        const droppedPackets = droppedByTimeMap.get(timeValue) || 0;
+        const finishedPackets = finishedByTimeMap.get(timeValue) || 0;
+        const pausedPackets = pausedByTimeMap.get(timeValue) || 0;
+        const skippedPackets = skippedByTimeMap.get(timeValue) || 0;
 
         return {
           packets,
-          droppedPackets,
-          finishedPackets,
-          pausedPackets,
-          skippedPackets,
+          droppedPackets:
+            statistics.packetsDroppedCount > 0 ? droppedPackets : null,
+          finishedPackets:
+            statistics.packetsFinishedCount > 0 ? finishedPackets : null,
+          pausedPackets:
+            statistics.packetsPausedCount > 0 ? pausedPackets : null,
+          skippedPackets:
+            statistics.packetsSkippedCount > 0 ? skippedPackets : null,
         };
       });
 
@@ -132,7 +146,7 @@ export const useRunStatistics = ({ live }: { live?: boolean }) => {
 
     const value = Number.parseInt(eventValue);
 
-    if (!isNaN(value)) {
+    if (!isNaN(value) && value <= 200) {
       setWindowSize(value);
     }
   }, []);

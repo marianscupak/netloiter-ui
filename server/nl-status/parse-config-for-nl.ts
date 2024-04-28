@@ -257,7 +257,7 @@ export const parseActionForNl = (
       return {
         $type: type,
         n: parseValueGenerator(count),
-        action: _action,
+        action: _action.toLowerCase(),
       };
     }
     case ActionType.SocketTcp: {

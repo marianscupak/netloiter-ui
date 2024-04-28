@@ -12,6 +12,7 @@ import axios from "axios";
 import { NL_REST_PORT, parseRuleForNl } from "../nl-status/parse-config-for-nl";
 import { sequelize } from "../sequelize";
 import { NetworkFlow } from "netloiter-ui-fe/src/utils/common";
+import { ActionType } from "@prisma/client";
 
 export const runHistoryRouter = createTRPCRouter({
   getAll: publicProcedure.query(
@@ -106,96 +107,32 @@ export const runHistoryRouter = createTRPCRouter({
     }),
   getRunStatistics: publicProcedure
     .input(objectWithId)
-    .query(async ({ input: { id } }) => {
-      const packetsProcessed = await RunMessage.count({
-        where: {
-          runId: id,
-          data: { type: MessageType.StartingPacketProcessing },
-        },
+    .query(async ({ input: { id }, ctx }) => {
+      const scenarioId = (await Run.findOne({ where: { id } }))?.scenarioId;
+      const actions = scenarioId
+        ? await ctx.prisma.action.findMany({
+            where: {
+              rules: {
+                some: { rule: { scenarios: { some: { scenarioId } } } },
+              },
+            },
+            select: { type: true },
+          })
+        : [];
+      const rulesChangedMessageCount = await RunMessage.count({
+        where: { data: { type: MessageType.RulesReplaced }, runId: id },
       });
 
-      const packetsByTime = (await RunMessage.findAll({
-        where: {
-          runId: id,
-          data: { type: MessageType.StartingPacketProcessing },
-        },
-        group: "time",
-        attributes: [
-          "time",
-          [sequelize.fn("COUNT", sequelize.col("id")), "packetsCount"],
-        ],
-        order: ["time"],
-      })) as unknown as { time: Date; packetsCount: number }[];
+      const actionTypes = actions.map(({ type }) => type);
 
-      const packetsFinishedCount = await RunMessage.count({
-        where: { runId: id, data: { type: MessageType.FinishAction } },
-      });
+      const scenarioContainsActionType = (type: ActionType) =>
+        actionTypes.includes(type) || rulesChangedMessageCount > 0;
+      const containsFinish = scenarioContainsActionType(ActionType.Finish);
+      const containsDrop = scenarioContainsActionType(ActionType.Drop);
+      const containsSkip = scenarioContainsActionType(ActionType.Skip);
+      const containsPause = scenarioContainsActionType(ActionType.Pause);
 
-      const packetsFinishedByTime = (await RunMessage.findAll({
-        where: { runId: id, data: { type: MessageType.FinishAction } },
-        group: "time",
-        attributes: [
-          "time",
-          [sequelize.fn("COUNT", sequelize.col("id")), "packetsCount"],
-        ],
-        order: ["time"],
-      })) as unknown as { time: Date; packetsCount: number }[];
-
-      const packetsDroppedCount = await RunMessage.count({
-        where: { runId: id, data: { type: MessageType.DropAction } },
-      });
-
-      const packetsDroppedByTime = (await RunMessage.findAll({
-        where: { runId: id, data: { type: MessageType.DropAction } },
-        group: "time",
-        attributes: [
-          "time",
-          [sequelize.fn("COUNT", sequelize.col("id")), "packetsCount"],
-        ],
-        order: ["time"],
-      })) as unknown as { time: Date; packetsCount: number }[];
-
-      const packetsSkippedCount = await RunMessage.count({
-        where: { runId: id, data: { type: MessageType.SkipAction } },
-      });
-
-      const packetsSkippedByTime = (await RunMessage.findAll({
-        where: { runId: id, data: { type: MessageType.SkipAction } },
-        group: "time",
-        attributes: [
-          "time",
-          [sequelize.fn("COUNT", sequelize.col("id")), "packetsCount"],
-        ],
-        order: ["time"],
-      })) as unknown as { time: Date; packetsCount: number }[];
-
-      const packetsPausedCount = await RunMessage.count({
-        where: { runId: id, data: { type: MessageType.PauseAction } },
-      });
-
-      const packetsPausedByTime = (await RunMessage.findAll({
-        where: { runId: id, data: { type: MessageType.PauseAction } },
-        group: "time",
-        attributes: [
-          "time",
-          [sequelize.fn("COUNT", sequelize.col("id")), "packetsCount"],
-        ],
-        order: ["time"],
-      })) as unknown as { time: Date; packetsCount: number }[];
-
-      const messageCountByType = (
-        await sequelize.query(
-          "SELECT data->>'type' as type, COUNT(*) as \"messagesCount\" " +
-            'FROM "public"."RunMessage" ' +
-            `WHERE "runId" = ${id} ` +
-            "GROUP BY data->>'type'",
-        )
-      )[0] as unknown as {
-        type: MessageType;
-        messagesCount: number;
-      }[];
-
-      return {
+      const [
         packetsProcessed,
         packetsByTime,
         packetsFinishedCount,
@@ -207,6 +144,128 @@ export const runHistoryRouter = createTRPCRouter({
         packetsPausedCount,
         packetsPausedByTime,
         messageCountByType,
+      ] = await Promise.all([
+        RunMessage.count({
+          where: {
+            runId: id,
+            data: { type: MessageType.StartingPacketProcessing },
+          },
+        }),
+        RunMessage.findAll({
+          where: {
+            runId: id,
+            data: { type: MessageType.StartingPacketProcessing },
+          },
+          group: "time",
+          attributes: [
+            "time",
+            [sequelize.fn("COUNT", sequelize.col("id")), "packetsCount"],
+          ],
+          order: ["time"],
+        }),
+        containsFinish
+          ? RunMessage.count({
+              where: { runId: id, data: { type: MessageType.FinishAction } },
+            })
+          : 0,
+        containsFinish
+          ? RunMessage.findAll({
+              where: { runId: id, data: { type: MessageType.FinishAction } },
+              group: "time",
+              attributes: [
+                "time",
+                [sequelize.fn("COUNT", sequelize.col("id")), "packetsCount"],
+              ],
+              order: ["time"],
+            })
+          : [],
+        containsDrop
+          ? RunMessage.count({
+              where: { runId: id, data: { type: MessageType.DropAction } },
+            })
+          : 0,
+        containsDrop
+          ? RunMessage.findAll({
+              where: { runId: id, data: { type: MessageType.DropAction } },
+              group: "time",
+              attributes: [
+                "time",
+                [sequelize.fn("COUNT", sequelize.col("id")), "packetsCount"],
+              ],
+              order: ["time"],
+            })
+          : [],
+        containsSkip
+          ? RunMessage.count({
+              where: { runId: id, data: { type: MessageType.SkipAction } },
+            })
+          : 0,
+        containsSkip
+          ? RunMessage.findAll({
+              where: { runId: id, data: { type: MessageType.SkipAction } },
+              group: "time",
+              attributes: [
+                "time",
+                [sequelize.fn("COUNT", sequelize.col("id")), "packetsCount"],
+              ],
+              order: ["time"],
+            })
+          : [],
+        containsPause
+          ? RunMessage.count({
+              where: { runId: id, data: { type: MessageType.PauseAction } },
+            })
+          : 0,
+        containsPause
+          ? RunMessage.findAll({
+              where: { runId: id, data: { type: MessageType.PauseAction } },
+              group: "time",
+              attributes: [
+                "time",
+                [sequelize.fn("COUNT", sequelize.col("id")), "packetsCount"],
+              ],
+              order: ["time"],
+            })
+          : [],
+        sequelize.query(
+          "SELECT data->>'type' as type, COUNT(*) as \"messagesCount\" " +
+            'FROM "public"."RunMessage" ' +
+            `WHERE "runId" = ${id} ` +
+            "GROUP BY data->>'type'",
+        ),
+      ]);
+
+      // Return the results
+      return {
+        packetsProcessed,
+        packetsByTime: packetsByTime as unknown as {
+          time: Date;
+          packetsCount: number;
+        }[],
+        packetsFinishedCount,
+        packetsFinishedByTime: packetsFinishedByTime as unknown as {
+          time: Date;
+          packetsCount: number;
+        }[],
+        packetsDroppedCount,
+        packetsDroppedByTime: packetsDroppedByTime as unknown as {
+          time: Date;
+          packetsCount: number;
+        }[],
+        packetsSkippedCount,
+        packetsSkippedByTime: packetsSkippedByTime as unknown as {
+          time: Date;
+          packetsCount: number;
+        }[],
+        packetsPausedCount,
+        packetsPausedByTime: packetsPausedByTime as unknown as {
+          time: Date;
+          packetsCount: number;
+        }[],
+        messageCountByType: messageCountByType[0] as unknown as {
+          type: MessageType;
+          messagesCount: number;
+        }[],
       };
     }),
   getRunFlows: publicProcedure
