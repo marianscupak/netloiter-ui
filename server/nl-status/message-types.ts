@@ -189,8 +189,7 @@ const rulesReplacedMessageSchema = baseMessageSchema.extend({
 
 export type RulesReplacedMessage = z.infer<typeof rulesReplacedMessageSchema>;
 
-export const messageWithPacketIdSchema = z.union([
-  evaluatingAllRuleMessageSchema,
+export const messageWithPacketIdSchema = z.discriminatedUnion("type", [
   evaluatingAllRuleMessageSchema,
   allRuleFailureMessageSchema,
   allRuleSuccessMessageSchema,
