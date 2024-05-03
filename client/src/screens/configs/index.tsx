@@ -16,7 +16,7 @@ export const Configs = () => {
               <Button variant="contained">Add</Button>
             </NavLink>
           </div>
-          <div className="w-[500px]">
+          <div className="md:w-[500px] w-full">
             <ConfigsTable configs={configs} />
           </div>
         </div>

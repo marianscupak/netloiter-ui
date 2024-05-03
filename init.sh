@@ -53,7 +53,7 @@ if [ -d "$netloiter_dir" ]; then
     echo "NetLoiter is already downloaded in $root_path/$netloiter_dir."
 else
     # Clone the repository
-    git clone https://pajda.fit.vutbr.cz/testos/netloiter.git "$root_path/$netloiter_dir"
+    git clone --depth 1 --branch v2 https://pajda.fit.vutbr.cz/testos/netloiter.git "$root_path/$netloiter_dir"
     echo "NetLoiter cloned successfully. Installing NetLoiter dependencies..."
     sudo "$root_path/$netloiter_dir/install/install.sh"
 fi

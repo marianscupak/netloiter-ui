@@ -29,7 +29,7 @@ export const MessageTypeFilter = ({ value, onChange }: Props) => {
   }, [onChange]);
 
   return (
-    <div className="flex gap-4">
+    <div className="flex gap-4 flex-wrap sm:flex-nowrap">
       <div className="w-full">
         <Select
           label="Message types"

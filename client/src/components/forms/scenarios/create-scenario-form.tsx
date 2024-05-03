@@ -95,7 +95,7 @@ export const CreateScenarioForm = ({ defaultValues, readOnly }: Props) => {
 
   return (
     <FormProvider {...form}>
-      <div className="bg-dark-gray p-4 w-[80%]">
+      <div className="bg-dark-gray p-4 w-full md:w-[80%]">
         <div className="mt-4">
           <FormTextField name="name" label="Name" disabled={readOnly} />
         </div>

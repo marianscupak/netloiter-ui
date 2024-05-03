@@ -33,9 +33,9 @@ export const Layout = () => {
   }, [setSnackbar]);
 
   return (
-    <div className="bg-gray h-full flex">
+    <div className="bg-gray h-full flex flex-col lg:flex-row">
       <Navigation />
-      <div className="w-full h-full min-h-[100vh]">
+      <div className="flex-grow min-h-[100vh]">
         <Outlet />
       </div>
       <Snackbar

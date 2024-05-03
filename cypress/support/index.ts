@@ -1,3 +1,7 @@
+before(() => {
+  cy.viewport(1024, 768);
+});
+
 export const goToPath = (path: string) => cy.visit(path);
 
 export const typeInInput = (name: string, value: string) =>
@@ -113,7 +117,7 @@ export const createConfig = (configName: string) => {
   cy.get('input[name="flows.0.all"]').click();
 
   cy.get("button").contains("ADD FLOW").click();
-  cy.get("button").eq(1).click();
+  cy.get("button").eq(2).click();
   cy.get('input[type="checkbox"]').eq(3).click();
   cy.get("body").trigger("keydown", { keyCode: 27 });
   typeInInput("flows.1.ip", "127.0.0.1");

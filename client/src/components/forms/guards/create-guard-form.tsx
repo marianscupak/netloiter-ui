@@ -73,7 +73,7 @@ export const CreateGuardForm = ({ defaultValues, readOnly }: Props) => {
 
   return (
     <FormProvider {...form}>
-      <div className="bg-dark-gray p-4 w-[50%]">
+      <div className="bg-dark-gray p-4 w-full md:w-[50%]">
         <FormTextField name="name" label="Name" disabled={readOnly} />
         <GuardFormFields />
         {!readOnly && (

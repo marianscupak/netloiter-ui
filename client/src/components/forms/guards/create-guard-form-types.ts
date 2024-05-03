@@ -36,7 +36,6 @@ const icmpGuardValuesSchema = createGuardBaseFormValuesSchema.extend({
   icmpCode: z.number(),
 });
 
-// TODO: If @ip argument is provided, then @src and @dst must not be provided!
 const ipGuardValuesSchema = createGuardBaseFormValuesSchema.extend({
   type: z.literal(GuardType.IP),
   src: ipSchema.optional(),

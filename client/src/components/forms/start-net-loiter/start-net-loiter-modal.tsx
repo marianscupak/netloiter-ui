@@ -68,9 +68,9 @@ export const StartNetLoiterModal = ({
   return (
     <Modal open={open} onClose={onClose}>
       <FormProvider {...form}>
-        <div className="flex gap-4">
-          <div className="text-header w-[70%]">Start NetLoiter</div>
-          <div className="w-[30%] ml-auto">
+        <div className="flex flex-col gap-4 md:flex-row">
+          <div className="text-header w-full md:w-[70%]">Start NetLoiter</div>
+          <div className="w-full md:w-[30%] ml-auto">
             <Button
               variant="outlined"
               className="w-full h-full"
@@ -90,30 +90,30 @@ export const StartNetLoiterModal = ({
             />
           </div>
         ) : (
-          <div className="flex w-full gap-4 my-4">
-            <div className="w-[70%]">
+          <div className="flex flex-col md:flex-row w-full gap-4 my-4">
+            <div className="w-full md:w-[70%]">
               <FormSelect
                 name="scenarioId"
                 label="Scenario"
                 options={scenarioOptions}
               />
             </div>
-            <NavLink to="/scenarios/create" className="w-[30%]">
+            <NavLink to="/scenarios/create" className="w-full md:w-[30%]">
               <Button variant="outlined" className="w-full h-full">
                 NEW SCENARIO
               </Button>
             </NavLink>
           </div>
         )}
-        <div className="flex w-full gap-4">
-          <div className="w-[70%]">
+        <div className="flex flex-col md:flex-row w-full gap-4 my-4">
+          <div className="w-full md:w-[70%]">
             <FormSelect
               name="configId"
               label="Config"
               options={configOptions}
             />
           </div>
-          <NavLink to="/configs/create" className="w-[30%]">
+          <NavLink to="/configs/create" className="w-full md:w-[30%]">
             <Button variant="outlined" className="w-full h-full">
               NEW CONFIG
             </Button>

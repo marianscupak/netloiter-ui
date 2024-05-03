@@ -100,7 +100,9 @@ export const Home = () => {
     <div className="flex justify-center items-center h-[100vh]">
       {status.runningFrom ? (
         <div>
-          <div className="text-header">NetLoiter is up and running</div>
+          <div className="text-header text-center">
+            NetLoiter is up and running
+          </div>
           <div className="mb-2 text-center">Running for: {runningFor}</div>
           <div className="flex justify-center gap-2">
             <NavLink to="/current-run">
@@ -113,7 +115,9 @@ export const Home = () => {
         </div>
       ) : (
         <div>
-          <div className="text-header">NetLoiter is not running</div>
+          <div className="text-header text-center">
+            NetLoiter is not running
+          </div>
           <div className="flex justify-center gap-2">
             <Button variant="contained" onClick={onOpen}>
               START

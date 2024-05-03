@@ -152,8 +152,8 @@ export const RuleFormFields = ({
           disabled={isLoaded || readOnly}
         />
       </div>
-      <div className="flex gap-4 mt-4">
-        <div className="w-1/2">
+      <div className="flex-col flex gap-4 mt-4 md:flex-row">
+        <div className="w-full md:w-1/2">
           <div>Guards</div>
           {guards.map((guard, index) => (
             <div className="p-2 border rounded-[4px] mb-4" key={guard.id}>
@@ -188,7 +188,7 @@ export const RuleFormFields = ({
             </div>
           )}
         </div>
-        <div className="w-1/2">
+        <div className="w-full md:w-1/2">
           <div>Actions</div>
           {actions.map((action, index) => (
             <div className="p-2 border rounded-[4px] mb-4" key={action.id}>

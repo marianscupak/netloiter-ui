@@ -1,6 +1,5 @@
 import { createTRPCRouter, publicProcedure } from "../trpc";
 import { createScenarioFormValuesSchema } from "netloiter-ui-fe/src/components/forms/scenarios/create-scenario-form-types";
-import { TRPCError } from "@trpc/server";
 import { createRule } from "./utils/rule";
 import { getScenarioDetail } from "./utils/scenario";
 import { objectWithId } from "./utils/object-with-id";
