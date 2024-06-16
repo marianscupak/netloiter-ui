@@ -1,5 +1,5 @@
 # NetLoiter UI
-Welcome to NetLoiter UI 👋 This project is a user interface for interacting with NetLoiter, a tool
+Welcome to NetLoiter UI 👋 This project is a user interface for interacting with [NetLoiter](https://pajda.fit.vutbr.cz/testos/netloiter/), a tool
 designed to inject faults into network communication.
 
 ## Features
